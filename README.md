@@ -1,4 +1,4 @@
-d2 Starter app
+DHIS Interpretation Wall app
 ==============
 
 ## Prerequisites
