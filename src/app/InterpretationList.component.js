@@ -24,6 +24,7 @@ const InterpretationList = React.createClass({
 		return {
 			hasMore: true
 			,items: []
+			,currentUser: this.props.d2.currentUser.displayName
 		};
 	},
   
@@ -118,13 +119,9 @@ const InterpretationList = React.createClass({
 		return dataList;
 	},
 	
-
-	createDiv( dataList, page ) 
-	{
-		console.log('page : ' + page);	
-	
+	createDiv( dataList, page ) {
 		return (
-			<ChartList key={page} list={dataList} />
+			<ChartList key={page} list={dataList} currentUser={this.state.currentUser} />
 	    );
 			
 	},

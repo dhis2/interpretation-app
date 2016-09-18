@@ -48,8 +48,12 @@ const Comment = React.createClass({
 							<span className="tipText">
 								<IntlProvider>
 									<FormattedRelative value={date} />
-								</IntlProvider>
-							</span>
+								</IntlProvider>								
+							</span> 
+							<span className={this.props.currentUser == this.state.currentUser ? '' : 'hidden'} >
+								<a onClick={this.editHandler}> Edit</a> | 
+								<a onClick={this.deleteHandler}>Delete</a>
+							</span>		  
 						</div>
 					</td>
 				</tr>
@@ -82,7 +86,7 @@ const CommentList = React.createClass({
 		return (		
 			<div>
 				{this.state.list.map( data =>				
-					<Comment key={data} data={data} /> 
+					<Comment key={data} data={data} currentUser={this.props.currentUser} /> 
 				)}				
 			</div>	
 		)
