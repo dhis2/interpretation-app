@@ -1,0 +1,214 @@
+@import '../../node_modules/d2-ui/lib/css/HeaderBar.css';
+@import "../../node_modules/d2-ui/scss/DataTable";
+
+$left-bar-width: 295px;
+
+html {
+  background-color: #f3f3f3;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 9pt;
+}
+
+.app-wrapper {
+  margin-top: 4rem;
+}
+
+.left-bar {
+  bottom: 0;
+  left: 0;
+  padding-top: 3rem;
+  position: fixed;
+  top: 0;
+  width: $left-bar-width;
+}
+
+.main-content {
+  margin-left: $left-bar-width + 30;
+}
+
+
+/*----------------------------------------------------------------------------*/
+/* Interpretation                                                             */
+/*----------------------------------------------------------------------------*/
+
+.interpretationContainer
+{
+  width: 650px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 2px;
+  margin-bottom: 2px;
+  box-shadow: #e1e1e1 0 1px 1px 0;
+  background-color: white;
+}
+
+.interpretationArea
+{
+  height: 125px;
+  width: 630px;
+  border: 1px solid #ccc;
+  resize: none;
+  overflow: auto;
+  margin: 10px 4px 6px 4px;
+  padding: 4px 0 0px 6px;
+}
+
+.interpretationButton
+{
+  width: 120px;
+  height: 24px;
+  margin: 0 0 6px 4px;
+}
+
+.interpretationCommentHeader
+{
+  padding: 7px 0 5px 0;
+  margin: 1px 0 12px 0;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+
+#interpretationFeed
+{
+  width: 630px;
+  margin-left: 4%;
+}
+
+#shareLink
+{
+  color: #777;
+  font-size: 16px;
+  padding-top: 7px;
+  margin-left: 4%;
+  margin-bottom: 22px;
+}
+
+.interpretationSymbol
+{
+  display: inline-block;
+  padding-right: 15px;
+}
+
+.interpretationUser
+{
+  display: inline-block;
+}
+
+.interpretationName
+{
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.interpretationText
+{
+  margin-bottom: 20px;
+}
+
+.interpretationItem
+{
+  margin-bottom: 22px;
+  margin-top: 22px;
+  width: 100%;
+  padding: 20px;
+}
+
+.interpretationItem img
+{
+  border: 0px;
+  padding: 0px;
+}
+
+.interpretationCommentArea
+{
+  margin-top: 10px;
+  padding: 18px 20px 14px 20px;
+  background-color: #e9edef;
+  border-radius: 3px;
+}
+
+.commentArea
+{
+  height: 18px;
+  width: 410px;
+  border: 1px solid #ccc;
+  resize: none;
+  overflow: auto;
+  padding: 4px 0px 0px 6px;
+}
+
+.commentButton
+{
+  width: 120px;
+  height: 24px;
+  margin: 1px 0 0 5px;
+  float: right;
+}
+
+.pointer
+{
+  cursor:pointer;
+}
+
+.tipText {
+    color: #9e9999;
+    font-weight: normal;
+}
+
+.userLink {
+    font-size: 10pt;
+	text-decoration: none;
+    color: #366cd8;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.hidden{
+	display:none;
+}
+
+.postComment
+{
+	clear: none;
+}
+
+.title {
+    height: 19px;
+    font-weight: 700;
+    font-size: 12px;
+    font-family: LiberationSans,arial,sans-serif;
+    color: #333;
+    text-align: center;
+    line-height: 14px;
+    letter-spacing: -.1px;
+}
+
+.contentTable
+{
+	overflow: auto;
+	width: 600;
+	height: 400;
+}
+
+.moreLink
+{
+	font-style:italic;
+	color:blue;
+	cunsor:pointer;
+}
+
+.badge
+{
+    width:50px;
+    height:50px;
+    border-radius:250px;
+    font-size:18px;
+    color:black;
+    text-align:center;
+    background:#a9a5a5;
+    font-weight: bold;
+	vertical-align: middle;
+    display: table-cell;
+}
