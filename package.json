@@ -19,7 +19,7 @@
     "DHIS2",
     "App"
   ],
-  "author": "Mark Polak",
+  "author": "James Chang",
   "license": "BSD-3-Clause",
   "dependencies": {
     "intl-messageformat": "^1.3.0",
@@ -74,12 +74,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dhis2/interpretations-app.git"
+    "url": "git+https://github.com/dhis2/interpretation-app.git"
   },
   "bugs": {
-    "url": "https://github.com/dhis2/interpretations-app/issues"
+    "url": "https://github.com/dhis2/interpretation-app/issues"
   },
-  "homepage": "https://github.com/dhis2/interpretations-app#readme",
+  "homepage": "https://github.com/dhis2/interpretation-app#readme",
   "manifest.webapp": {
     "icons": {
       "48": "icon.png"

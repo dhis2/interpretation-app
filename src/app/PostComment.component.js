@@ -1,39 +1,37 @@
 
 import React from 'react';
-import { LeftNav, RaisedButton, Avatar, FileFolder } from 'material-ui';
-  
+import { Avatar } from 'material-ui';
+
 const PostComment = React.createClass({
-	
-	getInitialState() {
-		return {
-            "list" : []
+
+    getInitialState() {
+        return {
+            list: [],
         };
     },
-	
-	render() {
-		
-		const userName = this.props.currentUser.split( " " );
-		let initChars = userName[0][0];
-		if( userName.length > 1 )
-		{
-			initChars += userName[userName.length - 1][0];
-		}
-		
-		
-		return (
-			
+
+    render() {
+        const userName = this.props.currentUser.split(' ');
+        let initChars = userName[0][0];
+        if (userName.length > 1) {
+            initChars += userName[userName.length - 1][0];
+        }
+
+
+        return (
+
 			<div className="postComment hidden" id={this.props.postCommentId} >
 				<table>
 					<tr>
 						<td>
-							<Avatar>{initChars}</Avatar>
+							<Avatar color="black">{initChars}</Avatar>
 						</td>
 						<td>
 							<table>
 								<tr>
 									<td>
 										<textarea className="commentArea" hintText="Add a comment..." ></textarea>
-										<br/>
+										<br />
 										<span className="funcLink">Share you comment</span>
 									</td>
 								</tr>
@@ -42,9 +40,9 @@ const PostComment = React.createClass({
 					</tr>
 				</table>
 			</div>
-		)
-	}
-	
+		);
+    },
+
 });
 
 

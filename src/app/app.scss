@@ -26,6 +26,10 @@ html {
   margin-left: $left-bar-width + 30;
 }
 
+.rightNav
+{
+	top:49px;
+}
 
 /*----------------------------------------------------------------------------*/
 /* Interpretation                                                             */
@@ -196,19 +200,11 @@ html {
 {
 	font-style:italic;
 	color:blue;
-	cunsor:pointer;
+	cursor:pointer;
 }
 
-.badge
-{
-    width:50px;
-    height:50px;
-    border-radius:250px;
-    font-size:18px;
-    color:black;
-    text-align:center;
-    background:#a9a5a5;
-    font-weight: bold;
-	vertical-align: middle;
-    display: table-cell;
+a{
+	cursor:pointer;
 }
+
+

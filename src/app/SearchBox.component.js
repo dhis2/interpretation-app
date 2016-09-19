@@ -24,7 +24,7 @@ const SearchBox = React.createClass({
 
     _change(e) {
         this.setState({ value: e.target.value });
-		this.props.onChangeEvent( e.target.value );
+        this.props.onChangeEvent(e.target.value);
     },
 
     render() {
@@ -36,7 +36,7 @@ const SearchBox = React.createClass({
         return (
             <TextField errorStyle={errorStyle} {...this.props} value={this.state.value} onChange={this._change} />
         );
-    }
+    },
 });
 
 

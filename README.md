@@ -18,7 +18,7 @@ npm -v
 
 Clone the repository from github with the following command
 ```sh
-git clone https://github.com/dhis2/interpretations-app
+git clone https://github.com/dhis2/interpretation-app
 ```
 
 Install the node dependencies
