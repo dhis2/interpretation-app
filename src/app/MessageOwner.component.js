@@ -4,6 +4,9 @@ import { IntlProvider, FormattedDate } from 'react-intl';
 
 
 const MessageOwner = React.createClass({
+    propTypes: {
+        data: React.PropTypes.object,
+    },
 
     getWords(str, start, end) {
         return str.split(/\s+/).slice(start, end).join(' ');

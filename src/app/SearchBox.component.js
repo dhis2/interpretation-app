@@ -10,6 +10,7 @@ const SearchBox = React.createClass({
     propTypes: {
         value: React.PropTypes.string,
         multiLine: React.PropTypes.bool,
+        onChangeEvent: React.PropTypes.func,
     },
 
     getInitialState() {

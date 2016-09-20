@@ -3,6 +3,10 @@ import React from 'react';
 import { Avatar } from 'material-ui';
 
 const PostComment = React.createClass({
+    propTypes: {
+        currentUser: React.PropTypes.string,
+        postCommentId: React.PropTypes.string,
+    },
 
     getInitialState() {
         return {

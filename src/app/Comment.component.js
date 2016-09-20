@@ -5,10 +5,10 @@ import { Avatar } from 'material-ui';
 
 const Comment = React.createClass({
     propTypes: {
-        data: React.PropTypes.text,
-        created: React.PropTypes.text,
-        user: React.PropTypes.text,
-        currentUser: React.PropTypes.text,
+        data: React.PropTypes.string,
+        created: React.PropTypes.string,
+        user: React.PropTypes.string,
+        currentUser: React.PropTypes.string,
     },
 
     getInitialState() {
