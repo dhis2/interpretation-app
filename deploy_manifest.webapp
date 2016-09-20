@@ -1,0 +1,13 @@
+{
+	"version":"0.01"
+	,"name":"InterpretationWall App"
+	,"description":"InterpretationWall App"
+	,"icons":{"16":null,"48":"images/icons/icon.png","128":null}
+	,"developer":{"url":"","name":"James Chang","company":null,"email":null}
+	,"launch_path":"index.html"
+	,"installs_allowed_from":null
+	,"default_locale":"en"
+	,"activities": {
+	  "dhis": { "href": "*" }
+	}
+}
