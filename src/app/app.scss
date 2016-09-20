@@ -28,7 +28,8 @@ html {
 
 .rightNav
 {
-	top:49px;
+	/*top:49px;*/
+  margin-top: 55px;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -100,21 +101,21 @@ html {
 
 .interpretationName
 {
-  margin-bottom: 10px;
-  padding: 10px;
+  margin-bottom: 3px;
+  padding: 5px;
 }
 
 .interpretationText
 {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .interpretationItem
 {
-  margin-bottom: 22px;
-  margin-top: 22px;
+  /*margin-bottom: 5px;
+  margin-top: 5px;*/
   width: 100%;
-  padding: 20px;
+  padding: 5px;
 }
 
 .interpretationItem img
@@ -125,8 +126,8 @@ html {
 
 .interpretationCommentArea
 {
-  margin-top: 10px;
-  padding: 18px 20px 14px 20px;
+  margin-top: 5px;
+  padding: 9px 10px 7px 10px;
   background-color: #e9edef;
   border-radius: 3px;
 }
@@ -194,6 +195,11 @@ html {
 	overflow: auto;
 	width: 600;
 	height: 400;
+}
+
+.linkTag
+{
+  margin-left: 3px;
 }
 
 .moreLink
