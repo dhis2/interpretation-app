@@ -3,12 +3,12 @@ import React from 'react';
 import { Dialog, FlatButton } from 'material-ui';
 
 import MessageOwner from './MessageOwner.component';
-import CommentList from './Comment.component';
+import CommentList from './CommentList.component';
 import PostComment from './PostComment.component';
 
 import actions from './actions/Interpretation.action';
 
-const Chart = React.createClass({
+const Interpretation = React.createClass({
     propTypes: {
         data: React.PropTypes.object,
         currentUser: React.PropTypes.string,
@@ -164,4 +164,4 @@ const Chart = React.createClass({
     },
 });
 
-export default Chart;
+export default Interpretation;

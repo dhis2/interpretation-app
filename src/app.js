@@ -20,7 +20,6 @@ import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 // The react-tap-event-plugin is required by material-ui to make touch screens work properly with onClick events
 import 'react-tap-event-plugin';
 
-import InterpretationStore from './app/InterpretationStore';
 import InterpretationWall from './app/InterpretationWall';
 import './app/app.scss';
 
@@ -53,12 +52,11 @@ getManifest('./manifest.webapp')
     .then(startApp)
 	.then(d2 => {
         // App init
-        log.debug('D2 initialized', d2);
+    log.debug('D2 initialized', d2);
 
         /* if (!d2.currentUser.authorities.has('F_SYSTEM_SETTING')) {
             document.write(d2.i18n.getTranslation('access_denied'));
             return;
         } */
-
-    })
+})
     .catch(log.error.bind(log));

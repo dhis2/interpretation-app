@@ -1,6 +1,6 @@
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import Chart from '../../src/app/Chart.component';
+import Interpretation from '../../src/app/Interpretation.component';
 
 const InterpretationList = React.createClass({
     propTypes: {
@@ -112,7 +112,7 @@ const InterpretationList = React.createClass({
         return (
 			<div>
 			{dataList.map(data =>
-			<Chart page={page} key={data.id} data={data} currentUser={this.state.currentUser} />
+			<Interpretation page={page} key={data.id} data={data} currentUser={this.state.currentUser} />
 			)}
 			</div>
         );
