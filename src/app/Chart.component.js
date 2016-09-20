@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Dialog, FlatButton, Avatar } from 'material-ui';
+import { Dialog, FlatButton } from 'material-ui';
 
 import MessageOwner from './MessageOwner.component';
 import CommentList from './Comment.component';
@@ -9,6 +9,10 @@ import PostComment from './PostComment.component';
 import actions from './actions/Interpretation.action';
 
 const Chart = React.createClass({
+    propTypes: {
+        data: React.PropTypes.object,
+        currentUser: React.PropTypes.string,
+    },
 
     getInitialState() {
         return {
@@ -30,11 +34,8 @@ const Chart = React.createClass({
                 width: 600,
                 height: 400,
                 displayDensity: 'compact',
-            });
-
-			                                                                                                $('#' + divId).closest('.interpretationItem ').addClass('contentTable');
-        }
-        else if (this.props.data.type === 'CHART') {
+            });                                                                                             $('#' + divId).closest('.interpretationItem ').addClass('contentTable');
+        } else if (this.props.data.type === 'CHART') {
             DHIS.getChart({
                 uid: id,
                 el: divId,
@@ -42,10 +43,7 @@ const Chart = React.createClass({
                 width: 600,
                 height: 400,
             });
-        }
-		else {
-			                                                                                                $('#' + divId).css('width', '100%');
-			                                                                                                $('#' + divId).css('height', '308px');
+        } else {                                                                                               $('#' + divId).css('height', '308px');
             DHIS.getMap({
                 url: '../../..',
                 el: divId,
@@ -58,8 +56,8 @@ const Chart = React.createClass({
 
     _showCommentHandler() {
         const postComentTagId = `postComent ${this.props.data.id}`;
-		                                                                $('#' + postComentTagId).show();
-		                                                                $('#' + postComentTagId).closest('.interpretationCommentArea').show();
+        $(`#${postComentTagId}`).show();
+        $(`#${postComentTagId}`).closest('.interpretationCommentArea').show();
     },
 
     _likeHandler() {
@@ -75,7 +73,7 @@ const Chart = React.createClass({
 
         const peopleLikeTagId = `peopleLike ${this.props.data.id}`;
 
-        $('#' + peopleLikeTagId).show();
+        $(`#${peopleLikeTagId}`).show();
     },
 
     _openPeopleLikedHandler() {
@@ -108,13 +106,13 @@ const Chart = React.createClass({
                 label="Cancel"
                 primary
                 onTouchTap={this._openPeopleLikedHandler}
-        	/>,
+            />,
             <FlatButton
                 label="Submit"
                 primary
                 keyboardFocused
                 onTouchTap={this._closePeopleLikedHandler}
-        	/>,
+            />,
         ];
 
         return (
@@ -166,19 +164,4 @@ const Chart = React.createClass({
     },
 });
 
-
-const ChartList = React.createClass({
-    render() {
-        return (
-			<div>
-			{this.props.list.map(data =>
-
-			<Chart key={data.id} data={data} currentUser={this.props.currentUser} />
-			)}
-			</div>
-		);
-    },
-});
-
-
-export default ChartList;
+export default Chart;

@@ -1,6 +1,6 @@
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import ChartList from '../../src/app/Chart.component';
+import Chart from '../../src/app/Chart.component';
 
 const InterpretationList = React.createClass({
     propTypes: {
@@ -87,7 +87,7 @@ const InterpretationList = React.createClass({
         const d2 = this.props.d2;
         const d2Api = d2.Api.getApi();
 
-        let url = `interpretations?fields=id,type,text,created,likes,likedBy[name],user[name],comments[id,created,text,user[name]],chart[id,name],map[id,name],reportTable[id,name]&page=${page}&pageSize=100`;
+        let url = `interpretations?fields=id,type,text,created,likes,likedBy[name],user[name],comments[id,created,text,user[name]],chart[id,name],map[id,name],reportTable[id,name]&page=${page}&pageSize=3`;
 
         if (searchKey !== undefined && searchKey !== '') {
             url += `&filter=text:ilike:${searchKey}`;
@@ -110,7 +110,11 @@ const InterpretationList = React.createClass({
 
     createDiv(dataList, page) {
         return (
-			<ChartList key={page} list={dataList} currentUser={this.state.currentUser} />
+			<div>
+			{dataList.map(data =>
+			<Chart page={page} key={data.id} data={data} currentUser={this.state.currentUser} />
+			)}
+			</div>
         );
     },
 
