@@ -23,12 +23,13 @@ const autoSearchStyles = {
 const AutoCompleteUsers = React.createClass({
     propTypes: {
         searchId: React.PropTypes.string,
-        onSelect: React.PropTypes.func,
+        value: React.PropTypes.string,
+        item: React.PropTypes.object,
     },
 
     getInitialState() {
         return {
-            value: '',
+            value: this.props.item.displayName,
             itemList: [],
             loading: false,
             open: false,
@@ -48,7 +49,8 @@ const AutoCompleteUsers = React.createClass({
                     open={this.state.open}
                     onSelect={(value, item) => {
                         this.setState({ value, itemList: [item], open: false });
-                        this.props.onSelect(item);
+                        this.props.item.id = item.id;
+                        this.props.item.displayName = item.displayName;
                     }}
                     onChange={(event, value) => {
                         this.setState({ value, loading: true, open: false });
@@ -56,13 +58,15 @@ const AutoCompleteUsers = React.createClass({
                         delayOnceTimeAction.bind(700, this.props.searchId, () => {
                             if (value === '') {
                                 this.setState({ itemList: [], loading: false, open: false });
-                                this.props.onSelect({ displayName: '', id: '' });
+                                // this.props.onSelect({ displayName: '', id: '' });
+                                this.props.item.id = '';
+                                this.props.item.displayName = '';
                             }
                             else {
                                 getD2().then(d2 => {
                                     const url = `users.json?paging=false&filter=name:ilike:${value}`;
                                     d2.Api.getApi().get(url).then(result => {
-                                        const openVal = (result.users.length > 0) ? true: false;
+                                        const openVal = (result.users.length > 0);
 
                                         this.setState({ itemList: result.users, loading: false, open: openVal });
                                     })

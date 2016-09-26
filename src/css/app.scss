@@ -253,6 +253,7 @@ a{
 {
   margin-left: 4px;
   margin-right: 12px;
+  padding-bottom: 6px;
   vertical-align: middle;
   cursor: pointer;
 }
@@ -282,6 +283,134 @@ a{
   height:40px;
 }
 
+.cssBtn {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.cssBtnBlue
+{  
+  background-color:rgb(77, 144, 254);
+  background-image: -moz-linear-gradient(50% 0%, rgb(77, 144, 254), rgb(71, 135, 237));
+  border-bottom-color: rgb(48, 121, 237);
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-image-outset: 0 0 0 0;
+  border-image-repeat: stretch stretch;
+  border-image-slice: 100% 100% 100% 100%;
+  border-image-source: none;
+  border-image-width: 1 1 1 1;
+  border-left-color: rgb(48, 121, 237);
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-right-color: rgb(48, 121, 237);
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-top-color: rgb(48, 121, 237);
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  box-shadow: none;
+  color: rgb(255, 255, 255);
+  cursor: default;
+  display: inline-block;
+  font-family: Roboto,sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  height: 27px;
+  line-height: 27px;
+  margin-right: 16px;
+  min-width: 54px;
+  outline-color: rgb(255, 255, 255);
+  outline-style: none;
+  outline-width: 0px;
+  padding-bottom: 0px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 0px;
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  -moz-user-select: none;
+}
+
+.cssBtnBlue:hover
+{    
+  /* background-color:rgb(77, 144, 254); */
+  background-color:rgb(75, 135, 234);
+}
+
+.cssBtnGray
+{
+  background-color: rgb(245, 245, 245);
+  background-image: -moz-linear-gradient(50% 0%, rgb(245, 245, 245), rgb(241, 241, 241));
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-image-outset: 0 0 0 0;
+  border-image-repeat: stretch stretch;
+  border-image-slice: 100% 100% 100% 100%;
+  border-image-source: none;
+  border-image-width: 1 1 1 1;
+  border-left-color: rgba(0, 0, 0, 0.1);
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-right-color: rgba(0, 0, 0, 0.1);
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-top-color: rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  box-shadow: none;
+  color: rgb(68, 68, 68);
+  cursor: default;
+  display: inline-block;
+  font-family: Roboto,sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  height: 27px;
+  line-height: 27px;
+  margin-right: 16px;
+  min-width: 54px;
+  outline-color: rgb(68, 68, 68);
+  outline-style: none;
+  outline-width: 0px;
+  padding-bottom: 0px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 0px;
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  -moz-user-select: none;
+}
+
+.cssBtnGray:hover
+{  
+  background-color:rgb(240, 240, 240);
+}
+
 /*
 .searchTextDiv input
 {
@@ -300,8 +429,9 @@ a{
 .advanceSearchFormBtns
 {
   margin-top: 15px;
-  text-align: right;
   font-size: 15px;
+  text-align: left;
+  padding-left: 8px;
 }
 
 div.advancedSearchForm

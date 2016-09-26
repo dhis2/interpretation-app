@@ -41,7 +41,7 @@ const AutoCompleteSearchKeyword = React.createClass({
             <div className="searchTextDiv">
                 <AutocompleteMod
                     className="searchTextbox"
-                    inputProps={{ hintText: 'Type Search Here', style: { width: '400px' } }}
+                    inputProps={{ hintText: 'Search Interpretation', style: { width: '400px' } }}
                     ref="autocomplete"
                     value={this.state.value}
                     items={this.state.itemList}

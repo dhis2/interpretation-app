@@ -12,7 +12,7 @@ const customStyles = {
         right: 0,
         bottom: 0,
         backgroundColor: 'rgba(255, 255, 255, 0)',
-        'z-index': 1000,
+        zIndex: 1000,
     },
     content: {
         position: 'absolute',
@@ -23,9 +23,9 @@ const customStyles = {
         width: '500px',
         'box-shadow': '3px 3px 2px #DDD',
         'font-size': '13px !important',
-        'z-index': 1001,
     },
 };
+
 
 export default class SearchBox extends Component {
     constructor(props) {
@@ -78,17 +78,23 @@ export default class SearchBox extends Component {
 
         this.setState({ open: true });
         this.bodyscrollingDisable(true);
-        // $('divReactModal__Overlay--after-open').css('z-index', '1000');
     }
 
     _handleCloseAdvancedSearch() {
-        this.setState({ open: false });
+        // get data from advanced search form
+        const moreTerms = this.refs.advancedSearchForm.getSearchConditions();
+
+        // TODO: If data exists, highlight the down-arrow with color
+
+        this.setState({ open: false, moreTerms });
         this.bodyscrollingDisable(false);
     }
 
     _handleAdvancedSearch() {
-        // get data from ref.        
+        // get data from advanced search form
         const moreTerms = this.refs.advancedSearchForm.getSearchConditions();
+
+        // TODO: If data exists, highlight the down-arrow with color
 
         // Call back with search term and keyword
         this.props.onChangeEvent({ keyword: this.state.value, moreTerms });
@@ -125,7 +131,7 @@ export default class SearchBox extends Component {
                 <table className="searchTable">
                 <tr>
                 <td>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="#BBB" height="32" viewBox="0 0 24 24" width="32" className="searchImg" onClick={this._clickPerformSearch}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#BBB" height="30" viewBox="0 0 24 24" width="30" className="searchImg" onClick={this._clickPerformSearch}>
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
                     <path d="M0 0h24v24H0z" fill="none"></path>
                 </svg>
@@ -134,7 +140,7 @@ export default class SearchBox extends Component {
                     <AutoCompleteSearchKeyword searchId="searchKeyword" onSelect={this._keywordSelected} />
                 </td>
                 <td>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="#BBB" height="36" viewBox="0 0 24 24" width="36" className="searchImg" onClick={this._handleOpenAdvancedSearch}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#BBB" height="30" viewBox="0 0 24 24" width="30" className="searchImg" onClick={this._handleOpenAdvancedSearch}>
                     <path d="M7 10l5 5 5-5z"></path>
                     <path d="M0 0h24v24H0z" fill="none"></path>
                 </svg>
@@ -147,10 +153,10 @@ export default class SearchBox extends Component {
                     onRequestClose={this._handleCloseAdvancedSearch}
                     style={customStyles}
                     shouldCloseOnOverlayClick={true}>
-                    <AdvanceSearchForm ref="advancedSearchForm" />
+                    <AdvanceSearchForm ref="advancedSearchForm" savedTerms={this.state.moreTerms} />
                     <div className="advanceSearchFormBtns">
-                        <button className="searchStyle" onClick={this._handleAdvancedSearch}>Search</button>&nbsp;&nbsp;&nbsp;
-                        <button className="searchStyle" onClick={this._handleCloseAdvancedSearch}>Close</button>
+                        <button className="cssBtnBlue" onClick={this._handleAdvancedSearch}>Search</button>
+                        <button className="cssBtnGray" onClick={this._handleCloseAdvancedSearch}>Close</button>
                     </div>
                 </Modal>
             </div>

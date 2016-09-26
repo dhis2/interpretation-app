@@ -13,22 +13,23 @@ export default class AdvanceSearchForm extends Component {
         super(props);
 
         // const today = new Date().toISOString();
-
-        this.state = {
+        this.state = (!props.savedTerms) ? {
             type: '',
-            dateCreatedFrom: '',
-            dateCreatedTo: '',
-            dateModifiedFrom: '',
-            dateModifiedTo: '',
-            author: '',
-            commentator: '',
-        };
+            dateModiFrom: null,
+            dateModiTo: null,
+            dateCreatedFrom: null,
+            dateCreatedTo: null,
+            dateModifiedFrom: null,
+            dateModifiedTo: null,
+            author: { id: '', displayName: '' },
+            commentator: { id: '', displayName: '' },
+        } : props.savedTerms;
 
         this._typeChanged = this._typeChanged.bind(this);
+        this._setDateModiFrom = this._setDateModiFrom.bind(this);
+        this._setDateModiTo = this._setDateModiTo.bind(this);
         this._setDateCreatedFrom = this._setDateCreatedFrom.bind(this);
         this._setDateCreatedTo = this._setDateCreatedTo.bind(this);
-        this._setDateModifiedFrom = this._setDateModifiedFrom.bind(this);
-        this._setDateModifiedTo = this._setDateModifiedTo.bind(this);
         this._authorSelected = this._authorSelected.bind(this);
         this._commentatorSelected = this._commentatorSelected.bind(this);
     }
@@ -41,6 +42,14 @@ export default class AdvanceSearchForm extends Component {
         this.setState({ type: e.target.value });
     }
 
+    _setDateModiFrom(dateModiFrom) {
+        this.setState({ dateModiFrom });
+    }
+
+    _setDateModiTo(dateModiTo) {
+        this.setState({ dateModiTo });
+    }
+
     _setDateCreatedFrom(date) {
         this.setState({ dateCreatedFrom: date });
     }
@@ -49,20 +58,12 @@ export default class AdvanceSearchForm extends Component {
         this.setState({ dateCreatedTo: date });
     }
 
-    _setDateModifiedFrom(date) {
-        this.setState({ dateModifiedFrom: date });
-    }
-
-    _setDateModifiedTo(date) {
-        this.setState({ dateModifiedTo: date });
-    }
-
     _authorSelected(user) {
-        this.state.author = user.id;
+        this.state.author = user;
     }
 
     _commentatorSelected(user) {
-        this.state.commentator = user.id;
+        this.state.commentator = user;
     }
 
     render() {
@@ -73,7 +74,7 @@ export default class AdvanceSearchForm extends Component {
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Type</span></td>
                             <td className="tdData">
-                                <select className="searchStyle form-control" onChange={this._typeChanged}>
+                                <select className="searchStyle form-control" value={this.state.type} onChange={this._typeChanged}>
                                     <option value=""></option>
                                     <option value="CHART">Chart</option>
                                     <option value="REPORT_TABLE">Report Table</option>
@@ -84,7 +85,7 @@ export default class AdvanceSearchForm extends Component {
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Date created</span></td>
                             <td className="tdData">
-                                <DatePicker
+                                <DatePicker key="dateCreatedFrom"
                                     className="searchStyle calendar"
                                     dateFormat="YYYY-MM-DD"
                                     selected={this.state.dateCreatedFrom}
@@ -92,7 +93,7 @@ export default class AdvanceSearchForm extends Component {
                                     placeholderText="From"
                                 />
                                 &nbsp;&nbsp;-&nbsp;&nbsp;
-                                <DatePicker
+                                <DatePicker key="dateCreatedTo"
                                     className="searchStyle calendar"
                                     dateFormat="YYYY-MM-DD"
                                     selected={this.state.dateCreatedTo}
@@ -104,19 +105,19 @@ export default class AdvanceSearchForm extends Component {
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Date modified</span></td>
                             <td className="tdData">
-                                <DatePicker
+                                <DatePicker key="dateModiFrom"
                                     className="searchStyle calendar"
                                     dateFormat="YYYY-MM-DD"
-                                    selected={this.state.dateModifiedFrom}
-                                    onChange={this._setdateModifiedFrom}
+                                    selected={this.state.dateModiFrom}
+                                    onChange={this._setDateModiFrom}
                                     placeholderText="From"
                                 />
                                 &nbsp;&nbsp;-&nbsp;&nbsp;
-                                <DatePicker
+                                <DatePicker key="dateModiTo"
                                     className="searchStyle calendar"
                                     dateFormat="YYYY-MM-DD"
-                                    selected={this.state.dateModifiedTo}
-                                    onChange={this._setdateModifiedTo}
+                                    selected={this.state.dateModiTo}
+                                    onChange={this._setDateModiTo}
                                     placeholderText="To"
                                 />
                             </td>
@@ -124,13 +125,13 @@ export default class AdvanceSearchForm extends Component {
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Author (user)</span></td>
                             <td className="tdData">
-                                <AutoCompleteUsers searchId="author" onSelect={this._authorSelected} />
+                                <AutoCompleteUsers searchId="author" item={this.state.author} />
                             </td>
                         </tr>
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Commentator (user)</span></td>
                             <td className="tdData">
-                                <AutoCompleteUsers searchId="commentator" onSelect={this._commentatorSelected} />
+                                <AutoCompleteUsers searchId="commentator" item={this.state.commentator} />
                             </td>
                         </tr>
                     </tbody>
@@ -140,7 +141,7 @@ export default class AdvanceSearchForm extends Component {
     }
 }
 
-// AdvanceSearchForm.propTypes = { value: React.PropTypes.string };
-// AdvanceSearchForm.defaultProps = { value: '' };
+AdvanceSearchForm.propTypes = { savedTerms: React.PropTypes.object };
+// AdvanceSearchForm.defaultProps = { savedTerms: undefined };
 
 // className="searchStyle calendar"
