@@ -1,10 +1,8 @@
 
 import React from 'react';
 import { Dialog, FlatButton } from 'material-ui';
-
 import MessageOwner from './MessageOwner.component';
-import CommentList from './CommentList.component';
-import PostComment from './PostComment.component';
+import CommentArea from './CommentArea.component';
 
 import actions from './actions/Interpretation.action';
 
@@ -12,10 +10,12 @@ const Interpretation = React.createClass({
     propTypes: {
         data: React.PropTypes.object,
         currentUser: React.PropTypes.string,
+        deleteInterpretationSuccess: React.PropTypes.func,
     },
 
     getInitialState() {
         return {
+            text: this.props.data.text,
             likes: this.props.data.likes,
             likedBy: this.props.data.likedBy,
             open: false,
@@ -23,6 +23,14 @@ const Interpretation = React.createClass({
     },
 
     componentDidMount() {
+        const currentUserId = this.props.currentUser.id;
+        for (let i = 0; i < this.props.data.likedBy.length; i++) {
+            if (currentUserId === this.props.data.likedBy[i].id) {
+                const likeLinkTagId = `likeLink_${this.props.data.id}`;
+                $(`#${likeLinkTagId}`).replaceWith("<span class='disabledLink'>Like</span>");
+            }
+        }
+
         const id = this.props.data.objId;
         const divId = this.props.data.id;
 
@@ -34,8 +42,10 @@ const Interpretation = React.createClass({
                 width: 600,
                 height: 400,
                 displayDensity: 'compact',
-            });                                                                                             $('#' + divId).closest('.interpretationItem ').addClass('contentTable');
-        } else if (this.props.data.type === 'CHART') {
+            });
+            $('#' + divId).closest('.interpretationItem ').addClass('contentTable');
+        }
+        else if (this.props.data.type === 'CHART') {
             DHIS.getChart({
                 uid: id,
                 el: divId,
@@ -43,7 +53,9 @@ const Interpretation = React.createClass({
                 width: 600,
                 height: 400,
             });
-        } else {                                                                                               $('#' + divId).css('height', '308px');
+        }
+		else {
+            $('#' + divId).css('height', '308px');
             DHIS.getMap({
                 url: '../../..',
                 el: divId,
@@ -55,25 +67,64 @@ const Interpretation = React.createClass({
     },
 
     _showCommentHandler() {
-        const postComentTagId = `postComent ${this.props.data.id}`;
-        $(`#${postComentTagId}`).show();
-        $(`#${postComentTagId}`).closest('.interpretationCommentArea').show();
+        const postComentTagId = `#postComent_${this.props.data.id}`;
+        $(`${postComentTagId}`).show();
+        $(`${postComentTagId}`).closest('.interpretationCommentArea').show();
     },
 
     _likeHandler() {
-        actions.updateModel(this.props.data, this.props.data.id);
-        const likes = this.state.likes + 1;
-        let likedBy = this.state.likedBy;
-        likedBy = likedBy.concat(this.props.data.user);
+        actions.updateLike(this.props.data, this.props.data.id).subscribe(() => {
+            const likeLinkTagId = `likeLink_${this.props.data.id}`;
+            $(`#${likeLinkTagId}`).replaceWith("<span class='disabledLink'>Like</span>");
 
-        this.setState({
-            likes,
-            likedBy,
+            const likes = this.state.likes + 1;
+            const likedBy = this.state.likedBy;
+            likedBy.push({ name: this.props.data.user, id: this.props.data.userId });
+
+            this.setState({
+                likes,
+                likedBy,
+            });
+
+            const peopleLikeTagId = `peopleLike_${this.props.data.id}`;
+            const postComentTagId = `postComent_${this.props.data.id}`;
+            $(`#${peopleLikeTagId}`).show();
+            $(`#${postComentTagId}`).closest('.interpretationCommentArea').show();
         });
+    },
 
-        const peopleLikeTagId = `peopleLike ${this.props.data.id}`;
+    _deleteHandler() {
+        actions.deleteInterpretation(this.props.data, this.props.data.id)
+			.subscribe(() => {
+    this.props.deleteInterpretationSuccess(this.props.data.id);
+		});
+    },
 
-        $(`#${peopleLikeTagId}`).show();
+    _showEditHandler() {
+        const divEditText = `edit_${this.props.data.id}`;
+        const divShowText = `show_${this.props.data.id}`;
+        $(`#${divEditText}`).show();
+        $(`#${divShowText}`).hide();
+    },
+
+    _editInterpretationTextSuccess(text) {
+        this.props.data.text = text;
+
+        const divEditText = `edit_${this.props.data.id}`;
+        const divShowText = `show_${this.props.data.id}`;
+        $(`#${divEditText}`).hide();
+        $(`#${divShowText}`).show();
+
+        this.setState({ text });
+    },
+
+    _getCommentAreaClazz() {
+        let commentAreaClazzNames = 'interpretationCommentArea';
+        if (this.props.data.comments.length > 0 && this.state.likes === 0) {
+            commentAreaClazzNames += ' hidden';
+        }
+
+        return commentAreaClazzNames;
     },
 
     _openPeopleLikedHandler() {
@@ -89,76 +140,66 @@ const Interpretation = React.createClass({
     },
 
     render() {
-        let commentPart = '';
-        if (this.props.data.comments.length > 0) {
-            commentPart = <CommentList list={this.props.data.comments} key={this.props.data.id} currentUser={this.props.data.user} />;
-        }
+        const likeLinkTagId = `likeLink_${this.props.data.id}`;
+        const interpretationTagId = `interpretation_${this.props.data.id}`;
+        const peopleLikeTagId = `peopleLike_${this.props.data.id}`;
 
-        let commentAreaClazzNames = 'interpretationCommentArea';
-        if (commentPart === '' && this.props.data.likes === 0) {
-            commentAreaClazzNames += ' hidden';
-        }
-
-        const postComentTagId = `postComent ${this.props.data.id}`;
-        const peopleLikeTagId = `peopleLike ${this.props.data.id}`;
         const peopleLikedByDialogActions = [
-            <FlatButton
+            <FlatButton type="button"
+                onClick={this._closePeopleLikedHandler}
                 label="Cancel"
                 primary
-                onTouchTap={this._openPeopleLikedHandler}
-            />,
-            <FlatButton
-                label="Submit"
-                primary
-                keyboardFocused
-                onTouchTap={this._closePeopleLikedHandler}
             />,
         ];
 
         return (
-			<div>
+			<div id={interpretationTagId}>
 				<div className="interpretationContainer" >
 
-				<div>
-					<div className="interpretationItem">
-						<div className="title">{this.props.data.name}</div>
-						<div id={this.props.data.id}></div>
-					</div>
-				</div>
+                    <div>
+                        <div className="interpretationItem">
+                            <div className="title">{this.props.data.name}</div>
+                            <div id={this.props.data.id}></div>
+                        </div>
+                    </div>
 
-				<MessageOwner data={this.props.data} />
+                    <MessageOwner data={this.props.data} text={this.state.text} editInterpretationTextSuccess={this._editInterpretationTextSuccess} />
 
-				<div className="linkTag">
-					<a onClick={this._likeHandler}>Like</a> |
-					<a onClick={this._showCommentHandler}>Comment</a>
-					<span className={this.props.currentUser === this.props.data.user ? '' : 'hidden'} > |
-					<a onClick={this.editHandler}>Edit</a> |
-					<a onClick={this.deleteHandler}>Delete</a>
-					</span>
-				</div>
+                    <div className="linkTag">
+                        <a onClick={this._likeHandler} id={likeLinkTagId}>  Like </a> |
+                        <a onClick={this._showCommentHandler}>  Comment </a>
+                        <span className={this.props.currentUser.id === this.props.data.userId || this.props.currentUser.superUser ? '' : 'hidden'} >|
+                        <a onClick={this._showEditHandler}>  Edit </a> |
+                        <a onClick={this._deleteHandler}>  Delete </a>
+                        </span>
+                    </div>
 
-				<div className={commentAreaClazzNames} >
-					<div id={peopleLikeTagId}>
-						<img src="./images/like.png" /> <a onClick={this._openPeopleLikedHandler}>{this.state.likes} people</a><span> liked this.</span>
-					</div>
-					<PostComment postCommentId={postComentTagId} currentUser={this.props.currentUser} />
-					{commentPart}
-				</div>
+                     <div className={this._getCommentAreaClazz()} >
+                        <div id={peopleLikeTagId} className={this.state.likes > 0 ? '' : 'hidden'}>
+                            <img src="./images/like.png" /> <a onClick={this._openPeopleLikedHandler}>{this.state.likes} people</a><span> liked this.</span>
+                            <br />
+                            <br />
+                        </div>
+                        <CommentArea comments={this.props.data.comments} likes={this.state.likes} interpretationId={this.props.data.id} likedBy={this.state.likedBy} currentUser={this.props.currentUser} />
+                    
+                        
+                        <Dialog
+                            title="People"
+                            actions={peopleLikedByDialogActions}
+                            modal="true"
+                            open={this.state.open}
+                            onRequestClose={this._closePeopleLikedHandler}
+                        >
+                            <div>
+                                {this.state.likedBy.map(likedByUserName =>
+                                    <p>{likedByUserName.name}</p>
+                                )}
+                            </div>
+                        </Dialog>
 
-				<Dialog
-    title="Dialog With Actions"
-    actions={peopleLikedByDialogActions}
-    modal
-    open={this.state.open}
-    onRequestClose={this._closePeopleLikedHandler}
-				>
-					<div>
-						{this.state.likedBy.map(likedByUserName =>
-							<p>{likedByUserName}</p>
-						)}
-					</div>
-				</Dialog>
-				</div>
+
+                    </div>
+                </div>
 			</div>
 		);
     },

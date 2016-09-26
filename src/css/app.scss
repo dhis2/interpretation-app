@@ -134,8 +134,8 @@ html {
 
 .commentArea
 {
-  height: 18px;
-  width: 410px;
+  height: 70px;
+  width: 580px;
   border: 1px solid #ccc;
   resize: none;
   overflow: auto;
@@ -213,4 +213,126 @@ a{
 	cursor:pointer;
 }
 
+.disabledLink
+{
+  color: #cac4c4;
+}
 
+.valignTop{
+  vertical-align: top;
+}
+
+/*----------------------------------------------------------------------------*/
+/* Interpretation                                                             */
+/*----------------------------------------------------------------------------*/
+
+
+.tooltip { display: none; }
+.tooltip-on-hover:hover + .tooltip { display: block; }
+
+/*----------------------------------------------------------------------------*/
+/* Search                                                             */
+/*----------------------------------------------------------------------------*/
+
+.stop-scrolling {
+  height: 100%;
+  overflow: hidden;
+}
+
+.searchDiv
+{
+	height: 46px;
+  min-width: 350px;
+  display: inline-block;
+  border: 1px solid #ddd;
+  margin: 3px;
+  background-color: white;
+}
+
+.searchImg
+{
+  margin-left: 4px;
+  margin-right: 12px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.searchImg:hover
+{
+  fill: #777;
+}
+
+.searchTable td
+{
+  border: none;
+  margin: 0px;
+  padding: 0px;
+  vertical-align: middle;
+}
+
+.searchTextbox
+{
+  width: 400px;
+}
+
+.searchItemsDiv 
+{
+  font-size:16px;
+  line-height:32px;
+  height:40px;
+}
+
+/*
+.searchTextDiv input
+{
+  border: none;
+  outline: none;
+  line-height: 32px;
+  height: 32px;;
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  margin: 0px;
+  padding: 0px;
+  width: 350px;
+}
+*/
+
+.advanceSearchFormBtns
+{
+  margin-top: 15px;
+  text-align: right;
+  font-size: 15px;
+}
+
+div.advancedSearchForm
+{
+  padding: 4px;
+  border: 1px solid #bbb;
+}
+
+.tdTitle
+{
+  padding: 8px;
+  margin-right: 20px;
+}
+
+.tdData
+{
+  padding-left: 15px; 
+}
+
+.tdData input, .tdData select
+{
+  font-size: 13px;  
+  height: 21.5px !important;
+}
+
+.searchStyle
+{
+  font-size: 13px;
+}
+
+.calendar
+{
+  width: 90px;
+}

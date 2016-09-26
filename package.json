@@ -22,11 +22,14 @@
   "author": "James Chang",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "intl-messageformat": "^1.3.0",
-    "intl-relativeformat": "^1.3.0",
-    "javascript-time-ago": "^0.4.3",
     "jquery": "^2.2.3",
-    "react-time-ago": "^0.2.3"
+    "react-modal": "^1.4.0",
+    "react-time-ago": "^0.2.3",
+    "simple-react-modal": "^0.5.1",
+  	"react-infinite-scroller": "^0.2.10",
+	  "react-intl": "^2.1.5",
+    "react-datepicker": "^0.29.0",
+    "react-autocomplete": "^1.3.1"
   },
   "devDependencies": {
     "babel-core": "^6.7.2",

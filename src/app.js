@@ -21,7 +21,10 @@ import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import 'react-tap-event-plugin';
 
 import InterpretationWall from './app/InterpretationWall';
-import './app/app.scss';
+import './css/app.scss';
+import './css/datepicker.scss';
+//import './css/w3.css';
+//import './css/w3-theme-blue-grey.css';
 
 // Render the a LoadingMask to show the user the app is in loading
 // The consecutive render after we did our setup will replace this loading mask

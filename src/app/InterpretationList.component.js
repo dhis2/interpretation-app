@@ -13,7 +13,10 @@ const InterpretationList = React.createClass({
 
     getInitialState() {
         return {
-            hasMore: true, items: [], currentUser: this.props.d2.currentUser.displayName,
+            hasMore: true,
+            items: [],
+            searchTerm: undefined,
+            currentUser: { name: this.props.d2.currentUser.displayName, id: this.props.d2.currentUser.id, superUser: this.isSuperUser() },
         };
     },
 
@@ -23,16 +26,12 @@ const InterpretationList = React.createClass({
         };
     },
 
-    onSearchChanged(keyword) {
+    onSearchChanged(searchTerm) {
+		// set the search terms on state memory
+        this.state.searchTerm = searchTerm;
+
 		// reset the list item
-        this.state.items = [];
-
-		// set the keyword on memory
-        this.searchKey = keyword;
-
-        this.loadMore(1);
-
-        // console.log('Search Performed: ${keyword}');
+        this.setState({ hasMore: true, items: [], searchTerm });
     },
 
     getFormattedData(itemList) {
@@ -45,20 +44,9 @@ const InterpretationList = React.createClass({
 
             let data = {};
             data = interpretation;
+            data.userId = interpretation.user.id;
             data.user = interpretation.user.name;
-
-			// Comments information
-            let comments = '';
-            for (let j = 0; j < interpretation.comments.length; j++) {
-                const cm = interpretation.comments[j];
-                comments += `${cm.user.name},${cm.created},${cm.text};`;
-            }
-
-            if (comments.length > 0) {
-                comments = comments.substring(0, comments.length - 1);
-            }
-
-            data.comments = comments;
+            data.comments = JSON.stringify(interpretation.comments);
 
             if (interpretation.type === 'CHART') {
                 data.objId = interpretation.chart.id;
@@ -66,7 +54,7 @@ const InterpretationList = React.createClass({
             } else if (interpretation.type === 'MAP') {
                 data.objId = interpretation.map.id;
                 data.name = interpretation.map.name;
-            } else {
+            } else if (interpretation.type === 'REPORT_TABLE') {
                 data.objId = interpretation.reportTable.id;
                 data.name = interpretation.reportTable.name;
             }
@@ -77,45 +65,98 @@ const InterpretationList = React.createClass({
         return dataList;
     },
 
+    getSearchTerms(searchTerm) {
+        let searchTermUrl = '';
+
+        if (searchTerm !== undefined) {
+            if (searchTerm.keyword !== undefined && searchTerm.keyword !== '') {
+                searchTermUrl += `&filter=text:ilike:${searchTerm.keyword}`;
+            }
+
+            if (searchTerm.moreTerms !== undefined) {
+                if (searchTerm.moreTerms.author !== '') searchTermUrl += `&filter=user.id:eq:${searchTerm.moreTerms.author}`;
+
+                if (searchTerm.moreTerms.commentator !== '') searchTermUrl += `&filter=comments.user.id:eq:${searchTerm.moreTerms.commentator}`;
+
+                if (searchTerm.moreTerms.type !== '') searchTermUrl += `&filter=type:eq:${searchTerm.moreTerms.type}`;
+
+                if (searchTerm.moreTerms.dateCreatedFrom !== '') searchTermUrl += `&filter=created:ge:${searchTerm.moreTerms.dateCreatedFrom.format('YYYY-MM-DD')}`;
+
+                if (searchTerm.moreTerms.dateCreatedTo !== '') searchTermUrl += `&filter=created:le:${searchTerm.moreTerms.dateCreatedTo.format('YYYY-MM-DD')}`;
+
+                if (searchTerm.moreTerms.dateModifiedFrom !== '') searchTermUrl += `&filter=lastUpdated:ge:${searchTerm.moreTerms.dateModifiedFrom.format('YYYY-MM-DD')}`;
+
+                if (searchTerm.moreTerms.dateModifiedTo !== '') searchTermUrl += `&filter=lastUpdated:le:${searchTerm.moreTerms.dateModifiedTo.format('YYYY-MM-DD')}`;
+            }
+        }
+
+        return searchTermUrl;
+    },
+
     addToDivList(dataList, hasMore, resultPage) {
         this.setState({
             items: this.state.items.concat([this.createDiv(dataList, resultPage)]), hasMore,
         });
     },
 
-    loadMore(page, searchKey) {
+    isSuperUser() {
+        return this.props.d2.currentUser.authorities.has('ALL');
+    },
+
+    loadMore(page) {
         const d2 = this.props.d2;
         const d2Api = d2.Api.getApi();
 
-        let url = `interpretations?fields=id,type,text,created,likes,likedBy[name],user[name],comments[id,created,text,user[name]],chart[id,name],map[id,name],reportTable[id,name]&page=${page}&pageSize=3`;
-
-        if (searchKey !== undefined && searchKey !== '') {
-            url += `&filter=text:ilike:${searchKey}`;
-        }
+        let url = `interpretations?fields=id,type,text,created,likes,likedBy[id,name],user[id,name],comments[id,created,text,user[id,name]],chart[id,name],map[id,name],reportTable[id,name]&page=${page}&pageSize=5`;
+        url += this.getSearchTerms(this.state.searchTerm);
 
         d2Api.get(url).then(result => {
             const dataList = this.getFormattedData(result.interpretations, d2Api.baseUrl);
-
             const hasMore = (result.pager.page < result.pager.pageCount);
             const resultPage = result.pager.page;
 
-            setTimeout(this.addToDivList(dataList, hasMore, resultPage).bind(this), 1000);
+            this.addToDivList(dataList, hasMore, resultPage);
 
             return Promise.resolve();
         })
 		.catch(error => { console.log(error); return Promise.resolve(); });
     },
 
-    searchKey: '',
-
     createDiv(dataList, page) {
         return (
 			<div>
 			{dataList.map(data =>
-			<Interpretation page={page} key={data.id} data={data} currentUser={this.state.currentUser} />
+                <Interpretation page={page} key={data.id} data={data} currentUser={this.state.currentUser} deleteInterpretationSuccess={this._deleteInterpretationSuccess} />
 			)}
 			</div>
         );
+    },
+
+    removeFromArray(list, propertyName, value) {
+        let index;
+
+        for (let i = 0; i < list.length; i++) {
+            if (list[i][propertyName] === value) {
+                index = i;
+            }
+        }
+
+        if (index !== undefined) {
+            list.splice(index, 1);
+        }
+
+        return list;
+    },
+
+    _deleteInterpretationSuccess(id) {
+        const items = this.state.items;
+
+        for (let i = 0; i < items.length; i++) {
+            const children = items[i].props.children;
+            this.removeFromArray(children, 'key', id);
+        }
+
+        this.setState({ items });
     },
 
     render() {
