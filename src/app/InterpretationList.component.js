@@ -117,9 +117,9 @@ const InterpretationList = React.createClass({
 
             this.addToDivList(dataList, hasMore, resultPage);
 
-            return Promise.resolve();
-        })
-		.catch(error => { console.log(error); return Promise.resolve(); });
+            Promise.resolve();
+        });
+		// .catch(error => { console.log(error); return Promise.resolve(); });
     },
 
     createDiv(dataList, page) {
