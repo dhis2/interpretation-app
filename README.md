@@ -1,5 +1,5 @@
-DHIS Interpretation Wall app
-==============
+DHIS 2 Interpretation app
+---
 
 ## Prerequisites
 Make sure you have at least the following versions of `node` and `npm`.
