@@ -69,9 +69,9 @@ To check the code style for both the JS and SCSS files run
 npm run lint
 ```
 
-# Tools etc.
+# Tools
 
-## Frameworks... and libraries
+## Frameworks and libraries
 ### React
 [React](https://facebook.github.io/react/) is the _view_ part of the front-end applications, it has a component based architecture. At DHIS2 we also use JSX syntax that is generally used with React.
 
