@@ -1,6 +1,8 @@
 DHIS 2 Interpretation app
 ---
 
+This repo contains the DHIS 2 interpretation wall app.
+
 ## Prerequisites
 Make sure you have at least the following versions of `node` and `npm`.
 
