@@ -13,18 +13,9 @@ export default class AdvanceSearchForm extends Component {
         super(props);
 
         // const today = new Date().toISOString();
-        this.state = (!props.savedTerms) ? {
-            type: '',
-            dateModiFrom: null,
-            dateModiTo: null,
-            dateCreatedFrom: null,
-            dateCreatedTo: null,
-            dateModifiedFrom: null,
-            dateModifiedTo: null,
-            author: { id: '', displayName: '' },
-            commentator: { id: '', displayName: '' },
-        } : props.savedTerms;
+        this.state = (!props.savedTerms) ? this.getInitialData() : props.savedTerms;
 
+        this._clickCloseBtn = this._clickCloseBtn.bind(this);
         this._typeChanged = this._typeChanged.bind(this);
         this._setDateModiFrom = this._setDateModiFrom.bind(this);
         this._setDateModiTo = this._setDateModiTo.bind(this);
@@ -34,8 +25,30 @@ export default class AdvanceSearchForm extends Component {
         this._commentatorSelected = this._commentatorSelected.bind(this);
     }
 
+    getInitialData() {
+        return {
+            type: '',
+            dateModiFrom: null,
+            dateModiTo: null,
+            dateCreatedFrom: null,
+            dateCreatedTo: null,
+            dateModifiedFrom: null,
+            dateModifiedTo: null,
+            author: { id: '', displayName: '' },
+            commentator: { id: '', displayName: '' },
+        };
+    }
+
     getSearchConditions() {
         return this.state;
+    }
+
+    resetForm() {
+        this.setState(this.getInitialData());
+    }
+
+    _clickCloseBtn() {
+        this.props.askPopupClose();
     }
 
     _typeChanged(e) {
@@ -69,6 +82,11 @@ export default class AdvanceSearchForm extends Component {
     render() {
         return (
             <div className="advanceSearchForm form-control">
+                <div tabIndex="0" aria-label="Close search options" className="btnImages seachPopupCloseImg" role="button" onClick={this._clickCloseBtn}>
+                    <svg x="0px" y="0px" width="12px" height="12px" viewBox="0 0 10 10" focusable="false" style={{ float: 'right', margin: '0 0 10px 10px;' }}>
+                        <polygon points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 "></polygon>
+                    </svg>
+                </div>
                 <table className="advanceSearchFormTable">
                     <tbody>
                         <tr>
@@ -141,7 +159,10 @@ export default class AdvanceSearchForm extends Component {
     }
 }
 
-AdvanceSearchForm.propTypes = { savedTerms: React.PropTypes.object };
+AdvanceSearchForm.propTypes = {
+    savedTerms: React.PropTypes.object,
+    askPopupClose: React.PropTypes.func,
+};
 // AdvanceSearchForm.defaultProps = { savedTerms: undefined };
 
 // className="searchStyle calendar"

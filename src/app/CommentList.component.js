@@ -8,6 +8,7 @@ const CommentList = React.createClass({
         currentUser: React.PropTypes.text,
         interpretationId: React.PropTypes.text,
         hidden: React.PropTypes.bool,
+        isHidden: React.PropTypes.bool,
         deleteCommentSuccess: React.PropTypes.func,
         updateCommentSuccess: React.PropTypes.func,
     },
@@ -17,11 +18,17 @@ const CommentList = React.createClass({
     },
 
     render() {
-        const clazzName = (this.props.hidden) ? 'hidden' : '';
-console.log('=== this.props.hidden : '  + this.props.hidden);
-console.log('this.props.hidden === true : '  + (this.props.hidden === true));
+        const clazzName = this.props.isHidden ? 'hidden' : '';
+
+        let tagId = '';
+        if (this.props.hidden) {
+            tagId = `hideCommentList_${this.props.interpretationId}`;
+        } else {
+            tagId = `showCommentList_${this.props.interpretationId}`;
+        }
+
         return (
-             <div className={clazzName}>
+             <div className={clazzName} id={tagId} >
                 {this.state.list.map(data =>
                     <div id={data.id}>
                         <Comment key={data} data={data} currentUser={this.props.currentUser} interpretationId={this.props.interpretationId} updateCommentSuccess={this.props.updateCommentSuccess} deleteCommentSuccess={this.props.deleteCommentSuccess} />

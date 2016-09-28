@@ -2,8 +2,24 @@
 import Action from 'd2-ui/lib/action/Action';
 import { getInstance as getD2 } from 'd2/lib/d2';
 
-const actions = Action.createActionsFromNames(['updateLike', 'deleteInterpretation', 'editInterpretation'], 'interpretation');
+const actions = Action.createActionsFromNames(['listInterpretation', 'updateLike', 'deleteInterpretation', 'editInterpretation'], 'interpretation');
 
+
+
+actions.listInterpretation
+    .subscribe(({ data: [model, page, searchData], complete }) => {
+        getD2().then(d2 => {
+            let url = `interpretations?fields=id,type,text,created,likes,likedBy[id,name],user[id,name],comments[id,created,text,user[id,name]],chart[id,name],map[id,name],reportTable[id,name]&page=${page}&pageSize=5${searchData}`;
+
+            d2.Api.getApi().get(url)
+				.then(result => {
+    complete(result);
+})
+.catch(errorResponse => {
+    console.log(errorResponse);
+				});
+        });
+    });
 
 actions.deleteInterpretation
     .subscribe(({ data: [model, id], complete }) => {

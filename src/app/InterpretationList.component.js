@@ -1,6 +1,8 @@
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import Interpretation from '../../src/app/Interpretation.component';
+import Progress from 'react-progress-3';
+import actions from './actions/Interpretation.action';
 
 const InterpretationList = React.createClass({
     propTypes: {
@@ -27,11 +29,12 @@ const InterpretationList = React.createClass({
     },
 
     onSearchChanged(searchTerm) {
-		// set the search terms on state memory
+		// set the search terms on state memory and reset the item list
         this.state.searchTerm = searchTerm;
+        this.state.items = [];
 
-		// reset the list item
-        this.setState({ hasMore: true, items: [], searchTerm });
+        // Search for Interpretation with first page.  searchTerm are passed as memory
+        this.loadMore(1);
     },
 
     getFormattedData(itemList) {
@@ -46,7 +49,7 @@ const InterpretationList = React.createClass({
             data = interpretation;
             data.userId = interpretation.user.id;
             data.user = interpretation.user.name;
-            data.comments = JSON.stringify(interpretation.comments);
+            // data.comments = JSON.stringify(interpretation.comments);
 
             if (interpretation.type === 'CHART') {
                 data.objId = interpretation.chart.id;
@@ -74,19 +77,19 @@ const InterpretationList = React.createClass({
             }
 
             if (searchTerm.moreTerms !== undefined) {
-                if (searchTerm.moreTerms.author && searchTerm.moreTerms.author.id !== '') searchTermUrl += `&filter=user.id:eq:${searchTerm.moreTerms.author.id}`;
+                if (searchTerm.moreTerms.author !== '') searchTermUrl += `&filter=user.id:eq:${searchTerm.moreTerms.author}`;
 
-                if (searchTerm.moreTerms.commentator && searchTerm.moreTerms.commentator.id !== '') searchTermUrl += `&filter=comments.user.id:eq:${searchTerm.moreTerms.commentator.id}`;
+                if (searchTerm.moreTerms.commentator !== '') searchTermUrl += `&filter=comments.user.id:eq:${searchTerm.moreTerms.commentator}`;
 
                 if (searchTerm.moreTerms.type !== '') searchTermUrl += `&filter=type:eq:${searchTerm.moreTerms.type}`;
 
-                if (!searchTerm.moreTerms.dateCreatedFrom !== '') searchTermUrl += `&filter=created:ge:${searchTerm.moreTerms.dateCreatedFrom.format('YYYY-MM-DD')}`;
+                if (searchTerm.moreTerms.dateCreatedFrom !== '') searchTermUrl += `&filter=created:ge:${searchTerm.moreTerms.dateCreatedFrom.format('YYYY-MM-DD')}`;
 
-                if (!searchTerm.moreTerms.dateCreatedTo !== '') searchTermUrl += `&filter=created:le:${searchTerm.moreTerms.dateCreatedTo.format('YYYY-MM-DD')}`;
+                if (searchTerm.moreTerms.dateCreatedTo !== '') searchTermUrl += `&filter=created:le:${searchTerm.moreTerms.dateCreatedTo.format('YYYY-MM-DD')}`;
 
-                if (!searchTerm.moreTerms.dateModiFrom !== '') searchTermUrl += `&filter=lastUpdated:ge:${searchTerm.moreTerms.dateModiFrom.format('YYYY-MM-DD')}`;
+                if (searchTerm.moreTerms.dateModifiedFrom !== '') searchTermUrl += `&filter=lastUpdated:ge:${searchTerm.moreTerms.dateModifiedFrom.format('YYYY-MM-DD')}`;
 
-                if (!searchTerm.moreTerms.dateModiTo !== '') searchTermUrl += `&filter=lastUpdated:le:${searchTerm.moreTerms.dateModiTo.format('YYYY-MM-DD')}`;
+                if (searchTerm.moreTerms.dateModifiedTo !== '') searchTermUrl += `&filter=lastUpdated:le:${searchTerm.moreTerms.dateModifiedTo.format('YYYY-MM-DD')}`;
             }
         }
 
@@ -103,23 +106,28 @@ const InterpretationList = React.createClass({
         return this.props.d2.currentUser.authorities.has('ALL');
     },
 
+    showProgressBar(show) {
+        if (show) Progress.show();
+        else Progress.hide();
+    },
+
     loadMore(page) {
-        const d2 = this.props.d2;
-        const d2Api = d2.Api.getApi();
+        const searchData = this.getSearchTerms(this.state.searchTerm);
 
-        let url = `interpretations?fields=id,type,text,created,likes,likedBy[id,name],user[id,name],comments[id,created,text,user[id,name]],chart[id,name],map[id,name],reportTable[id,name]&page=${page}&pageSize=5`;
-        url += this.getSearchTerms(this.state.searchTerm);
+        this.showProgressBar(true);
 
-        d2Api.get(url).then(result => {
+        actions.listInterpretation('', page, searchData).subscribe(result => {
+            const d2 = this.props.d2;
+            const d2Api = d2.Api.getApi();
+
             const dataList = this.getFormattedData(result.interpretations, d2Api.baseUrl);
             const hasMore = (result.pager.page < result.pager.pageCount);
             const resultPage = result.pager.page;
 
             this.addToDivList(dataList, hasMore, resultPage);
 
-            Promise.resolve();
+            this.showProgressBar(false);
         });
-		// .catch(error => { console.log(error); return Promise.resolve(); });
     },
 
     createDiv(dataList, page) {
@@ -162,6 +170,7 @@ const InterpretationList = React.createClass({
     render() {
         return (
 			<div>
+                <Progress.Component />
 				<InfiniteScroll loader={<div><img src="images/ajaxLoaderBar.gif" /></div>} loadMore={this.loadMore} hasMore={this.state.hasMore} useWindow>
                     {this.state.items}
 				</InfiniteScroll>

@@ -11,6 +11,7 @@ let AutocompleteMod = React.createClass({
     value: React.PropTypes.any,
     onChange: React.PropTypes.func,
     onSelect: React.PropTypes.func,
+    onInputEnterPressed: React.PropTypes.func,
     shouldItemRender: React.PropTypes.func,
     sortItems: React.PropTypes.func,
     getItemValue: React.PropTypes.func.isRequired,
@@ -49,6 +50,7 @@ let AutocompleteMod = React.createClass({
         position: 'fixed',
         overflow: 'auto',
         maxHeight: '50%', // TODO: don't cheat, let it flow to the bottom
+        zIndex: 1000,
       },
       autoHighlight: true,
       onMenuVisibilityChange () {},
@@ -167,6 +169,8 @@ let AutocompleteMod = React.createClass({
     Enter (event) {
       if (this.state.isOpen === false) {
         // menu is closed so there is no selection to accept -> do nothing
+        // Added instead of 'onKeyDown' event handler to detect 'Enter' key
+        this.props.onInputEnterPressed(event);
         return
       }
       else if (this.state.highlightedIndex == null) {
@@ -174,8 +178,12 @@ let AutocompleteMod = React.createClass({
         this.setState({
           isOpen: false
         }, () => {
-          this.refs.input.select()
-        })
+          //this.refs.input.select();
+        });
+        
+        // Added instead of 'onKeyDown' event handler to detect 'Enter' key
+        this.setState({isOpen: false}); // collapse the menu
+        this.props.onInputEnterPressed(event);        
       }
       else {
         // text entered + menu item has been highlighted + enter is hit -> update value to that of selected menu item, close the menu
@@ -241,7 +249,7 @@ let AutocompleteMod = React.createClass({
 
   setMenuPositions () {
     var node = this.refs.input
-    var rect = node.getBoundingClientRect()
+    //var rect = node.getBoundingClientRect()
     var computedStyle = global.window.getComputedStyle(node)
     var marginBottom = parseInt(computedStyle.marginBottom, 10) || 0;
     var marginLeft = parseInt(computedStyle.marginLeft, 10) || 0;

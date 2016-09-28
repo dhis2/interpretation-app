@@ -15,25 +15,27 @@ const CommentArea = React.createClass({
     },
 
     getInitialState() {
-        const comments = JSON.parse(this.props.comments);
-        return this._setComments(comments);
+        const comments = this._getSubComments(this.props.comments);
+        return {
+            showComments: comments.showComments,
+            hideComments: comments.hideComments,
+            hidden: true,
+        };
     },
 
-    _setComments(list) {
+    _getSubComments(list) {
         let showComments = [];
         let hideComments = [];
         if (list.length >= 5) {
             showComments = list.slice(0, 5);
-            if (list.length > 6) {
-                hideComments = list.slice(6, list.length - 1);
+            if (list.length > 5) {
+                hideComments = list.slice(5, list.length);
             }
-        }
-        else {
+        } else {
             showComments = list;
         }
 
         return {
-            comments: list,
             showComments,
             hideComments,
         };
@@ -58,53 +60,59 @@ const CommentArea = React.createClass({
     // _addCommentSuccess(id, text) {
     _addCommentSuccess() {
         actions.listComment(undefined, this.props.interpretationId).subscribe(result => {
-            /* const currentDateObj = new Date();
-            let month = eval(currentDateObj.getMonth()) + 1;
-            month = (month < 10) ? `0${month}` : month;
-            const currentDate = `${currentDateObj.getFullYear()}-${month}-${currentDateObj.getDate()} ${currentDateObj.getHours()}:${currentDateObj.getMinutes()}:${currentDateObj.getSeconds()}`;
-            const comments = this.state.comments;
-            const commentId = result.comments[result.comments.length - 1].id;
-            comments.push({
-                id: `${commentId}`,
-                created: `${currentDate}`,
-                text: `${text}`,
-                user: {
-                    id: this.props.currentUser.id,
-                    name: this.props.currentUser.name,
-                },
+            this.setState({
+                hideComments: [],
+                showComments: [],
             });
 
-            this.setState({ comments }); */
-
-            this._setComments(result.comments);
-
-            const postComentTagId = `postComent_${this.props.interpretationId}`;
-            $(`#${postComentTagId}`).closest('.interpretationCommentArea').show();
+            this.setState(this._getSubComments(result.comments), function () {
+                const postComentTagId = `postComent_${this.props.interpretationId}`;
+                $(`#${postComentTagId}`).closest('.interpretationCommentArea').show();
+            });
         });
     },
 
     _updateCommentSuccess(id, text) {
-        const comments = this.state.comments;
-        for (let i = 0; i < comments.length; i++) {
-            if (comments[i].id === id) {
-                comments[i].text = text;
+        const showComments = this.state.showComments;
+        for (let i = 0; i < showComments.length; i++) {
+            if (showComments[i].id === id) {
+                showComments[i].text = text;
             }
         }
 
-        this.setState({ comments });
+        const hideComments = this.state.hideComments;
+        for (let i = 0; i < hideComments.length; i++) {
+            if (hideComments[i].id === id) {
+                hideComments[i].text = text;
+            }
+        }
+
+        this.setState({
+            showComments,
+            hideComments,
+        });
     },
 
     _deleteCommentSuccess(commentId) {
-        const comments = this.state.comments;
-        this.removeFromArray(comments, 'id', commentId);
-        this.setState({ comments });
+        actions.listComment(undefined, this.props.interpretationId).subscribe(result => {
+            const comments = this.state.showComments;
+            comments.concat(this.state.hideComments);
+            this.removeFromArray(comments, 'id', commentId);
+
+            this.setState({
+                hideComments: [],
+                showComments: [],
+            });
+
+            this.setState(this._getSubComments(result.comments));
+        });
     },
 
     _getShowCommentListTag() {
         let commentPart = '';
         if (this.state.showComments.length > 0) {
             const keyTagId = `showList_${this.props.interpretationId}`;
-            commentPart = <CommentList list={this.state.showComments} hidden={false} key={keyTagId} interpretationId={this.props.interpretationId} currentUser={this.props.currentUser} updateCommentSuccess={this._updateCommentSuccess} deleteCommentSuccess={this._deleteCommentSuccess} />;
+            commentPart = <CommentList list={this.state.showComments} hidden={false} isHidden={false} key={keyTagId} interpretationId={this.props.interpretationId} currentUser={this.props.currentUser} updateCommentSuccess={this._updateCommentSuccess} deleteCommentSuccess={this._deleteCommentSuccess} />;
         }
 
         return commentPart;
@@ -112,41 +120,34 @@ const CommentArea = React.createClass({
 
     _getHideCommentListTag() {
         let commentPart = '';
+
         if (this.state.hideComments.length > 0) {
-            const hasMoreTagId = `hasMore_${this.props.interpretationId}`;
             const keyTagId = `hideList_${this.props.interpretationId}`;
-            commentPart = <CommentList id={hasMoreTagId} hidden list={this.state.hideComments} key={keyTagId} interpretationId={this.props.interpretationId} currentUser={this.props.currentUser} updateCommentSuccess={this._updateCommentSuccess} deleteCommentSuccess={this._deleteCommentSuccess} />;
+            commentPart = <CommentList hidden isHidden={this.state.hidden} list={this.state.hideComments} key={keyTagId} interpretationId={this.props.interpretationId} currentUser={this.props.currentUser} updateCommentSuccess={this._updateCommentSuccess} deleteCommentSuccess={this._deleteCommentSuccess} />;
         }
 
         return commentPart;
     },
 
-    _getCommentAreaClazz() {
-        let commentAreaClazzNames = 'interpretationCommentArea';
-        if (this.state.comments.length > 0 && this.props.likes === 0) {
-            commentAreaClazzNames += ' hidden';
-        }
-
-        return commentAreaClazzNames;
-    },
-
     _showMore() {
-        const hasMoreTagLinkId = `hasMoreLink_${this.props.interpretationId}`;
-        const hasMoreTagId = `hasMore_${this.props.interpretationId}`;
+        this.setState({ hidden: false }, function () {
+            const hasMoreTagLinkId = `hasMoreCommentLink_${this.props.interpretationId}`;
+            const hasMoreTagId = `hideCommentList_${this.props.interpretationId}`;
 
-        $(`#${hasMoreTagLinkId}`).hide();
-        $(`#${hasMoreTagId}`).show();
+            $(`#${hasMoreTagLinkId}`).hide();
+            $(`#${hasMoreTagId}`).show();
+        });
     },
 
     render() {
-        const hasMoreTagLinkId = `hasMoreLink_${this.props.interpretationId}`;
+        const hasMoreTagLinkId = `hasMoreCommentLink_${this.props.interpretationId}`;
 
         return (
-            <div className={this._getCommentAreaClazz()} >
+            <div>
                 <PostComment currentUser={this.props.currentUser} interpretationId={this.props.interpretationId} postCommentSuccess={this._addCommentSuccess} />
                 {this._getShowCommentListTag()}
 
-                {this.state.hideComments.length > 0 ? <div id={hasMoreTagLinkId}><a onClick={this._showMore}>[{this.state.hideComments.length} more comments]</a></div> : '' }
+                {this.state.hideComments.length > 0 && this.state.hidden ? <div id={hasMoreTagLinkId}><a onClick={this._showMore}>[{this.state.hideComments.length} more comments]</a></div> : ''}
 
                 {this._getHideCommentListTag()}
             </div>

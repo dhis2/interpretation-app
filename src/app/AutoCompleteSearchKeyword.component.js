@@ -4,7 +4,6 @@ import { delayOnceTimeAction } from './utils';
 import { getInstance as getD2 } from 'd2/lib/d2';
 import AutocompleteMod from './AutocompleteMod.component';
 
-
 const autoSearchStyles = {
     item: {
         padding: '2px 6px',
@@ -23,17 +22,29 @@ const autoSearchStyles = {
 
 const AutoCompleteSearchKeyword = React.createClass({
     propTypes: {
+        value: React.PropTypes.any,
         searchId: React.PropTypes.string,
         onSelect: React.PropTypes.func,
+        onInputEnterPressed: React.PropTypes.func,
+        onChange: React.PropTypes.func,
     },
 
     getInitialState() {
         return {
-            value: '',
+            value: this.props.value,
             itemList: [],
             loading: false,
             open: false,
         };
+    },
+
+    collapseMenu() {
+        this.setState({ open: false });
+    },
+
+    _onInputEnterPressed(event) {
+        this.props.onInputEnterPressed(event);
+        this.collapseMenu();
     },
 
     render() {
@@ -47,12 +58,16 @@ const AutoCompleteSearchKeyword = React.createClass({
                     items={this.state.itemList}
                     getItemValue={(item) => item.text}
                     open={this.state.open}
+                    onInputEnterPressed={this._onInputEnterPressed}
                     onSelect={(value, item) => {
                         this.setState({ value, itemList: [item], open: false });
                         this.props.onSelect(item);
                     }}
                     onChange={(event, value) => {
                         this.setState({ value, loading: true, open: false });
+
+                        // Call back the parent passed in method for change 
+                        this.props.onChange(event, value);
 
                         delayOnceTimeAction.bind(700, this.props.searchId, () => {
                             if (value === '') {

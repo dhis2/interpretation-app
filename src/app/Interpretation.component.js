@@ -19,6 +19,7 @@ const Interpretation = React.createClass({
             likes: this.props.data.likes,
             likedBy: this.props.data.likedBy,
             open: false,
+            comments: this.props.data.comments,
         };
     },
 
@@ -67,9 +68,9 @@ const Interpretation = React.createClass({
     },
 
     _showCommentHandler() {
-        const postComentTagId = `#postComent_${this.props.data.id}`;
-        $(`${postComentTagId}`).show();
-        $(`${postComentTagId}`).closest('.interpretationCommentArea').show();
+        const postComentTagId = `postComent_${this.props.data.id}`;
+        $(`#${postComentTagId}`).show();
+        $(`#${postComentTagId}`).closest('.interpretationCommentArea').show();
     },
 
     _likeHandler() {
@@ -84,12 +85,12 @@ const Interpretation = React.createClass({
             this.setState({
                 likes,
                 likedBy,
+            }, function () {
+                const peopleLikeTagId = `peopleLike_${this.props.data.id}`;
+                const postComentTagId = `postComent_${this.props.data.id}`;
+                $(`#${peopleLikeTagId}`).show();
+                $(`#${postComentTagId}`).closest('.interpretationCommentArea').show();
             });
-
-            const peopleLikeTagId = `peopleLike_${this.props.data.id}`;
-            const postComentTagId = `postComent_${this.props.data.id}`;
-            $(`#${peopleLikeTagId}`).show();
-            $(`#${postComentTagId}`).closest('.interpretationCommentArea').show();
         });
     },
 
@@ -120,7 +121,7 @@ const Interpretation = React.createClass({
 
     _getCommentAreaClazz() {
         let commentAreaClazzNames = 'interpretationCommentArea';
-        if (this.props.data.comments.length > 0 && this.state.likes === 0) {
+        if (this.props.data.comments.length === 0 && this.state.likes === 0) {
             commentAreaClazzNames += ' hidden';
         }
 
@@ -178,9 +179,8 @@ const Interpretation = React.createClass({
                         <div id={peopleLikeTagId} className={this.state.likes > 0 ? '' : 'hidden'}>
                             <img src="./images/like.png" /> <a onClick={this._openPeopleLikedHandler}>{this.state.likes} people</a><span> liked this.</span>
                             <br />
-                            <br />
                         </div>
-                        <CommentArea comments={this.props.data.comments} likes={this.state.likes} interpretationId={this.props.data.id} likedBy={this.state.likedBy} currentUser={this.props.currentUser} />
+                        <CommentArea comments={this.state.comments} likes={this.state.likes} interpretationId={this.props.data.id} likedBy={this.state.likedBy} currentUser={this.props.currentUser} />
                     
                         
                         <Dialog
