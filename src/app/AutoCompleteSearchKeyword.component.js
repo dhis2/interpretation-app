@@ -69,7 +69,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                         // Call back the parent passed in method for change 
                         this.props.onChange(event, value);
 
-                        delayOnceTimeAction.bind(700, this.props.searchId, () => {
+                        delayOnceTimeAction.bind(500, this.props.searchId, () => {
                             if (value === '') {
                                 this.setState({ itemList: [], loading: false, open: false });
                                 this.props.onSelect({ text: '', id: '' });

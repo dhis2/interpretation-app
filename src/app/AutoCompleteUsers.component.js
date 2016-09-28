@@ -55,7 +55,7 @@ const AutoCompleteUsers = React.createClass({
                     onChange={(event, value) => {
                         this.setState({ value, loading: true, open: false });
 
-                        delayOnceTimeAction.bind(700, this.props.searchId, () => {
+                        delayOnceTimeAction.bind(500, this.props.searchId, () => {
                             if (value === '') {
                                 this.setState({ itemList: [], loading: false, open: false });
                                 // this.props.onSelect({ displayName: '', id: '' });
