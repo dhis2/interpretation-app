@@ -8,7 +8,6 @@ import { getInstance as getD2 } from 'd2/lib/d2';
 const AutoCompleteUsers = React.createClass({
     propTypes: {
         searchId: React.PropTypes.string,
-        value: React.PropTypes.string,
         item: React.PropTypes.object,
     },
 
@@ -20,6 +19,10 @@ const AutoCompleteUsers = React.createClass({
             userDataSource: [],
             user: (this.props.item) ? this.props.item : { id: '', displayName: '' },
         };
+    },
+
+    clear() {
+        this.setState({ value: '', user: { id: '', displayName: '' } });
     },
 
     _onUpdateUsers(value) {

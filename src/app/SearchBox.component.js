@@ -44,8 +44,12 @@ export default class SearchBox extends Component {
     }
 
     _openAdvancedSearchForm() {
-        this.setState({ open: true });
+        console.log( 'opened avancded')
+        // Remove the search text (value) when opening advanced Search
+        this.setState({ open: true, value: '' });
         this.bodyscrollingDisable(true);
+
+        this.refs.searchKeyword.clear();
     }
 
     _closeAdvancedSearchForm() {
@@ -107,7 +111,7 @@ export default class SearchBox extends Component {
                     </svg>
                 </td>
                 <td>
-                    <AutoCompleteSearchKeyword searchId="searchKeyword" onChange={this._searchKeywordChanged} onSelect={this._searchedItemSelected} />
+                    <AutoCompleteSearchKeyword searchId="searchKeyword" onChange={this._searchKeywordChanged} onSelect={this._searchedItemSelected} value={this.state.value} ref="searchKeyword" />
                 </td>
                 <td>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#BBB" height="30" viewBox="0 0 24 24" width="30" className="searchImg" onClick={this._openAdvancedSearchForm}>

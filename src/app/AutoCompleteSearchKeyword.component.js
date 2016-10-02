@@ -23,6 +23,10 @@ const AutoCompleteSearchKeyword = React.createClass({
         };
     },
 
+    clear() {
+        this.setState({ value: '', keyword: this.getKeywordObj() });
+    },
+
     getKeywordObj(idInput, textInput) {
         const id = (!idInput) ? '' : idInput;
         const text = (!textInput) ? '' : textInput;
@@ -90,6 +94,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 dataSource={this.state.keywordDataSource}
                 style={{ width: '540px' }}
                 fullWidth
+                searchText={this.state.value}
             />	    
         );
     },

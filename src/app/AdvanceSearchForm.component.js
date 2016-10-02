@@ -47,6 +47,9 @@ export default class AdvanceSearchForm extends Component {
 
     resetForm() {
         this.setState(this.getInitialData());
+
+        this.refs.author.clear();
+        this.refs.commentator.clear();
     }
 
     _clickCloseBtn() {
@@ -150,14 +153,13 @@ export default class AdvanceSearchForm extends Component {
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Author (user)</span></td>
                             <td className="tdData">
-                                <AutoCompleteUsers searchId="author" fullWidth item={this.state.author} />
-
+                                <AutoCompleteUsers searchId="author" fullWidth item={this.state.author} ref="author" />
                             </td>
                         </tr>
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Commentator (user)</span></td>
                             <td className="tdData">
-                                <AutoCompleteUsers searchId="commentator" fullWidth item={this.state.commentator} />
+                                <AutoCompleteUsers searchId="commentator" fullWidth item={this.state.commentator} ref="commentator" />
                             </td>
                         </tr>
                     </tbody>
