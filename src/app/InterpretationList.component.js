@@ -1,8 +1,9 @@
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import Interpretation from '../../src/app/Interpretation.component';
-import Progress from 'react-progress-3';
 import actions from './actions/Interpretation.action';
+import { dateUtil } from './utils';
+
 
 const InterpretationList = React.createClass({
     propTypes: {
@@ -29,6 +30,9 @@ const InterpretationList = React.createClass({
     },
 
     onSearchChanged(searchTerm) {
+
+        // console.log( 'onSearchChanged called');
+
 		// set the search terms on state memory and reset the item list
         this.state.searchTerm = searchTerm;
         this.state.items = [];
@@ -72,24 +76,25 @@ const InterpretationList = React.createClass({
         let searchTermUrl = '';
 
         if (searchTerm !== undefined) {
-            if (searchTerm.keyword !== undefined && searchTerm.keyword !== '') {
-                searchTermUrl += `&filter=text:ilike:${searchTerm.keyword}`;
-            }
+            // TODO: Will be changed from text to object
+            if (searchTerm.id) searchTermUrl += `&filter=id:eq:${searchTerm.id}`;
+
+            if (searchTerm.keyword) searchTermUrl += `&filter=text:ilike:${searchTerm.keyword}`;
 
             if (searchTerm.moreTerms !== undefined) {
-                if (searchTerm.moreTerms.author !== '') searchTermUrl += `&filter=user.id:eq:${searchTerm.moreTerms.author}`;
+                if (searchTerm.moreTerms.author && searchTerm.moreTerms.author.id !== '') searchTermUrl += `&filter=user.id:eq:${searchTerm.moreTerms.author.id}`;
 
-                if (searchTerm.moreTerms.commentator !== '') searchTermUrl += `&filter=comments.user.id:eq:${searchTerm.moreTerms.commentator}`;
+                if (searchTerm.moreTerms.commentator && searchTerm.moreTerms.commentator.id !== '') searchTermUrl += `&filter=comments.user.id:eq:${searchTerm.moreTerms.commentator.id}`;
 
                 if (searchTerm.moreTerms.type !== '') searchTermUrl += `&filter=type:eq:${searchTerm.moreTerms.type}`;
 
-                if (searchTerm.moreTerms.dateCreatedFrom !== '') searchTermUrl += `&filter=created:ge:${searchTerm.moreTerms.dateCreatedFrom.format('YYYY-MM-DD')}`;
+                if (searchTerm.moreTerms.dateCreatedFrom) searchTermUrl += `&filter=created:ge:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateCreatedFrom, '-')}`;
 
-                if (searchTerm.moreTerms.dateCreatedTo !== '') searchTermUrl += `&filter=created:le:${searchTerm.moreTerms.dateCreatedTo.format('YYYY-MM-DD')}`;
+                if (searchTerm.moreTerms.dateCreatedTo) searchTermUrl += `&filter=created:le:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateCreatedTo, '-')}`;
 
-                if (searchTerm.moreTerms.dateModifiedFrom !== '') searchTermUrl += `&filter=lastUpdated:ge:${searchTerm.moreTerms.dateModifiedFrom.format('YYYY-MM-DD')}`;
+                if (searchTerm.moreTerms.dateModiFrom) searchTermUrl += `&filter=lastUpdated:ge:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateModiFrom, '-')}`;
 
-                if (searchTerm.moreTerms.dateModifiedTo !== '') searchTermUrl += `&filter=lastUpdated:le:${searchTerm.moreTerms.dateModifiedTo.format('YYYY-MM-DD')}`;
+                if (searchTerm.moreTerms.dateModiTo) searchTermUrl += `&filter=lastUpdated:le:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateModiTo, '-')}`;
             }
         }
 
@@ -107,8 +112,8 @@ const InterpretationList = React.createClass({
     },
 
     showProgressBar(show) {
-        if (show) Progress.show();
-        else Progress.hide();
+        // if (show) Progress.show();
+        // else Progress.hide();
     },
 
     loadMore(page) {
@@ -131,8 +136,10 @@ const InterpretationList = React.createClass({
     },
 
     createDiv(dataList, page) {
+        const divKey = `list_${page}`;
+
         return (
-			<div>
+			<div key={divKey}>
 			{dataList.map(data =>
                 <Interpretation page={page} key={data.id} data={data} currentUser={this.state.currentUser} deleteInterpretationSuccess={this._deleteInterpretationSuccess} />
 			)}
@@ -170,8 +177,7 @@ const InterpretationList = React.createClass({
     render() {
         return (
 			<div>
-                <Progress.Component />
-				<InfiniteScroll loader={<div><img src="images/ajaxLoaderBar.gif" /></div>} loadMore={this.loadMore} hasMore={this.state.hasMore} useWindow>
+				<InfiniteScroll key="interpretationListKey" loader={<div><img src="src/images/ajaxLoaderBar.gif" /></div>} loadMore={this.loadMore} hasMore={this.state.hasMore} useWindow>
                     {this.state.items}
 				</InfiniteScroll>
 			</div>

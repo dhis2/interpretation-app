@@ -8,6 +8,8 @@ import { LeftNav } from 'material-ui';
 
 import SearchBox from './SearchBox.component';
 import InterpretationList from './InterpretationList.component';
+var injectTapEventPlugin = require("react-tap-event-plugin");
+injectTapEventPlugin();
 
 
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);

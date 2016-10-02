@@ -1,31 +1,14 @@
 import React from 'react';
-import Autocomplete from 'react-autocomplete';
+import { MenuItem, AutoComplete } from 'material-ui';
 import { delayOnceTimeAction } from './utils';
 import { getInstance as getD2 } from 'd2/lib/d2';
-import AutocompleteMod from './AutocompleteMod.component';
 
-const autoSearchStyles = {
-    item: {
-        padding: '2px 6px',
-        cursor: 'default',
-    },
-    highlightedItem: {
-        color: 'white',
-        background: 'hsl(200, 50%, 50%)',
-        padding: '2px 6px',
-        cursor: 'default',
-    },
-    menu: {
-        border: 'solid 1px #ccc',
-    },
-};
 
 const AutoCompleteSearchKeyword = React.createClass({
     propTypes: {
         value: React.PropTypes.any,
         searchId: React.PropTypes.string,
         onSelect: React.PropTypes.func,
-        onInputEnterPressed: React.PropTypes.func,
         onChange: React.PropTypes.func,
     },
 
@@ -35,69 +18,79 @@ const AutoCompleteSearchKeyword = React.createClass({
             itemList: [],
             loading: false,
             open: false,
+            keywordDataSource: [],
+            keyword: this.getKeywordObj(),
         };
+    },
+
+    getKeywordObj(idInput, textInput) {
+        const id = (!idInput) ? '' : idInput;
+        const text = (!textInput) ? '' : textInput;
+        return { id, text };
     },
 
     collapseMenu() {
         this.setState({ open: false });
     },
 
-    _onInputEnterPressed(event) {
-        this.props.onInputEnterPressed(event);
-        this.collapseMenu();
+    _onUpdatekeywords(value) {
+
+        this.setState({ value, loading: true, open: false });
+        // Call back the parent passed in method for change 
+        this.props.onChange(event, value);
+
+
+        delayOnceTimeAction.bind(500, this.props.searchId, () => {
+            if (value === '') {
+                this.setState({ keywordDataSource: [], keyword: this.getKeywordObj() });
+                this.props.onSelect(this.getKeywordObj());
+            }
+            else {
+                getD2().then(d2 => {
+                    const url = `interpretations?paging=false&fields=id,text&filter=text:ilike:${value}`;
+
+                    d2.Api.getApi().get(url).then(result => {
+                        const keywordList = [];
+
+                        for (const user of result.interpretations) {
+                            const source = this.getKeywordObj(user.id, user.text);
+                            keywordList.push({ text: source.text, value: <MenuItem primaryText={source.text} value={source.id} />, source });
+                        }
+
+                        this.setState({ keywordDataSource: keywordList });
+
+                        // this.setState({ itemList: result.interpretations, loading: false, open: openVal });
+                    })
+                    .catch(errorResponse => {
+                        console.log(`error ${errorResponse}`);
+                    });
+                });
+            }
+        });
+    },
+
+    _onSelectkeyword(value, i) {
+        if (i === undefined) {
+            // Enter Key was pressed without selection
+            this.props.onSelect(this.getKeywordObj('', value));
+        }
+        else {
+            // Set real keyword here with setstate!!
+            this.state.keyword = this.state.keywordDataSource[i].source;
+            this.props.onSelect(this.state.keyword);
+        }
     },
 
     render() {
         return (
-            <div className="searchTextDiv">
-                <AutocompleteMod
-                    className="searchTextbox"
-                    inputProps={{ hintText: 'Search Interpretation', style: { width: '400px' } }}
-                    ref="autocomplete"
-                    value={this.state.value}
-                    items={this.state.itemList}
-                    getItemValue={(item) => item.text}
-                    open={this.state.open}
-                    onInputEnterPressed={this._onInputEnterPressed}
-                    onSelect={(value, item) => {
-                        this.setState({ value, itemList: [item], open: false });
-                        this.props.onSelect(item);
-                    }}
-                    onChange={(event, value) => {
-                        this.setState({ value, loading: true, open: false });
-
-                        // Call back the parent passed in method for change 
-                        this.props.onChange(event, value);
-
-                        delayOnceTimeAction.bind(500, this.props.searchId, () => {
-                            if (value === '') {
-                                this.setState({ itemList: [], loading: false, open: false });
-                                this.props.onSelect({ text: '', id: '' });
-                            }
-                            else {
-                                getD2().then(d2 => {
-                                    const url = `interpretations?paging=false&fields=id,text&filter=text:ilike:${value}`;
-
-                                    d2.Api.getApi().get(url).then(result => {
-                                        const openVal = (result.interpretations.length > 0) ? true: false;
-
-                                        this.setState({ itemList: result.interpretations, loading: false, open: openVal });
-                                    })
-                                    .catch(errorResponse => {
-                                        console.log(`error ${errorResponse}`);
-                                    });
-                                });
-                            }
-                        });
-                    }}
-                    renderItem={(item, isHighlighted) => (
-                        <div className="searchItemsDiv" style={isHighlighted ? autoSearchStyles.highlightedItem : autoSearchStyles.item}
-                            key={item.id}
-                            id={item.id}
-                        >{item.text}</div>
-                    )}
-                />
-            </div>
+            <AutoComplete hintText="Search Interpretation"
+                filter={AutoComplete.noFilter}
+                onUpdateInput={this._onUpdatekeywords}
+                onNewRequest={this._onSelectkeyword}
+                dataSource={this.state.keywordDataSource}
+                style={{ width: '540px' }}
+                fullWidth
+            />	    
         );
     },
 });

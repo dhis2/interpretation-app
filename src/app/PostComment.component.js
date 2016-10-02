@@ -6,7 +6,7 @@ import actions from './actions/Comment.action';
 
 const PostComment = React.createClass({
     propTypes: {
-        currentUser: React.PropTypes.string,
+        currentUser: React.PropTypes.object,
         interpretationId: React.PropTypes.string,
         postCommentSuccess: React.PropTypes.func,
     },
@@ -18,13 +18,13 @@ const PostComment = React.createClass({
     },
 
     _addComment() {
-        actions.addComment(this.props.interpretationId, this.state.text)
-			.subscribe((data) => {
-                // const params = data.responseHeader.split("/");
-    // this.props.postCommentSuccess('', this.state.text);
-    this.props.postCommentSuccess();
-    this.setState({ text: '' });
-		});
+        if (this.state.text !== '') {
+            actions.addComment(this.props.interpretationId, this.state.text)
+                        .subscribe(() => {
+                            this.props.postCommentSuccess();
+                            this.setState({ text: '' });
+                        });
+        }
     },
 
     _onChange(e) {
@@ -39,27 +39,32 @@ const PostComment = React.createClass({
         }
 
         const postComentTagId = `postComent_${this.props.interpretationId}`;
+        const style = { fontSize: 15, fontWeight: 'bold' };
 
         return (
 
-			<div className="postComment hidden" id={postComentTagId} >
+			<div className="postComment" id={postComentTagId} >
 				<table>
-					<tr>
-						<td>
-							<Avatar color="black" size="32">{initChars}</Avatar>
-						</td>
-						<td>
-							<table>
-								<tr>
-									<td>
-										<textarea className="commentArea" hintText="Add a comment..." value={this.state.text} onChange={this._onChange} />
-										<br />
-										<a onClick={this._addComment}>Share you comment</a>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <Avatar color="black" size={32} style={style}>{initChars}</Avatar>
+                            </td>
+                            <td>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <textarea className="commentArea" placeholder="Add a comment..." value={this.state.text} onChange={this._onChange}/>
+                                                <br />
+                                                <a onClick={this._addComment}>Share you comment</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
 				</table>
 			</div>
 		);

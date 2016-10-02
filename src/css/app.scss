@@ -140,6 +140,7 @@ html {
   resize: none;
   overflow: auto;
   padding: 4px 0px 0px 6px;
+  font-family: Roboto,Arial,sans-serif;
 }
 
 .commentButton
@@ -242,7 +243,7 @@ a{
 .searchDiv
 {
 	height: 46px;
-  min-width: 350px;
+  min-width: 645px;
   display: inline-block;
   border: 1px solid #ddd;
   margin: 3px;
@@ -288,7 +289,7 @@ a{
 
 .searchTextbox
 {
-  width: 400px;
+  width: 550px;
 }
 
 .searchItemsDiv 
@@ -403,19 +404,6 @@ div.advancedSearchForm
 {
   padding: 8px;
   margin-right: 20px;
-}
-
-.tdData
-{
-  padding-left: 15px; 
-}
-
-.tdData input, .tdData select
-{
-  font-size: 13px;
-  height: 27px !important;
-  margin: 3px 0px;
-  padding: 1px 2px;  
 }
 
 .searchStyle

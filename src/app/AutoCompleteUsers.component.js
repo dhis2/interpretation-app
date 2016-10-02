@@ -1,24 +1,9 @@
 
 import React from 'react';
-import Autocomplete from 'react-autocomplete';
+import { MenuItem, AutoComplete } from 'material-ui';
 import { delayOnceTimeAction } from './utils';
 import { getInstance as getD2 } from 'd2/lib/d2';
 
-const autoSearchStyles = {
-    item: {
-        padding: '2px 6px',
-        cursor: 'default',
-    },
-    highlightedItem: {
-        color: 'white',
-        background: 'hsl(200, 50%, 50%)',
-        padding: '2px 6px',
-        cursor: 'default',
-    },
-    menu: {
-        border: 'solid 1px #ccc',
-    },
-};
 
 const AutoCompleteUsers = React.createClass({
     propTypes: {
@@ -29,62 +14,61 @@ const AutoCompleteUsers = React.createClass({
 
     getInitialState() {
         return {
-            value: this.props.item.displayName,
-            itemList: [],
+            value: (this.props.item) ? this.props.item.displayName : '',
             loading: false,
             open: false,
+            userDataSource: [],
+            user: (this.props.item) ? this.props.item : { id: '', displayName: '' },
         };
+    },
+
+    _onUpdateUsers(value) {
+        // this.setState({ value, loading: true, open: false });
+        delayOnceTimeAction.bind(500, this.props.searchId, () => {
+            if (value === '') {
+                this.setState({ userDataSource: [], user: { id: '', displayName: '' } });
+
+                this.props.item.id = '';
+                this.props.item.displayName = '';
+            }
+            else {
+                getD2().then(d2 => {
+                    const url = `users.json?paging=false&fields=id,displayName,userCredentials[username]&filter=name:ilike:${value}`;
+
+                    d2.Api.getApi().get(url).then(result => {
+                        const userList = [];
+
+                        for (const user of result.users) {
+                            const source = { id: user.id, displayName: `${user.displayName} (${user.userCredentials.username})` };
+                            userList.push({ text: source.displayName, value: <MenuItem primaryText={source.displayName} value={source.id} />, source });
+                        }
+
+                        this.setState({ userDataSource: userList });
+                    })
+                    .catch(errorResponse => {
+                        console.log(`error ${errorResponse}`);
+                    });
+                });
+            }
+        });
+    },
+
+    _onSelectUser(value, i) {
+        // Set real user here with setstate!!
+        this.state.user = this.state.userDataSource[i].source;
+        this.props.item.id = this.state.user.id;
+        this.props.item.displayName = this.state.user.displayName;
     },
 
     render() {
         return (
-            <div className="divAuthorSelector">
-                <Autocomplete
-                    className="searchStyle author"
-                    inputProps={{ placeholder: 'Type User Name', style: { width: '250px' } }}
-                    ref="autocomplete"
-                    value={this.state.value}
-                    items={this.state.itemList}
-                    getItemValue={(item) => item.displayName}
-                    open={this.state.open}
-                    onSelect={(value, item) => {
-                        this.setState({ value, itemList: [item], open: false });
-                        this.props.item.id = item.id;
-                        this.props.item.displayName = item.displayName;
-                    }}
-                    onChange={(event, value) => {
-                        this.setState({ value, loading: true, open: false });
-
-                        delayOnceTimeAction.bind(500, this.props.searchId, () => {
-                            if (value === '') {
-                                this.setState({ itemList: [], loading: false, open: false });
-                                // this.props.onSelect({ displayName: '', id: '' });
-                                this.props.item.id = '';
-                                this.props.item.displayName = '';
-                            }
-                            else {
-                                getD2().then(d2 => {
-                                    const url = `users.json?paging=false&filter=name:ilike:${value}`;
-                                    d2.Api.getApi().get(url).then(result => {
-                                        const openVal = (result.users.length > 0);
-
-                                        this.setState({ itemList: result.users, loading: false, open: openVal });
-                                    })
-                                    .catch(errorResponse => {
-                                        console.log(`error ${errorResponse}`);
-                                    });
-                                });
-                            }
-                        });
-                    }}
-                    renderItem={(item, isHighlighted) => (
-                        <div style={isHighlighted ? autoSearchStyles.highlightedItem : autoSearchStyles.item}
-                            key={item.id}
-                            id={item.id}
-                        >{item.displayName}</div>
-                    )}
-                />
-            </div>
+            <AutoComplete hintText="Enter User Name"
+                filter={AutoComplete.noFilter}
+                onUpdateInput={this._onUpdateUsers}
+                onNewRequest={this._onSelectUser}
+                dataSource={this.state.userDataSource}
+                searchText={this.state.value}
+            />
         );
     },
 });

@@ -50,7 +50,7 @@ actions.deleteComment
 actions.editComment
     .subscribe(({ data: [interpretationId, id, value], complete }) => {
         getD2().then(d2 => {
-            const url = `../../interpretations/${interpretationId}/comments/${id}`;
+            const url = `${d2.Api.getApi().baseUrl}/interpretations/${interpretationId}/comments/${id}`;
 
             d2.Api.getApi().request('PUT', url, value, { contentType: 'text/plain' })
 				.then(complete)
