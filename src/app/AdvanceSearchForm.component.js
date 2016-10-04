@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { DatePicker, SelectField, MenuItem } from 'material-ui';
+import { DatePicker, TextField, SelectField, MenuItem } from 'material-ui';
 // import { Button, FormControl } from 'react-bootstrap';
 // import DatePicker from 'react-bootstrap-date-picker';
 import AutoCompleteUsers from './AutoCompleteUsers.component';
@@ -23,8 +23,8 @@ export default class AdvanceSearchForm extends Component {
         this._setDateModiTo = this._setDateModiTo.bind(this);
         this._authorSelected = this._authorSelected.bind(this);
         this._commentatorSelected = this._commentatorSelected.bind(this);
-
         this._onSelectAuthor = this._onSelectAuthor.bind(this);
+        this._onChangeContains = this._onChangeContains.bind(this);
     }
 
     getInitialData() {
@@ -38,6 +38,7 @@ export default class AdvanceSearchForm extends Component {
             authorDataSource: [],
             commentator: { id: '', displayName: '' },
             commentatorDataSource: [],
+            contains: '',
         };
     }
 
@@ -87,6 +88,10 @@ export default class AdvanceSearchForm extends Component {
     _onSelectAuthor(value, i) {
         // Set real author here with setstate!!
         this.state.author = this.state.authorDataSource[i].source;
+    }
+
+    _onChangeContains(event) {
+        this.setState({ contains: event.target.value });
     }
 
     render() {
@@ -162,6 +167,19 @@ export default class AdvanceSearchForm extends Component {
                                 <AutoCompleteUsers searchId="commentator" fullWidth item={this.state.commentator} ref="commentator" />
                             </td>
                         </tr>
+
+                        <tr>
+                            <td className="tdTitle"><span className="searchStyle">Contains</span></td>
+                            <td className="tdData">
+                                <TextField
+                                    hintText="Partial Interpretation Text"
+                                    value={this.state.contains}
+                                    fullWidth
+                                    onChange={this._onChangeContains}
+                                />
+                            </td>
+                        </tr>
+
                     </tbody>
                 </table>
             </div>

@@ -23,7 +23,7 @@ html {
 }
 
 .main-content {
-  margin-left: $left-bar-width + 30;
+  margin-left: 5px;
 }
 
 .rightNav
@@ -36,9 +36,52 @@ html {
 /* Interpretation                                                             */
 /*----------------------------------------------------------------------------*/
 
+.divMainPage
+{
+  padding-top: 6px;
+}
+
+.tblMainPage
+{
+  width: 100%;
+  padding: 0px;
+  margin: none;
+}
+
+.tblMainPage td
+{
+  padding: 0px;
+  border-spacing: 0px;
+  margin: none;
+  vertical-align: top;
+}
+
+.divMainArea
+{
+  min-width: 650px;
+}
+
+.divRightArea
+{
+  vertical-align: top;
+  width: 210px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 2px;
+  margin-left: 10px;
+  margin-bottom: 2px;
+  box-shadow: #e1e1e1 0 1px 1px 0;
+  background-color: white;
+
+}
+
+.divSearchArea
+{
+  margin-bottom: 10px;
+}
+
 .interpretationContainer
 {
-  width: 650px;
   border: 1px solid #ddd;
   border-radius: 3px;
   padding: 2px;
@@ -50,7 +93,7 @@ html {
 .interpretationArea
 {
   height: 125px;
-  width: 630px;
+  width: 96%;
   border: 1px solid #ccc;
   resize: none;
   overflow: auto;
@@ -75,7 +118,7 @@ html {
 
 #interpretationFeed
 {
-  width: 630px;
+  width: 96%;
   margin-left: 4%;
 }
 
@@ -134,7 +177,7 @@ html {
 
 .commentArea
 {
-  height: 70px;
+  height: 50px;
   width: 580px;
   border: 1px solid #ccc;
   resize: none;
@@ -243,11 +286,10 @@ a{
 .searchDiv
 {
 	height: 46px;
-  min-width: 645px;
-  display: inline-block;
   border: 1px solid #ddd;
-  margin: 3px;
-  background-color: white;
+  border-radius: 5px;
+  margin-bottom: 4px;
+  background-color: White;
 }
 
 .searchImg
@@ -279,17 +321,39 @@ a{
   fill: #111;
 }
 
+.searchTable
+{
+  margin: none;
+  padding: 0px;
+  border-spacing: 0px;
+}
+
 .searchTable td
 {
   border: none;
-  margin: 0px;
+  margin: none;
   padding: 0px;
   vertical-align: middle;
 }
 
+.searchTable .tdSearchIcon
+{
+  width: 40px;
+}
+
+.searchTable .tdSearchTextInput
+{
+  width: 100%;
+}
+
+.searchTable .tdAdvancedSearch
+{
+  width: 40px;
+}
+
 .searchTextbox
 {
-  width: 550px;
+  width: 100%;
 }
 
 .searchItemsDiv 
@@ -299,92 +363,21 @@ a{
   height:40px;
 }
 
-.cssBtn {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-}
+/*----------------------------------------------------------------------------*/
+/* Search Auto Complete Dropdown Related                               */
+/*----------------------------------------------------------------------------*/
 
-.cssBtnBlue
-{  
-  background-color:rgb(77, 144, 254);
-  background-image: -moz-linear-gradient(50% 0%, rgb(77, 144, 254), rgb(71, 135, 237));
-
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
-
-  border-image-outset: 0 0 0 0;
-  border-image-repeat: stretch stretch;
-  border-image-slice: 100% 100% 100% 100%;
-  border-image-source: none;
-  border-image-width: 1 1 1 1;
-
-  box-shadow: none;
-  color: rgb(255, 255, 255);
-  cursor: default;
-  display: inline-block;
-  font-family: Roboto,sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  height: 27px;
-  line-height: 27px;
-  margin-right: 16px;
-  min-width: 54px;
-  outline-color: rgb(255, 255, 255);
-  outline-style: none;
-  outline-width: 0px;
-  padding: 0px 16px;
-  position: relative;
-  text-align: center;
-}
-
-.cssBtnBlue:hover
-{    
-  background-color:rgb(75, 135, 234);
-}
-
-.cssBtnGray
+.divLoadingPlaceHolder
 {
-  background-color: rgb(245, 245, 245);
-  background-image: -moz-linear-gradient(50% 0%, rgb(245, 245, 245), rgb(241, 241, 241));
-
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
-
-  border-image-outset: 0 0 0 0;
-  border-image-repeat: stretch stretch;
-  border-image-slice: 100% 100% 100% 100%;
-  border-image-source: none;
-  border-image-width: 1 1 1 1;
-
-  box-shadow: none;
-  color: rgb(68, 68, 68);
-  cursor: default;
-  display: inline-block;
-  font-family: Roboto,sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  height: 27px;
-  line-height: 27px;
-  margin-right: 16px;
-  min-width: 54px;
-  outline-color: rgb(68, 68, 68);
-  outline-style: none;
-  outline-width: 0px;
-  padding: 0px 16px;
-  position: relative;
-  text-align: center;
+  margin: 1px;
+  padding: 3px;
+  background-color: #EEE;
+  color: #555;
 }
 
-.cssBtnGray:hover
-{  
-  background-color:rgb(240, 240, 240);
-}
+/*----------------------------------------------------------------------------*/
+/* Advanced Search Form Related                                 */
+/*----------------------------------------------------------------------------*/
 
 .advanceSearchFormBtns
 {
@@ -418,3 +411,12 @@ div.advancedSearchForm
 
 /* ------------------------ */
 /* ------------------------ */
+
+.rc-tooltip-inner {
+    color: #f1ecec;
+    background-color: #101010;
+}
+
+.rc-tooltip-arrow-inner {
+   border-right-color: #131212 !important;
+}

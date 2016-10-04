@@ -45,7 +45,7 @@
     "http-proxy": "git+https://github.com/nicolayr/node-http-proxy.git",
     "intl-messageformat": "^1.3.0",
     "isparta": "^4.0.0",
-    "javascript-time-ago": "^0.4.3",    
+    "javascript-time-ago": "^0.4.3",
     "jsdom": "^9.0.0",
     "loglevel": "^1.4.0",
     "material-ui": "^0.14.4",
@@ -63,7 +63,8 @@
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-server": "^1.14.1",
+	  "rc-tooltip": "^3.4.2"
   },
   "pre-commit": [
     "test",

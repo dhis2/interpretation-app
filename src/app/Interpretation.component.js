@@ -4,8 +4,12 @@ import { Dialog, FlatButton } from 'material-ui';
 import MessageOwner from './MessageOwner.component';
 import CommentArea from './CommentArea.component';
 import { getInstance as getD2 } from 'd2/lib/d2';
+import { delayOnceTimeAction } from './utils';
+import { dataInfo } from './data';
 
 import actions from './actions/Interpretation.action';
+import Tooltip from 'rc-tooltip';
+import 'rc-tooltip/assets/bootstrap_white.css';
 
 const Interpretation = React.createClass({
     propTypes: {
@@ -21,30 +25,43 @@ const Interpretation = React.createClass({
             likedBy: this.props.data.likedBy,
             open: false,
             comments: this.props.data.comments.reverse(),
+            isTooltipActive: false,
         };
     },
 
     componentDidMount() {
-        const currentUserId = this.props.currentUser.id;
-        for (let i = 0; i < this.props.data.likedBy.length; i++) {
-            if (currentUserId === this.props.data.likedBy[i].id) {
-                const likeLinkTagId = `likeLink_${this.props.data.id}`;
-                $(`#${likeLinkTagId}`).replaceWith("<span class='disabledLink'>Like</span>");
+        window.addEventListener('resize', this._handleWindowResize);
+        this._drawIntepretation();
+    },
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this._handleWindowResize);
+    },
+
+    _handleWindowResize() {
+        // If browser window width is less than 900, do not request for redraw                
+        if ($(window).width() > dataInfo.minMainBodyWidth) {
+            this._drawIntepretation(true);
+        }
+    },
+
+
+    _drawIntepretation(isRedraw) {
+        delayOnceTimeAction.bind(1000, `resultInterpretation${this.props.data.id}`, () => {
+            const divId = this.props.data.id;
+
+            if (this.props.data.type === 'REPORT_TABLE') {
+                this._setReportTable(isRedraw);
+            } else if (this.props.data.type === 'CHART') {
+                if (isRedraw) $(`#${divId}`).html('');
+                this._setChart();
+            } else if (this.props.data.type === 'MAP') {
+                if (isRedraw) $(`#${divId}`).html('');
+                actions.getMap('', this.props.data.map.id).subscribe(result => {
+                    this._setMap(result);
+                });
             }
-        }
-
-        const divId = this.props.data.id;
-
-        if (this.props.data.type === 'REPORT_TABLE') {
-            this._setReportTable();
-        } else if (this.props.data.type === 'CHART') {
-            this._setChart();
-        } else if (this.props.data.type === 'MAP') {
-           // actions.getMap('', this.props.data.map.id).subscribe(result => {
-                $(`#${divId}`).css('height', '308px');
-                DHIS.getMap(this._setMapOptions());
-           // });
-        }
+        });
     },
 
     _findItemFromList(listData, searchProperty, searchValue) {
@@ -64,95 +81,95 @@ const Interpretation = React.createClass({
     _setChart() {
         const id = this.props.data.objId;
         const divId = this.props.data.id;
+        const width = dataInfo.getleftAreaWidth();
 
         getD2().then(d2 => {
             const options = {};
             options.uid = id;
             options.el = divId;
             options.id = id;
-            //options.url = d2.Api.getApi().baseUrl;
-            options.url = '../../..';
-            options.width = 600;
+            options.url = d2.Api.getApi().baseUrl.replace('api', '');
+            options.width = width;
             options.height = 400;
             options.relativePeriodDate = this.props.data.created;
 
             DHIS.getChart(options);
-
         });
     },
 
-    _setReportTable() {
+    _setReportTable(isRedraw) {
+        const width = dataInfo.getleftAreaWidth();
         const id = this.props.data.objId;
         const divId = this.props.data.id;
 
+        $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
+        $(`#${divId}`).css('width', width);
+        // $(`#${divId}`).css('height', '400px').css('width', width);
+
+        // Report Table do not need to redraw when browser window side changes
+        if (!isRedraw) {
+            getD2().then(d2 => {
+                const options = {};
+
+                options.el = divId;
+                options.id = id;
+                options.url = d2.Api.getApi().baseUrl.replace('api', '');
+                options.width = width;
+                options.height = 400;
+                options.displayDensity = 'compact';
+                options.relativePeriodDate = this.props.data.created;
+
+                DHIS.getTable(options);
+            });
+        }
+    },
+
+    relativePeriodKeys: ['THIS_MONTH', 'LAST_MONTH', 'LAST_3_MONTHS', 'LAST_6_MONTHS', 'LAST_12_MONTHS', 'THIS_YEAR', 'LAST_YEAR', 'LAST_5_YEARS'],
+
+    _setMap(data) {
         getD2().then(d2 => {
+            const width = dataInfo.getleftAreaWidth();
+            const divId = this.props.data.id;
+            const createdDate = this.props.data.created;
+
+            $(`#${divId}`).css('height', '308px');
+
             const options = {};
 
             options.el = divId;
-            options.id = id;
-            // options.url = d2.Api.getApi().baseUrl;
-            options.url = '../../..';
-            options.width = 600;
+            options.url = d2.Api.getApi().baseUrl.replace('api', '');
+            options.width = width;
             options.height = 400;
-            options.displayDensity = 'compact';
-            options.relativePeriodDate = this.props.data.created;
 
-            DHIS.getTable(options);
-            $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
-            $(`#${divId}`).css('height', '400px');
-        });
-    },
+            options.mapViews = data.mapViews;
 
-    _setMapOptions(data) {
-        const id = this.props.data.objId;
-        const divId = this.props.data.id;
-
-        const options = {};
-
-        options.el = divId;
-        options.id = id;
-        options.url = '../../..';
-        options.width = 600;
-        options.height = 400;
-        options.relativePeriodDate = this.props.data.created;
-
-       /* let relativePeriods = [];
-        options.mapViews = data.mapViews;
-
-        for (let i = 0; i < data.mapViews.length; i++) {
-            const mapView = data.mapViews[i];
-            const relativePeriodKeys = mapView.relativePeriods;
-            const periods = this._converRelativePeriods(relativePeriodKeys, createdDate);
-            relativePeriods = relativePeriods.concat(periods);
-
-            if (relativePeriods.length > 0) {
-                if (this._findItemFromList(mapView.columns, 'id', 'pe') !== undefined) {
-                    options.mapViews[i].columns = [{
-                        dimension: 'pe',
-                        items: relativePeriods,
-                    }];
-                } else if (this._findItemFromList(mapView.rows, 'id', 'pe') !== undefined) {
-                    options.mapViews[i].rows = [{
-                        dimension: 'pe',
-                        items: relativePeriods,
-                    }];
-                } else if (this._findItemFromList(mapView.filters, 'id', 'pe') !== undefined) {
-                    options.mapViews[i].filters = [{
-                        dimension: 'pe',
-                        items: relativePeriods,
-                    }];
+            for (let i = 0; i < data.mapViews.length; i++) {
+                const mapView = data.mapViews[i];
+                if (this._findItemFromList(mapView.filters, 'dimension', 'pe') !== undefined) {
+                    let relativePeriods = [];
+                    for (let j = 0; j < mapView.filters.length; j++) {
+                        const items = mapView.filters[j].items;
+                        for (let k = 0; k < items.length; k++) {
+                            if (this.relativePeriodKeys.indexOf(items[k].id) >= 0) {
+                                relativePeriods = relativePeriods.concat(this._converRelativePeriods(items[k].id, createdDate));
+                            }
+                        }
+                        if (relativePeriods.length > 0) {
+                            options.mapViews[i].filters[j].items = relativePeriods;
+                        }
+                    }
                 }
             }
-        } */
 
-        return options;
+            DHIS.getMap(options);
+        });
     },
 
     _convertToNumber(n) {
         return (n.startsWith('0')) ? eval(n[1]) : eval(n);
     },
 
-    _converRelativePeriods(relativePeriods, createdDate) {
+    _converRelativePeriods(relativePeriodKey, createdDate) {
         let periods = [];
 
         const created = createdDate.substring(0, 10).split('-');
@@ -163,56 +180,107 @@ const Interpretation = React.createClass({
 
         const currentYear = date.getFullYear();
 
-        for (const key in relativePeriods) {
-            if (relativePeriods[key]) {
-                // Yearly periods
-                if (key === 'thisYear') {
-                    periods.push({ id: currentYear });
-                }
-                if (key === 'lastYear') {
-                    const lastYear = currentYear - 1;
-                    periods.push({ id: lastYear });
-                }
-                if (key === 'last5Years') {
-                    const start = currentYear - 5;
-                    const end = currentYear - 1;
-                    for (let year = start; year >= end; year++) {
-                        periods.push({ id: year });
-                    }
-                }
-                // Monthy periods
-                if (key === 'thisMonth') {
-                    let currentMonth = date.getMonth() + 1;// Month from Date Object starts from 0
-                    currentMonth = (currentMonth > 10) ? currentMonth : `0${currentMonth}`;
-                    periods.push({ id: `${currentYear}${currentMonth}` });
-                }
-                if (key === 'lastMonth') {
-                    let currentMonth = date.getMonth();// Month from Date Object starts from 0
-                    currentMonth = (currentMonth > 10) ? currentMonth : `0${currentMonth}`;
-                    periods.push({ id: `${currentYear}${currentMonth}` });
-                }
-                if (key === 'monthsThisYear') {
-                    const currentMonth = date.getMonth();// Month from Date Object starts from 0
-                    for (let m = 1; m <= currentMonth; m++) {
-                        const k = (m > 10) ? m : `0${m}`;
-                        periods.push({ id: `${currentYear}${k}` });
-                    }
-                }
-                if (key === 'last12Months') {
-                    periods = periods.concat(this._getLastNMonth(12, currentYear, date.getMonth()));
-                }
-                if (key === 'last3Months') {
-                    periods = periods.concat(this._getLastNMonth(3, currentYear, date.getMonth()));
-                }
-                if (key === 'last6Months') {
-                    periods = periods.concat(this._getLastNMonth(6, currentYear, date.getMonth()));
-                }
-                // monthsLastYear
+        // Yearly periods
+        if (relativePeriodKey === 'THIS_YEAR') {
+            periods.push({ id: currentYear.toString(), name: currentYear.toString() });
+        }
+        if (relativePeriodKey === 'LAST_YEAR') {
+            const lastYear = currentYear - 1;
+            periods.push({ id: lastYear.toString(), name: lastYear.toString() });
+        }
+        if (relativePeriodKey === 'LAST_5_YEARS') {
+            const start = currentYear - 5;
+            const end = currentYear - 1;
+            for (let year = start; year >= end; year++) {
+                periods.push({ id: year.toString(), name: year.toString() });
             }
         }
+        // Monthy periods
+        if (relativePeriodKey === 'THIS_MONTH') {
+            let currentMonth = date.getMonth() + 1;// Month from Date Object starts from 0
+            currentMonth = (currentMonth > 10) ? currentMonth : `0${currentMonth}`;
+            const period = `${currentYear}${currentMonth}`;
+            periods.push({ id: period, name: period });
+        }
+        if (relativePeriodKey === 'LAST_MONTH') {
+            let currentMonth = date.getMonth();// Month from Date Object starts from 0
+            currentMonth = (currentMonth > 10) ? currentMonth : `0${currentMonth}`;
+            periods.push({ id: `${currentYear}${currentMonth}`, name: `${currentYear}${currentMonth}` });
+        }
+        /* if (relativePeriodKey === 'monthsThisYear') {
+            const currentMonth = date.getMonth();// Month from Date Object starts from 0
+            for (let m = 1; m <= currentMonth; m++) {
+                const k = (m > 10) ? m : `0${m}`;
+                periods.push({ id: `${currentYear}${k}` });
+            }
+        } */
+        if (relativePeriodKey === 'LAST_12_MONTHS') {
+            periods = periods.concat(this._getLastNMonth(12, currentYear, date.getMonth()));
+        }
+        if (relativePeriodKey === 'LAST_3_MONTHS') {
+            periods = periods.concat(this._getLastNMonth(3, currentYear, date.getMonth()));
+        }
+        if (relativePeriodKey === 'LAST_6_MONTHS') {
+            periods = periods.concat(this._getLastNMonth(6, currentYear, date.getMonth()));
+        }
+        // monthsLastYear
 
         return periods;
     },
+
+    _quarterlyNames: ['Jan - Mar', 'Apr - Jun', 'Jul - Sep', 'Oct - Dec'],
+
+   /* _getLastNQuarterly(noNumber, month, year) {
+        const periodList = [];
+        let quarterlyNo = 0;
+
+        if (month <= 3) {
+            quarterlyNo = 1;
+        } else if (month <= 6) {
+            quarterlyNo = 2;
+        } else if (month <= 9) {
+            quarterlyNo = 3;
+        } else {
+            quarterlyNo = 4;
+        }
+
+        // Current year
+
+        for (let i = quarterlyNo; i > 0; i--) {
+            const key = this._quarterlyNames[i - 1];
+            const period = { id: `${i}-${year}`, name: `${key} ${year}` };
+            periodList.push(period);
+        }
+
+        // For quarterly periods from START_YEAR_PARAM to last year
+
+        for (var yearIdx = (year - 1); yearIdx >= me.START_YEAR_PARAM; yearIdx--)
+        {
+            var value = '4-' + yearIdx;
+            var name = me.quarterlyNames[3] + ' ' + yearIdx;
+            var period = { 'value': value, 'name': name };
+            periodList.push(period);
+
+            var value = '3-' + yearIdx;
+            var name = me.quarterlyNames[2] + ' ' + yearIdx;
+            var period = { 'value': value, 'name': name };
+            periodList.push(period);
+
+
+            var value = '2-' + yearIdx;
+            var name = me.quarterlyNames[1] + ' ' + yearIdx;
+            var period = { 'value': value, 'name': name };
+            periodList.push(period);
+
+
+            var value = '1-' + yearIdx;
+            var name = me.quarterlyNames[0] + ' ' + yearIdx;
+            var period = { 'value': value, 'name': name };
+            periodList.push(period);
+        }
+
+        return periodList;
+    }, */
 
     _getLastNMonth(noNumber, year, month) {
         const currentYearPeriods = [];
@@ -220,7 +288,7 @@ const Interpretation = React.createClass({
         let count = 0;
         for (let m = month; m >= 1 && count < noNumber; m--) {
             const k = (m >= 10) ? m : `0${m}`;
-            currentYearPeriods.push({ id: `${year}${k}` });
+            currentYearPeriods.push({ id: `${year}${k}`, name: `${year}${k}` });
             count++;
         }
 
@@ -229,7 +297,7 @@ const Interpretation = React.createClass({
             const lastYear = year - 1;
             for (let m = noNumber; m >= 1 && count < noNumber; m--) {
                 const k = (m >= 10) ? m : `0${m}`;
-                lastYearPeriods.push({ id: `${lastYear}${k}` });
+                lastYearPeriods.push({ id: `${lastYear}${k}`, name: `${lastYear}${k}` });
                 count++;
             }
         }
@@ -242,9 +310,6 @@ const Interpretation = React.createClass({
 
     _likeHandler() {
         actions.updateLike(this.props.data, this.props.data.id).subscribe(() => {
-            const likeLinkTagId = `likeLink_${this.props.data.id}`;
-            $(`#${likeLinkTagId}`).replaceWith("<span class='disabledLink'>Like</span>");
-
             const likes = this.state.likes + 1;
             const likedBy = this.state.likedBy;
             likedBy.push({ name: this.props.data.user, id: this.props.data.userId });
@@ -257,6 +322,40 @@ const Interpretation = React.createClass({
                 const postComentTagId = `postComent_${this.props.data.id}`;
                 $(`#${peopleLikeTagId}`).show();
                 $(`#${postComentTagId}`).closest('.interpretationCommentArea').show();
+            });
+        });
+    },
+
+    _removeFromArray(list, propertyName, value) {
+        let index;
+
+        for (let i = 0; i < list.length; i++) {
+            if (list[i][propertyName] === value) {
+                index = i;
+            }
+        }
+
+        if (index !== undefined) {
+            list.splice(index, 1);
+        }
+
+        return list;
+    },
+
+    _unlikeHandler() {
+        actions.removeLike(this.props.data, this.props.data.id).subscribe(() => {
+            const likes = this.state.likes - 1;
+            let likedBy = this.state.likedBy;
+            likedBy = this._removeFromArray(likedBy, 'id', this.props.data.userId);
+
+            this.setState({
+                likes,
+                likedBy,
+            }, function () {
+                if (likes === 0) {
+                    const peopleLikeTagId = `peopleLike_${this.props.data.id}`;
+                    $(`#${peopleLikeTagId}`).hide();
+                }
             });
         });
     },
@@ -286,15 +385,6 @@ const Interpretation = React.createClass({
         this.setState({ text });
     },
 
-    _getCommentAreaClazz() {
-        let commentAreaClazzNames = 'interpretationCommentArea';
-        if (this.props.data.comments.length === 0 && this.state.likes === 0) {
-            commentAreaClazzNames += ' hidden';
-        }
-
-        return commentAreaClazzNames;
-    },
-
     _openPeopleLikedHandler() {
         this.setState({
             open: true,
@@ -307,10 +397,16 @@ const Interpretation = React.createClass({
         });
     },
 
+    _getPeopleLikeList() {
+        const list = this.state.likedBy.slice(0, 10);
+        return <div>{list.map(likedByUserName => <span key={likedByUserName.id}>{likedByUserName.name}<br /></span>)} {this.state.likedBy.length > 10 ? <span>more...</span> : '' }</div>;
+    },
+
     render() {
         const likeLinkTagId = `likeLink_${this.props.data.id}`;
         const interpretationTagId = `interpretation_${this.props.data.id}`;
         const peopleLikeTagId = `peopleLike_${this.props.data.id}`;
+        const peopleLikeLinkTagId = `peopleLikeLink_${this.props.data.id}`;
         const commentAreaKey = `commentArea_${this.props.data.id}`;
         const messageOwnerKey = `messageOwnerKey_${this.props.data.id}`;
         const likeDialogKey = `likeDialogKey_${this.props.data.id}`;
@@ -337,16 +433,23 @@ const Interpretation = React.createClass({
                     <MessageOwner key={messageOwnerKey} data={this.props.data} text={this.state.text} editInterpretationTextSuccess={this._editInterpretationTextSuccess} />
 
                     <div className="linkTag">
-                        <a onClick={this._likeHandler} id={likeLinkTagId}>  Like </a> |
+                        {this._findItemFromList(this.props.data.likedBy, 'id', this.props.currentUser.id) === undefined ? <a onClick={this._likeHandler} id={likeLinkTagId}>  Like </a> : <a onClick={this._unlikeHandler} id={likeLinkTagId}>  Unlike </a>} 
                         <span className={this.props.currentUser.id === this.props.data.userId || this.props.currentUser.superUser ? '' : 'hidden'} >
-                        <a onClick={this._showEditHandler}>  Edit </a> |
+                        <a onClick={this._showEditHandler}> |  Edit </a> |
                         <a onClick={this._deleteHandler}>  Delete </a>
                         </span>
                     </div>
 
-                     <div className={this._getCommentAreaClazz()} >
+                     <div className="interpretationCommentArea">
                         <div id={peopleLikeTagId} className={this.state.likes > 0 ? '' : 'hidden'}>
-                            <img src="./src/images/like.png" /> <a onClick={this._openPeopleLikedHandler}>{this.state.likes} people</a><span> liked this.</span>
+                            <img src="images/like.png" />
+                            <Tooltip
+                                placement="left"
+                                overlay={this._getPeopleLikeList()}
+                                arrowContent={<div className="rc-tooltip-arrow-inner"></div>} >
+                                    <a onClick={this._openPeopleLikedHandler} id={peopleLikeLinkTagId}>{this.state.likes} people </a>
+                            </Tooltip>
+                            <span> liked this.</span>
                             <br />
                         </div>
                         <CommentArea key={commentAreaKey} comments={this.state.comments} likes={this.state.likes} interpretationId={this.props.data.id} likedBy={this.state.likedBy} currentUser={this.props.currentUser} />

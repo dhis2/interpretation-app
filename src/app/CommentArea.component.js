@@ -45,22 +45,6 @@ const CommentArea = React.createClass({
         };
     },
 
-    removeFromArray(list, propertyName, value) {
-        let index;
-
-        for (let i = 0; i < list.length; i++) {
-            if (list[i][propertyName] === value) {
-                index = i;
-            }
-        }
-
-        if (index !== undefined) {
-            list.splice(index, 1);
-        }
-
-        return list;
-    },
-
     _addCommentSuccess() {
         actions.listComment(undefined, this.props.interpretationId).subscribe(result => {
             this.setState({

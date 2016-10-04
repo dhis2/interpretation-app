@@ -24,3 +24,31 @@ export const dateUtil = {
         return `${date.getFullYear()}${separator}${monthStr}${separator}${dateStr}`;
     },
 };
+
+export const restUtil = {
+    requestGetHelper(d2Api, url, successFunc) {
+        d2Api.get(url).then(result => {
+            successFunc(result);
+        });
+    },
+};
+
+export const otherUtils = {
+    removeFromList(list, propertyName, value) {
+        let index;
+
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            if (item[propertyName] === value) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index !== undefined) {
+            list.splice(index, 1);
+        }
+
+        return index;
+    },
+};

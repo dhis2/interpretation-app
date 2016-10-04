@@ -1,4 +1,5 @@
 import React from 'react';
+import { CircularProgress } from 'material-ui';
 import InfiniteScroll from 'react-infinite-scroller';
 import Interpretation from '../../src/app/Interpretation.component';
 import actions from './actions/Interpretation.action';
@@ -29,8 +30,19 @@ const InterpretationList = React.createClass({
         };
     },
 
-    onSearchChanged(searchTerm) {
+    searchLoading(loading) {
+        if (loading) {
+            $( '.intpreContents' ).hide();
+            $( '.intpreLoading' ).show();
+        }
+        else {
+            $( '.intpreLoading' ).hide();
+            $( '.intpreContents' ).show();
+        }
+    },
 
+    onSearchChanged(searchTerm) {
+        this.searchLoading(true);
         // console.log( 'onSearchChanged called');
 
 		// set the search terms on state memory and reset the item list
@@ -38,7 +50,9 @@ const InterpretationList = React.createClass({
         this.state.items = [];
 
         // Search for Interpretation with first page.  searchTerm are passed as memory
-        this.loadMore(1);
+        this.loadMore(1, () => {
+            this.searchLoading(false);
+        });
     },
 
     getFormattedData(itemList) {
@@ -95,6 +109,8 @@ const InterpretationList = React.createClass({
                 if (searchTerm.moreTerms.dateModiFrom) searchTermUrl += `&filter=lastUpdated:ge:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateModiFrom, '-')}`;
 
                 if (searchTerm.moreTerms.dateModiTo) searchTermUrl += `&filter=lastUpdated:le:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateModiTo, '-')}`;
+
+                if (searchTerm.moreTerms.contains) searchTermUrl += `&filter=text:ilike:${searchTerm.moreTerms.contains}`;
             }
         }
 
@@ -111,15 +127,8 @@ const InterpretationList = React.createClass({
         return this.props.d2.currentUser.authorities.has('ALL');
     },
 
-    showProgressBar(show) {
-        // if (show) Progress.show();
-        // else Progress.hide();
-    },
-
-    loadMore(page) {
+    loadMore(page, afterFunc) {
         const searchData = this.getSearchTerms(this.state.searchTerm);
-
-        this.showProgressBar(true);
 
         actions.listInterpretation('', page, searchData).subscribe(result => {
             const d2 = this.props.d2;
@@ -131,9 +140,11 @@ const InterpretationList = React.createClass({
 
             this.addToDivList(dataList, hasMore, resultPage);
 
-            this.showProgressBar(false);
+            if (afterFunc) afterFunc();
         });
     },
+    // TODO: Does not have fail response, or always response!!!
+
 
     createDiv(dataList, page) {
         const divKey = `list_${page}`;
@@ -177,9 +188,14 @@ const InterpretationList = React.createClass({
     render() {
         return (
 			<div>
-				<InfiniteScroll key="interpretationListKey" loader={<div><img src="src/images/ajaxLoaderBar.gif" /></div>} loadMore={this.loadMore} hasMore={this.state.hasMore} useWindow>
-                    {this.state.items}
-				</InfiniteScroll>
+                <div className="intpreLoading" style={{ display: 'none' }}>
+                    <CircularProgress size={2} />
+                </div>
+                <div className="intpreContents">
+                    <InfiniteScroll key="interpretationListKey" loader={<div><img src="src/images/ajaxLoaderBar.gif" /></div>} loadMore={this.loadMore} hasMore={this.state.hasMore} useWindow>
+                        {this.state.items}
+                    </InfiniteScroll>
+                </div>
 			</div>
 		);
     },
