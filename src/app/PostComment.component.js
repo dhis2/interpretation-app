@@ -43,7 +43,7 @@ const PostComment = React.createClass({
 
         return (
 
-			<div className="postComment" id={postComentTagId} >
+			<div className="postComment greyBackground" id={postComentTagId} >
 				<table>
                     <tbody>
                         <tr>

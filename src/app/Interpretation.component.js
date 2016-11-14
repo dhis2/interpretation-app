@@ -6,6 +6,7 @@ import CommentArea from './CommentArea.component';
 import { getInstance as getD2 } from 'd2/lib/d2';
 import { delayOnceTimeAction } from './utils';
 import { dataInfo } from './data';
+import { otherUtils } from './utils';
 
 import actions from './actions/Interpretation.action';
 import Tooltip from 'rc-tooltip';
@@ -16,6 +17,7 @@ const Interpretation = React.createClass({
         data: React.PropTypes.object,
         currentUser: React.PropTypes.object,
         deleteInterpretationSuccess: React.PropTypes.func,
+        aggChartList: React.PropTypes.array,
     },
 
     getInitialState() {
@@ -29,20 +31,31 @@ const Interpretation = React.createClass({
         };
     },
 
+
     componentDidMount() {
         window.addEventListener('resize', this._handleWindowResize);
         this._drawIntepretation();
     },
+
 
     componentWillUnmount() {
         window.removeEventListener('resize', this._handleWindowResize);
     },
 
     _handleWindowResize() {
-        // If browser window width is less than 900, do not request for redraw                
-        if ($(window).width() > dataInfo.minMainBodyWidth) {
-            this._drawIntepretation(true);
+        // If browser window width is less than 900, do not request for redraw   
+        if ($('.intpreContents').width() < 650) {
+            $('.intpreContents').width(650);
         }
+        else {
+            $('.intpreContents').width(dataInfo.getleftAreaWidth());
+        }
+
+        this._drawIntepretation(true);
+
+        /* if ($(window).width() > dataInfo.minMainBodyWidth) {
+            this._drawIntepretation(true);
+        } */
     },
 
 
@@ -51,34 +64,65 @@ const Interpretation = React.createClass({
             const divId = this.props.data.id;
 
             if (this.props.data.type === 'REPORT_TABLE') {
-                this._setReportTable(isRedraw);
-            } else if (this.props.data.type === 'CHART') {
-                if (isRedraw) $(`#${divId}`).html('');
-                this._setChart();
+                this._setReportTable();
             } else if (this.props.data.type === 'MAP') {
-                if (isRedraw) $(`#${divId}`).html('');
+                if (isRedraw) {
+                    $(`#${divId}`).html('<img className="loadingImg" src="images/ajax-loader-circle.gif" />');
+                }
                 actions.getMap('', this.props.data.map.id).subscribe(result => {
                     this._setMap(result);
                 });
+            } else if (this.props.data.type === 'EVENT_REPORT') {
+                if (!isRedraw) {
+                    this._setEventReport();
+                }
+            } else if (this.props.data.type === 'EVENT_CHART') {
+                if (!isRedraw) {
+                    this._setEventChart();
+                }
             }
+        });
+
+        delayOnceTimeAction.bind(5000, `imgLoading${this.props.data.id}`, () => {
+            const divId = this.props.data.id;
+            $(`#${divId}`).find('img.loadingImg').remove();
         });
     },
 
-    _findItemFromList(listData, searchProperty, searchValue) {
-        let foundData;
+    _setReportTable() {
+        const width = dataInfo.getleftAreaWidth();
+        const divId = this.props.data.id;
 
-        for (let i = 0; i < listData.length; i++) {
-            const item = listData[i];
-            if (item[searchProperty] === searchValue) {
-                foundData = item;
-                return false;
-            }
-        }
-
-        return foundData;
+        $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
+        $(`#${divId}`).css('width', width).css('maxHeight', '600px');
     },
 
-    _setChart() {
+    _setEventReport() {
+        const width = dataInfo.getleftAreaWidth();
+        const id = this.props.data.objId;
+        const divId = this.props.data.id;
+
+
+        $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
+        $(`#${divId}`).css('width', width).css('maxHeight', '600px');
+
+        // Report Table do not need to redraw when browser window side changes
+        getD2().then(d2 => {
+            const options = {};
+            options.el = divId;
+            options.id = id;
+            options.url = d2.Api.getApi().baseUrl.replace('api', '');
+            options.width = width;
+            options.height = 400;
+            options.displayDensity = 'compact';
+            options.fontSize = 'small';
+            options.relativePeriodDate = this.props.data.created;
+
+            DHIS.getEventReport(options);
+        });
+    },
+
+    _setEventChart() {
         const id = this.props.data.objId;
         const divId = this.props.data.id;
         const width = dataInfo.getleftAreaWidth();
@@ -93,40 +137,37 @@ const Interpretation = React.createClass({
             options.height = 400;
             options.relativePeriodDate = this.props.data.created;
 
-            DHIS.getChart(options);
+            options.domainAxisStyle = {
+                labelRotation: 45,
+                labelFont: '10px sans-serif',
+                labelColor: '#111',
+            };
+
+            options.rangeAxisStyle = {
+                labelFont: '9px sans-serif',
+            };
+
+            options.legendStyle = {
+                labelFont: 'normal 10px sans-serif',
+                labelColor: '#222',
+                labelMarkerSize: 10,
+                titleFont: 'bold 12px sans-serif',
+                titleColor: '#333',
+            };
+
+            options.seriesStyle = {
+                labelColor: '#333',
+                labelFont: '9px sans-serif',
+            };
+
+            DHIS.getEventChart(options);
         });
-    },
-
-    _setReportTable(isRedraw) {
-        const width = dataInfo.getleftAreaWidth();
-        const id = this.props.data.objId;
-        const divId = this.props.data.id;
-
-        $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
-        $(`#${divId}`).css('width', width);
-        // $(`#${divId}`).css('height', '400px').css('width', width);
-
-        // Report Table do not need to redraw when browser window side changes
-        if (!isRedraw) {
-            getD2().then(d2 => {
-                const options = {};
-
-                options.el = divId;
-                options.id = id;
-                options.url = d2.Api.getApi().baseUrl.replace('api', '');
-                options.width = width;
-                options.height = 400;
-                options.displayDensity = 'compact';
-                options.relativePeriodDate = this.props.data.created;
-
-                DHIS.getTable(options);
-            });
-        }
     },
 
     relativePeriodKeys: ['THIS_MONTH', 'LAST_MONTH', 'LAST_3_MONTHS', 'LAST_6_MONTHS', 'LAST_12_MONTHS', 'THIS_YEAR', 'LAST_YEAR', 'LAST_5_YEARS'],
 
     _setMap(data) {
+        const me = this;
         getD2().then(d2 => {
             const width = dataInfo.getleftAreaWidth();
             const divId = this.props.data.id;
@@ -145,13 +186,14 @@ const Interpretation = React.createClass({
 
             for (let i = 0; i < data.mapViews.length; i++) {
                 const mapView = data.mapViews[i];
-                if (this._findItemFromList(mapView.filters, 'dimension', 'pe') !== undefined) {
+               // mapView.relativePeriodDate = createdDate.substring(0, 10);
+                if (otherUtils.findItemFromList(mapView.filters, 'dimension', 'pe') !== undefined) {
                     let relativePeriods = [];
                     for (let j = 0; j < mapView.filters.length; j++) {
                         const items = mapView.filters[j].items;
                         for (let k = 0; k < items.length; k++) {
                             if (this.relativePeriodKeys.indexOf(items[k].id) >= 0) {
-                                relativePeriods = relativePeriods.concat(this._converRelativePeriods(items[k].id, createdDate));
+                                relativePeriods = relativePeriods.concat(me._converRelativePeriods(items[k].id, createdDate));
                             }
                         }
                         if (relativePeriods.length > 0) {
@@ -169,6 +211,7 @@ const Interpretation = React.createClass({
         return (n.startsWith('0')) ? eval(n[1]) : eval(n);
     },
 
+    // Quaterly && 6-month period
     _converRelativePeriods(relativePeriodKey, createdDate) {
         let periods = [];
 
@@ -230,58 +273,6 @@ const Interpretation = React.createClass({
 
     _quarterlyNames: ['Jan - Mar', 'Apr - Jun', 'Jul - Sep', 'Oct - Dec'],
 
-   /* _getLastNQuarterly(noNumber, month, year) {
-        const periodList = [];
-        let quarterlyNo = 0;
-
-        if (month <= 3) {
-            quarterlyNo = 1;
-        } else if (month <= 6) {
-            quarterlyNo = 2;
-        } else if (month <= 9) {
-            quarterlyNo = 3;
-        } else {
-            quarterlyNo = 4;
-        }
-
-        // Current year
-
-        for (let i = quarterlyNo; i > 0; i--) {
-            const key = this._quarterlyNames[i - 1];
-            const period = { id: `${i}-${year}`, name: `${key} ${year}` };
-            periodList.push(period);
-        }
-
-        // For quarterly periods from START_YEAR_PARAM to last year
-
-        for (var yearIdx = (year - 1); yearIdx >= me.START_YEAR_PARAM; yearIdx--)
-        {
-            var value = '4-' + yearIdx;
-            var name = me.quarterlyNames[3] + ' ' + yearIdx;
-            var period = { 'value': value, 'name': name };
-            periodList.push(period);
-
-            var value = '3-' + yearIdx;
-            var name = me.quarterlyNames[2] + ' ' + yearIdx;
-            var period = { 'value': value, 'name': name };
-            periodList.push(period);
-
-
-            var value = '2-' + yearIdx;
-            var name = me.quarterlyNames[1] + ' ' + yearIdx;
-            var period = { 'value': value, 'name': name };
-            periodList.push(period);
-
-
-            var value = '1-' + yearIdx;
-            var name = me.quarterlyNames[0] + ' ' + yearIdx;
-            var period = { 'value': value, 'name': name };
-            periodList.push(period);
-        }
-
-        return periodList;
-    }, */
-
     _getLastNMonth(noNumber, year, month) {
         const currentYearPeriods = [];
 
@@ -312,7 +303,7 @@ const Interpretation = React.createClass({
         actions.updateLike(this.props.data, this.props.data.id).subscribe(() => {
             const likes = this.state.likes + 1;
             const likedBy = this.state.likedBy;
-            likedBy.push({ name: this.props.data.user, id: this.props.data.userId });
+            likedBy.push({ name: this.props.currentUser.name, id: this.props.currentUser.id });
 
             this.setState({
                 likes,
@@ -326,27 +317,11 @@ const Interpretation = React.createClass({
         });
     },
 
-    _removeFromArray(list, propertyName, value) {
-        let index;
-
-        for (let i = 0; i < list.length; i++) {
-            if (list[i][propertyName] === value) {
-                index = i;
-            }
-        }
-
-        if (index !== undefined) {
-            list.splice(index, 1);
-        }
-
-        return list;
-    },
-
     _unlikeHandler() {
         actions.removeLike(this.props.data, this.props.data.id).subscribe(() => {
             const likes = this.state.likes - 1;
-            let likedBy = this.state.likedBy;
-            likedBy = this._removeFromArray(likedBy, 'id', this.props.data.userId);
+            const likedBy = this.state.likedBy;
+            otherUtils.removeFromList(likedBy, 'id', this.props.currentUser.id);
 
             this.setState({
                 likes,
@@ -402,6 +377,23 @@ const Interpretation = React.createClass({
         return <div>{list.map(likedByUserName => <span key={likedByUserName.id}>{likedByUserName.name}<br /></span>)} {this.state.likedBy.length > 10 ? <span>more...</span> : '' }</div>;
     },
 
+    _exploreInterpretation() {
+        let link = '';
+        if (this.props.data.type === 'REPORT_TABLE') {
+            link = 'dhis-web-pivot';
+        } else if (this.props.data.type === 'CHART') {
+            link = 'dhis-web-visualizer';
+        } else if (this.props.data.type === 'MAP') {
+            link = 'dhis-web-mapping';
+        } else if (this.props.data.type === 'EVENT_REPORT') {
+            link = 'dhis-web-event-reports';
+        } else if (this.props.data.type === 'EVENT_CHART') {
+            link = 'dhis-web-event-visualizer';
+        }
+
+        window.location.href = `../../../${link}/index.html?id=${this.props.data.objId}`;
+    },
+
     render() {
         const likeLinkTagId = `likeLink_${this.props.data.id}`;
         const interpretationTagId = `interpretation_${this.props.data.id}`;
@@ -425,31 +417,31 @@ const Interpretation = React.createClass({
 
                     <div>
                         <div className="interpretationItem">
-                            <div className="title">{this.props.data.name}</div>
-                            <div id={this.props.data.id}></div>
+                            <div className="title"><span>{this.props.data.name}</span> <label className="linkArea"> <span className="smallFont">|</span> <a onClick={this._exploreInterpretation} className="smallFont" target="_blank">Explore</a></label></div>
+                            <div id={this.props.data.id} className="center"><img className="loadingImg" src="images/ajax-loader-circle.gif" /></div>
                         </div>
                     </div>
 
                     <MessageOwner key={messageOwnerKey} data={this.props.data} text={this.state.text} editInterpretationTextSuccess={this._editInterpretationTextSuccess} />
 
                     <div className="linkTag">
-                        {this._findItemFromList(this.props.data.likedBy, 'id', this.props.currentUser.id) === undefined ? <a onClick={this._likeHandler} id={likeLinkTagId}>  Like </a> : <a onClick={this._unlikeHandler} id={likeLinkTagId}>  Unlike </a>} 
+                        {otherUtils.findItemFromList(this.props.data.likedBy, 'id', this.props.currentUser.id) === undefined ? <a onClick={this._likeHandler} id={likeLinkTagId}>Like</a> : <a onClick={this._unlikeHandler} id={likeLinkTagId}>Unlike</a> } 
                         <span className={this.props.currentUser.id === this.props.data.userId || this.props.currentUser.superUser ? '' : 'hidden'} >
-                        <a onClick={this._showEditHandler}> |  Edit </a> |
-                        <a onClick={this._deleteHandler}>  Delete </a>
+                        <label className="linkArea">·</label><a onClick={this._showEditHandler}>Edit</a>
+                        <label className="linkArea">·</label><a onClick={this._deleteHandler}>Delete</a>
                         </span>
                     </div>
 
                      <div className="interpretationCommentArea">
-                        <div id={peopleLikeTagId} className={this.state.likes > 0 ? '' : 'hidden'}>
-                            <img src="images/like.png" />
+                        <div id={peopleLikeTagId} className={this.state.likes > 0 ? 'greyBackground likeArea paddingLeft' : 'hidden greyBackground likeArea'}>
+                            <img src="images/like.png" className="verticalAlignTop" />
                             <Tooltip
                                 placement="left"
                                 overlay={this._getPeopleLikeList()}
                                 arrowContent={<div className="rc-tooltip-arrow-inner"></div>} >
                                     <a onClick={this._openPeopleLikedHandler} id={peopleLikeLinkTagId}>{this.state.likes} people </a>
                             </Tooltip>
-                            <span> liked this.</span>
+                            <span> liked this</span><label className="linkArea">·</label><span>{this.state.comments.length} people commented</span>
                             <br />
                         </div>
                         <CommentArea key={commentAreaKey} comments={this.state.comments} likes={this.state.likes} interpretationId={this.props.data.id} likedBy={this.state.likedBy} currentUser={this.props.currentUser} />

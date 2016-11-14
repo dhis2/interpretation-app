@@ -127,7 +127,7 @@ export default class SearchBox extends Component {
                     onRequestClose={this._closeAdvancedSearchForm}
                     open={this.state.open}
                     overlayStyle={{ backgroundColor: 'rgba(255, 255, 255, 0)' }}
-                    contentStyle={{ position: 'absolute', top: '33px', left: '12px', right: 'auto', bottom: 'auto', width: '645px' }}
+                    contentStyle={{ position: 'absolute', top: '33px', left: '20px', right: 'auto', bottom: 'auto', width: '645px' }}
                     autoDetectWindowHeight={false}
                 >
                     <AdvanceSearchForm ref="advancedSearchForm" savedTerms={this.state.moreTerms} askPopupClose={this._closeAdvancedSearchForm} />                

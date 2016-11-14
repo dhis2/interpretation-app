@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { IntlProvider, FormattedDate } from 'react-intl';
+import { otherUtils } from './utils';
 
 import actions from './actions/Interpretation.action';
 
@@ -13,6 +14,10 @@ const MessageOwner = React.createClass({
 
     getInitialState() {
         return this.setValues(this.props.data.text, this.props.data.text);
+    },
+
+    componentDidMount() {
+        this._displayContent();
     },
 
     setValues(content, oldText) {
@@ -35,8 +40,24 @@ const MessageOwner = React.createClass({
         return str.split(/\s+/).slice(start, end).join(' ');
     },
 
+    _displayContent() {
+        $(`#${this._getTagId().divShowTag}`).html(otherUtils.parseStringToHTML(this.state.showContent));
+        $(`#${this._getTagId().divHideTag}`).html(otherUtils.parseStringToHTML(this.state.hiddenContent));
+    },
+
+    _getTagId() {
+        return {
+            divEditText: `edit_${this.props.data.id}`,
+            divShowText: `show_${this.props.data.id}`,
+            divShowTag: `showHtmlText_${this.props.data.id}`,
+            divHideTag: `hideHtmlText_${this.props.data.id}`,
+        };
+    },
+
     _onChange(e) {
-        this.setState(this.setValues(e.target.value, this.state.oldText));
+        this.setState(this.setValues(e.target.value, this.state.oldText), function () {
+            this._displayContent();
+        });
     },
 
     handleClick(e) {
@@ -57,11 +78,8 @@ const MessageOwner = React.createClass({
     _cancelInterpretationText() {
         this.setState(this.setValues(this.state.oldText, this.state.oldText));
 
-        const divEditText = `edit_${this.props.data.id}`;
-        const divShowText = `show_${this.props.data.id}`;
-
-        $(`#${divEditText}`).hide();
-        $(`#${divShowText}`).show();
+        $(`#${this._getTagId().divEditText}`).hide();
+        $(`#${this._getTagId().divShowText}`).show();
     },
 
     _convertToNumber(n) {
@@ -81,10 +99,7 @@ const MessageOwner = React.createClass({
             clazzName += ' hidden';
         }
 
-        const divEditText = `edit_${this.props.data.id}`;
-        const divShowText = `show_${this.props.data.id}`;
         return (
-
 			<div className="interpretationName">
 				<div className="interpretationUser">
 					<a className="bold userLink">{this.props.data.user} </a>
@@ -99,14 +114,13 @@ const MessageOwner = React.createClass({
 					</IntlProvider>
 					</span>
 				</div>
-
 				<div className="interpretationText">
-					<div id={divShowText} >
-                        {this.state.showContent}
+					<div id={this._getTagId().divShowText} >
+                        <span id={this._getTagId().divShowTag}></span>
                         <span className={clazzName} onClick={this.handleClick}> ... more</span>
-                        <span className="hiddenContent hidden">{this.state.hiddenContent}</span>
+                        <span id={this._getTagId().divHideTag} className="hiddenContent hidden"></span>
                     </div>
-                    <div id={divEditText} className="hidden" >
+                    <div id={this._getTagId().divEditText} className="hidden" >
                         <textarea className="commentArea" value={this.state.text} onChange={this._onChange} />
                         <br />
                         <a onClick={this._editInterpretationText}>  OK </a> | <a onClick={this._cancelInterpretationText}>  Cancel</a>

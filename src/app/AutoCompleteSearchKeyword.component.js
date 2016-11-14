@@ -23,6 +23,11 @@ const AutoCompleteSearchKeyword = React.createClass({
         };
     },
 
+    componentDidMount() {
+        // Change input 'type' from 'text' to 'search' - has 'x' clear mark on html5 browser.
+        $('div.autoCompleteTextField').find('input[type="text"]').attr('type', 'search');
+    },
+
     getKeywordObj(idInput, textInput) {
         const id = (!idInput) ? '' : idInput;
         const text = (!textInput) ? '' : textInput;
@@ -32,13 +37,13 @@ const AutoCompleteSearchKeyword = React.createClass({
     getPlaceHolderItems() {
         const placeHolderItems = [];
 
-        placeHolderItems.push(this.createPlaceHolderObj('Chart Favorite', './src/images/chart.png', 'Chart Favorite Searching...'));
-        placeHolderItems.push(this.createPlaceHolderObj('Report Table Favorite', './src/images/table.png', 'Report Table Favorite Searching...'));
-        placeHolderItems.push(this.createPlaceHolderObj('Map Favorite', './src/images/map.png', 'Map Favorite Searching...'));
-        placeHolderItems.push(this.createPlaceHolderObj('Author', './src/images/user_small.png', 'Author Searching...'));
-        placeHolderItems.push(this.createPlaceHolderObj('Commentator', './src/images/user_small.png', 'Commentator Searching...'));
-        placeHolderItems.push(this.createPlaceHolderObj('Interpretation Text', './src/images/document_small.png', 'Interpretation Text Searching...'));
-        placeHolderItems.push(this.createPlaceHolderObj('Comment Text', './src/images/comment.png', 'Comment Text Searching...'));
+        placeHolderItems.push(this.createPlaceHolderObj('Chart Favorite', 'images/chart.png', 'Chart Favorite Searching...'));
+        placeHolderItems.push(this.createPlaceHolderObj('Report Table Favorite', 'images/table.png', 'Report Table Favorite Searching...'));
+        placeHolderItems.push(this.createPlaceHolderObj('Map Favorite', 'images/map.png', 'Map Favorite Searching...'));
+        placeHolderItems.push(this.createPlaceHolderObj('Author', 'images/user_small.png', 'Author Searching...'));
+        placeHolderItems.push(this.createPlaceHolderObj('Commentator', 'images/user_small.png', 'Commentator Searching...'));
+        placeHolderItems.push(this.createPlaceHolderObj('Interpretation Text', 'images/interpretation.png', 'Interpretation Text Searching...'));
+        placeHolderItems.push(this.createPlaceHolderObj('Comment Text', 'images/comment.png', 'Comment Text Searching...'));
 
         return placeHolderItems;
     },
@@ -59,7 +64,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 for (const interpretation of result.interpretations) {
                     const source = this.getKeywordObj(interpretation.id, interpretation.chart.name);
 
-                    keywordList.push(this.createSelectionObj(source, './src/images/chart.png', 'Chart Favorite'));
+                    keywordList.push(this.createSelectionObj(source, 'images/chart.png', 'Chart Favorite'));
                 }
 
                 updateItemList(keywordList, 'Chart Favorite');
@@ -74,7 +79,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 for (const interpretation of result.interpretations) {
                     const source = this.getKeywordObj(interpretation.id, interpretation.reportTable.name);
 
-                    keywordList.push(this.createSelectionObj(source, './src/images/table.png', 'Report Table Favorite'));
+                    keywordList.push(this.createSelectionObj(source, 'images/table.png', 'Report Table Favorite'));
                 }
 
                 updateItemList(keywordList, 'Report Table Favorite');
@@ -89,7 +94,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 for (const interpretation of result.interpretations) {
                     const source = this.getKeywordObj(interpretation.id, interpretation.map.name);
 
-                    keywordList.push(this.createSelectionObj(source, './src/images/map.png', 'Map Favorite'));
+                    keywordList.push(this.createSelectionObj(source, 'images/map.png', 'Map Favorite'));
                 }
 
                 updateItemList(keywordList, 'Map Favorite');
@@ -104,7 +109,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 for (const interpretation of result.interpretations) {
                     const source = this.getKeywordObj(interpretation.id, interpretation.user.name);
 
-                    keywordList.push(this.createSelectionObj(source, './src/images/user_small.png', 'Author'));
+                    keywordList.push(this.createSelectionObj(source, 'images/user_small.png', 'Author'));
                 }
 
                 updateItemList(keywordList, 'Author');
@@ -121,7 +126,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                         if (comment.user.name.search(new RegExp(value, 'i')) >= 0) {
                             const source = this.getKeywordObj(interpretation.id, comment.user.name);
 
-                            keywordList.push(this.createSelectionObj(source, './src/images/user_small.png', 'Commentator'));
+                            keywordList.push(this.createSelectionObj(source, 'images/user_small.png', 'Commentator'));
                         }
                     }
                 }
@@ -139,7 +144,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 for (const interpretation of result.interpretations) {
                     const source = this.getKeywordObj(interpretation.id, interpretation.text);
 
-                    keywordList.push(this.createSelectionObj(source, './src/images/document_small.png', 'Interpretation Text'));
+                    keywordList.push(this.createSelectionObj(source, 'images/interpretation.png', 'Interpretation Text'));
                 }
 
                 updateItemList(keywordList, 'Interpretation Text');
@@ -158,7 +163,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                         if (comment.text.search(new RegExp(value, 'i')) >= 0) {
                             const source = this.getKeywordObj(interpretation.id, comment.text);
 
-                            keywordList.push(this.createSelectionObj(source, './src/images/comment.png', 'Comment Text'));
+                            keywordList.push(this.createSelectionObj(source, 'images/comment.png', 'Comment Text'));
                         }
                     }
                 }
@@ -168,18 +173,24 @@ const AutoCompleteSearchKeyword = React.createClass({
     },
 
     createSelectionObj(source, imageSrc, title) {
+        /*
+                    value: <MenuItem value={source.id} className="searchItemStyle" menuItemClassName="searchItemStyle" menuItemStyle="searchItemStyle">
+                                <img alt={title} height="14" width="14" src={imageSrc} />
+                                &nbsp;&nbsp;<span>{source.text}</span>
+                            </MenuItem>,
+        */
         return { text: source.text,
-                value: <MenuItem value={source.id}>
+                value: <div value={source.id} className="searchItemStyle">
                             <img alt={title} height="14" width="14" src={imageSrc} />
-                            &nbsp;&nbsp;<span>{source.text}</span>
-                        </MenuItem>,
+                            &nbsp;&nbsp;&nbsp;<span>{source.text}</span>
+                        </div>,
                 source };
     },
 
     createPlaceHolderObj(text, imageSrc, title) {
         return { text,
                 value: <div className="divLoadingPlaceHolder">
-                        <img src="./src/images/loadingSmall.gif" /> Loading -&nbsp;
+                        <img src="images/loadingSmall.gif" /> Loading -&nbsp;
                         <img alt={text} height="14" width="14" src={imageSrc} /> {title}
                     </div>,
                 source: { id: '', text: '' } };
@@ -243,7 +254,7 @@ const AutoCompleteSearchKeyword = React.createClass({
 
     render() {
         return (
-            <AutoComplete hintText="Search Interpretation"
+            <AutoComplete hintText="Search Interpretation" className="autoCompleteTextField"
                 filter={AutoComplete.noFilter}
                 onUpdateInput={this._onUpdatekeywords}
                 onNewRequest={this._onSelectkeyword}

@@ -4,11 +4,11 @@ import HeaderBarComponent from 'd2-ui/lib/app-header/HeaderBar';
 import headerBarStore$ from 'd2-ui/lib/app-header/headerBar.store';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 
-import { LeftNav } from 'material-ui';
-
 import SearchBox from './SearchBox.component';
 import InterpretationList from './InterpretationList.component';
-var injectTapEventPlugin = require("react-tap-event-plugin");
+import TopRankItems from './TopRankItems.component';
+
+const injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
 
@@ -29,6 +29,7 @@ export default React.createClass({
         return {
             charts: [],
             value: '',
+            currentUser: { name: this.props.d2.currentUser.displayName, id: this.props.d2.currentUser.id, superUser: this.isSuperUser() },
         };
     },
 
@@ -39,7 +40,15 @@ export default React.createClass({
         };
     },
 
+    isSuperUser() {
+        return this.props.d2.currentUser.authorities.has('ALL');
+    },
+
     _onSearchChange(searchTerm) {
+        this.refs.lists.onSearchChanged(searchTerm);
+    },
+
+    _onTopRankItemClicked(searchTerm) {
         this.refs.lists.onSearchChanged(searchTerm);
     },
 
@@ -69,10 +78,9 @@ export default React.createClass({
                             </div>
                         </td>
                         <td>
-
                             <div className="divRightArea">
-                                <div style={{ height: '600px' }}>
-                                    <br />
+                                <div style={{ minHeight: '500px' }}>
+                                    <TopRankItems currentUser={this.state.currentUser} onTopRankItemClicked={this._onTopRankItemClicked} />
                                 </div>
                             </div>
                         </td>

@@ -51,4 +51,29 @@ export const otherUtils = {
 
         return index;
     },
+
+    findItemFromList(listData, searchProperty, searchValue) {
+        let foundData;
+
+        for (let i = 0; i < listData.length; i++) {
+            const item = listData[i];
+            if (item[searchProperty] === searchValue) {
+                foundData = item;
+            }
+        }
+
+        return foundData;
+    },
+
+    sortByKey(array, key) {
+        return array.sort((a, b) => {
+            const x = a[key];
+            const y = b[key];
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        });
+    },
+
+    parseStringToHTML(str) {
+        return $.parseHTML(str);
+    },
 };

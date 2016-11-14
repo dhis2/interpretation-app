@@ -17,7 +17,7 @@ const CommentList = React.createClass({
     },
 
     render() {
-        const clazzName = this.props.isHidden ? 'hidden' : '';
+        const clazzName = this.props.hidden ? 'hidden' : '';
 
         let tagId = '';
         if (this.props.hidden) {
@@ -29,7 +29,7 @@ const CommentList = React.createClass({
         return (
              <div className={clazzName} id={tagId} key={tagId}>
                 {this.state.list.map(data =>
-                    <div id={data.id} key={data.id}>
+                    <div id={data.id} key={data.id} className="greyBackground">
                         <Comment key={data} data={data} currentUser={this.props.currentUser} interpretationId={this.props.interpretationId} updateCommentSuccess={this.props.updateCommentSuccess} deleteCommentSuccess={this.props.deleteCommentSuccess} />
                     </div>
                 )}

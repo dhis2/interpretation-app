@@ -147,7 +147,7 @@ const CommentArea = React.createClass({
                 <PostComment currentUser={this.props.currentUser} interpretationId={this.props.interpretationId} postCommentSuccess={this._addCommentSuccess} />
                 {this._getShowCommentListTag()}
 
-                {this.state.hideComments.length > 0 ? <div id={hasMoreTagLinkId}><a onClick={this._showMore}>[{this.state.hideComments.length} more comments]</a></div> : ''}
+                {this.state.hideComments.length > 0 ? <div className="greyBackground paddingLeft" id={hasMoreTagLinkId}><a onClick={this._showMore}>[{this.state.hideComments.length} more comments]</a></div> : ''}
 
                 {this._getHideCommentListTag()}
             </div>

@@ -1,10 +1,11 @@
 import React from 'react';
-import { CircularProgress } from 'material-ui';
 import InfiniteScroll from 'react-infinite-scroller';
-import Interpretation from '../../src/app/Interpretation.component';
+import { CircularProgress } from 'material-ui';
+import Interpretation from './Interpretation.component';
 import actions from './actions/Interpretation.action';
-import { dateUtil } from './utils';
-
+import { dataInfo } from './data';
+import { dateUtil, otherUtils } from './utils';
+import { getInstance as getD2 } from 'd2/lib/d2';
 
 const InterpretationList = React.createClass({
     propTypes: {
@@ -30,16 +31,34 @@ const InterpretationList = React.createClass({
         };
     },
 
-    searchLoading(loading) {
-        if (loading) {
-            $( '.intpreContents' ).hide();
-            $( '.intpreLoading' ).show();
+    componentDidMount() {
+        window.addEventListener('resize', this._handleWindowResize);
+    },
+
+    _handleWindowResize() {
+        // If browser window width is less than 900, do not request for redraw   
+        if ($('.intpreContents').width() < 650) {
+            $('.intpreContents').width(650);
         }
         else {
-            $( '.intpreLoading' ).hide();
-            $( '.intpreContents' ).show();
+            $('.intpreContents').width(dataInfo.getleftAreaWidth());
+        }
+
+    },
+
+
+    searchLoading(loading) {
+        if (loading) {
+            $('.intpreContents').hide();
+            $('.intpreLoading').show();
+        } else {
+            $('.intpreLoading').hide();
+            $('.intpreContents').show();
         }
     },
+
+    curAggchartItems: [],
+    aggReportItems: [],
 
     onSearchChanged(searchTerm) {
         this.searchLoading(true);
@@ -59,6 +78,8 @@ const InterpretationList = React.createClass({
 		// Can not use itemList itself into the 'setState' since
 		// we didn't resolve it yet?
         const dataList = [];
+        this.aggReportItems = [];
+        this.curAggchartItems = [];
 
         for (let i = 0; i < itemList.length; i++) {
             const interpretation = itemList[i];
@@ -72,12 +93,20 @@ const InterpretationList = React.createClass({
             if (interpretation.type === 'CHART') {
                 data.objId = interpretation.chart.id;
                 data.name = interpretation.chart.name;
+                this.curAggchartItems.push(interpretation);
             } else if (interpretation.type === 'MAP') {
                 data.objId = interpretation.map.id;
                 data.name = interpretation.map.name;
             } else if (interpretation.type === 'REPORT_TABLE') {
                 data.objId = interpretation.reportTable.id;
                 data.name = interpretation.reportTable.name;
+                this.aggReportItems.push(interpretation);
+            } else if (interpretation.type === 'EVENT_REPORT') {
+                data.objId = interpretation.eventReport.id;
+                data.name = interpretation.eventReport.name;
+            } else if (interpretation.type === 'EVENT_CHART') {
+                data.objId = interpretation.eventChart.id;
+                data.name = interpretation.eventChart.name;
             }
 
             dataList.push(data);
@@ -100,7 +129,7 @@ const InterpretationList = React.createClass({
 
                 if (searchTerm.moreTerms.commentator && searchTerm.moreTerms.commentator.id !== '') searchTermUrl += `&filter=comments.user.id:eq:${searchTerm.moreTerms.commentator.id}`;
 
-                if (searchTerm.moreTerms.type !== '') searchTermUrl += `&filter=type:eq:${searchTerm.moreTerms.type}`;
+                if (searchTerm.moreTerms.type) searchTermUrl += `&filter=type:eq:${searchTerm.moreTerms.type}`;
 
                 if (searchTerm.moreTerms.dateCreatedFrom) searchTermUrl += `&filter=created:ge:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateCreatedFrom, '-')}`;
 
@@ -117,6 +146,60 @@ const InterpretationList = React.createClass({
         return searchTermUrl;
     },
 
+    loadCharts(aggchartItems) {
+        getD2().then(d2 => {
+            const url = d2.Api.getApi().baseUrl.replace('api', '');
+            const width = dataInfo.getleftAreaWidth();
+
+            const chartItems = [];
+            for (let i = 0; i < aggchartItems.length; i++) {
+                const id = aggchartItems[i].objId;
+                const divId = aggchartItems[i].id;
+               
+                const options = {};
+                options.uid = id;
+                options.el = divId;
+                options.id = id;
+                options.width = width;
+                options.height = 400;
+                options.preventMask = false;
+                options.relativePeriodDate = aggchartItems[i].created;
+                chartItems.push(options);
+            }
+
+            chartPlugin.url = url;
+            chartPlugin.showTitles = false;
+            chartPlugin.preventMask = false;
+            chartPlugin.load(chartItems);
+        });
+    },
+
+    loadAggregateReports() {
+        getD2().then(d2 => {
+            const url = d2.Api.getApi().baseUrl.replace('api', '');
+            const width = dataInfo.getleftAreaWidth();
+
+            const items = [];
+            for (let i = 0; i < this.aggReportItems.length; i++) {
+                const id = this.aggReportItems[i].objId;
+                const divId = this.aggReportItems[i].id;
+
+                const options = {};
+                options.el = divId;
+                options.id = id;
+                options.width = width;
+                options.height = 400;
+                options.displayDensity = 'compact';
+                options.relativePeriodDate = this.aggReportItems[i].created;
+                items.push(options);
+            }
+
+            reportTablePlugin.url = url;
+            reportTablePlugin.showTitles = false;
+            reportTablePlugin.load(items);
+        });
+    },
+
     addToDivList(dataList, hasMore, resultPage) {
         this.setState({
             items: this.state.items.concat([this.createDiv(dataList, resultPage)]), hasMore,
@@ -130,7 +213,7 @@ const InterpretationList = React.createClass({
     loadMore(page, afterFunc) {
         const searchData = this.getSearchTerms(this.state.searchTerm);
 
-        actions.listInterpretation('', page, searchData).subscribe(result => {
+        actions.listInterpretation('', searchData, page).subscribe(result => {
             const d2 = this.props.d2;
             const d2Api = d2.Api.getApi();
 
@@ -139,6 +222,9 @@ const InterpretationList = React.createClass({
             const resultPage = result.pager.page;
 
             this.addToDivList(dataList, hasMore, resultPage);
+
+            this.loadCharts(this.curAggchartItems);
+            this.loadAggregateReports();
 
             if (afterFunc) afterFunc();
         });
@@ -158,28 +244,12 @@ const InterpretationList = React.createClass({
         );
     },
 
-    removeFromArray(list, propertyName, value) {
-        let index;
-
-        for (let i = 0; i < list.length; i++) {
-            if (list[i][propertyName] === value) {
-                index = i;
-            }
-        }
-
-        if (index !== undefined) {
-            list.splice(index, 1);
-        }
-
-        return list;
-    },
-
     _deleteInterpretationSuccess(id) {
         const items = this.state.items;
 
         for (let i = 0; i < items.length; i++) {
             const children = items[i].props.children;
-            this.removeFromArray(children, 'key', id);
+            otherUtils.removeFromList(children, 'key', id);
         }
 
         this.setState({ items });
@@ -192,10 +262,11 @@ const InterpretationList = React.createClass({
                     <CircularProgress size={2} />
                 </div>
                 <div className="intpreContents">
-                    <InfiniteScroll key="interpretationListKey" loader={<div><img src="src/images/ajaxLoaderBar.gif" /></div>} loadMore={this.loadMore} hasMore={this.state.hasMore} useWindow>
+                    <InfiniteScroll key="interpretationListKey" loader={<div><img src="images/ajaxLoaderBar.gif" /></div>} loadMore={this.loadMore} hasMore={this.state.hasMore} useWindow>
                         {this.state.items}
                     </InfiniteScroll>
                 </div>
+
 			</div>
 		);
     },
