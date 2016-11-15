@@ -33,8 +33,7 @@ const AutoCompleteUsers = React.createClass({
 
                 this.props.item.id = '';
                 this.props.item.displayName = '';
-            }
-            else {
+            } else {
                 getD2().then(d2 => {
                     const url = `users.json?paging=false&fields=id,displayName,userCredentials[username]&filter=name:ilike:${value}`;
 

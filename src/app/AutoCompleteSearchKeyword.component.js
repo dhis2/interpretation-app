@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuItem, AutoComplete } from 'material-ui';
+import { AutoComplete } from 'material-ui';
 import { delayOnceTimeAction, restUtil, otherUtils } from './utils';
 import { getInstance as getD2 } from 'd2/lib/d2';
 
@@ -173,12 +173,6 @@ const AutoCompleteSearchKeyword = React.createClass({
     },
 
     createSelectionObj(source, imageSrc, title) {
-        /*
-                    value: <MenuItem value={source.id} className="searchItemStyle" menuItemClassName="searchItemStyle" menuItemStyle="searchItemStyle">
-                                <img alt={title} height="14" width="14" src={imageSrc} />
-                                &nbsp;&nbsp;<span>{source.text}</span>
-                            </MenuItem>,
-        */
         return { text: source.text,
                 value: <div value={source.id} className="searchItemStyle">
                             <img alt={title} height="14" width="14" src={imageSrc} />
@@ -214,15 +208,14 @@ const AutoCompleteSearchKeyword = React.createClass({
 
     _onUpdatekeywords(value) {
         this.setState({ value, loading: true, open: false });
-        // Call back the parent passed in method for change 
+        // Call back the parent passed in method for change
         this.props.onChange(event, value);
 
         delayOnceTimeAction.bind(500, this.props.searchId, () => {
             if (value === '') {
                 this.setState({ keywordDataSource: [], keyword: this.getKeywordObj() });
                 this.props.onSelect(this.getKeywordObj());
-            }
-            else {
+            } else {
                 getD2().then(d2 => {
                     // Clear the dropdown List
                     this.setState({ keywordDataSource: [] });
@@ -244,8 +237,7 @@ const AutoCompleteSearchKeyword = React.createClass({
         if (i === undefined) {
             // Enter Key was pressed without selection
             this.props.onSelect(this.getKeywordObj('', value));
-        }
-        else {
+        } else {
             // Set real keyword here with setstate!!
             this.state.keyword = this.state.keywordDataSource[i].source;
             this.props.onSelect(this.state.keyword);

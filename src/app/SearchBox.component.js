@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { FlatButton, Dialog, DatePicker } from 'material-ui';
-// import Modal from 'react-modal';
+import { FlatButton, Dialog } from 'material-ui';
 import AdvanceSearchForm from './AdvanceSearchForm.component';
 import AutoCompleteSearchKeyword from './AutoCompleteSearchKeyword.component';
 
@@ -28,8 +27,7 @@ export default class SearchBox extends Component {
     bodyscrollingDisable(enable) {
         if (enable) {
             $('body').addClass('stop-scrolling');
-        }
-        else {
+        } else {
             $('body').removeClass('stop-scrolling');
         }
     }
@@ -88,12 +86,12 @@ export default class SearchBox extends Component {
         const actions = [
             <FlatButton
                 label="Search"
-                primary={true}
+                primary
                 onClick={this._performAdvancedSearch}
             />,
             <FlatButton
                 label="Reset"
-                primary={true}
+                primary
                 onClick={this._advSearchFormReset}
             />,
         ];

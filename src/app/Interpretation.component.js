@@ -43,7 +43,7 @@ const Interpretation = React.createClass({
     },
 
     _handleWindowResize() {
-        // If browser window width is less than 900, do not request for redraw   
+        // If browser window width is less than 900, do not request for redraw
         if ($('.intpreContents').width() < 650) {
             $('.intpreContents').width(650);
         }
@@ -52,10 +52,6 @@ const Interpretation = React.createClass({
         }
 
         this._drawIntepretation(true);
-
-        /* if ($(window).width() > dataInfo.minMainBodyWidth) {
-            this._drawIntepretation(true);
-        } */
     },
 
 
@@ -164,7 +160,16 @@ const Interpretation = React.createClass({
         });
     },
 
-    relativePeriodKeys: ['THIS_MONTH', 'LAST_MONTH', 'LAST_3_MONTHS', 'LAST_6_MONTHS', 'LAST_12_MONTHS', 'THIS_YEAR', 'LAST_YEAR', 'LAST_5_YEARS'],
+    relativePeriodKeys: [
+        'THIS_MONTH',
+        'LAST_MONTH',
+        'LAST_3_MONTHS',
+        'LAST_6_MONTHS',
+        'LAST_12_MONTHS',
+        'THIS_YEAR',
+        'LAST_YEAR',
+        'LAST_5_YEARS',
+    ],
 
     _setMap(data) {
         const me = this;
@@ -226,47 +231,37 @@ const Interpretation = React.createClass({
         // Yearly periods
         if (relativePeriodKey === 'THIS_YEAR') {
             periods.push({ id: currentYear.toString(), name: currentYear.toString() });
-        }
-        if (relativePeriodKey === 'LAST_YEAR') {
+        } else if (relativePeriodKey === 'LAST_YEAR') {
             const lastYear = currentYear - 1;
             periods.push({ id: lastYear.toString(), name: lastYear.toString() });
-        }
-        if (relativePeriodKey === 'LAST_5_YEARS') {
+        } else if (relativePeriodKey === 'LAST_5_YEARS') {
             const start = currentYear - 5;
             const end = currentYear - 1;
             for (let year = start; year >= end; year++) {
                 periods.push({ id: year.toString(), name: year.toString() });
             }
-        }
-        // Monthy periods
-        if (relativePeriodKey === 'THIS_MONTH') {
+        } else if (relativePeriodKey === 'THIS_MONTH') { // Monthy periods
             let currentMonth = date.getMonth() + 1;// Month from Date Object starts from 0
             currentMonth = (currentMonth > 10) ? currentMonth : `0${currentMonth}`;
             const period = `${currentYear}${currentMonth}`;
             periods.push({ id: period, name: period });
-        }
-        if (relativePeriodKey === 'LAST_MONTH') {
+        } else if (relativePeriodKey === 'LAST_MONTH') {
             let currentMonth = date.getMonth();// Month from Date Object starts from 0
             currentMonth = (currentMonth > 10) ? currentMonth : `0${currentMonth}`;
             periods.push({ id: `${currentYear}${currentMonth}`, name: `${currentYear}${currentMonth}` });
-        }
-        /* if (relativePeriodKey === 'monthsThisYear') {
+        } else if (relativePeriodKey === 'monthsThisYear') {
             const currentMonth = date.getMonth();// Month from Date Object starts from 0
             for (let m = 1; m <= currentMonth; m++) {
                 const k = (m > 10) ? m : `0${m}`;
                 periods.push({ id: `${currentYear}${k}` });
             }
-        } */
-        if (relativePeriodKey === 'LAST_12_MONTHS') {
+        } else if (relativePeriodKey === 'LAST_12_MONTHS') {
             periods = periods.concat(this._getLastNMonth(12, currentYear, date.getMonth()));
-        }
-        if (relativePeriodKey === 'LAST_3_MONTHS') {
+        } else if (relativePeriodKey === 'LAST_3_MONTHS') {
             periods = periods.concat(this._getLastNMonth(3, currentYear, date.getMonth()));
-        }
-        if (relativePeriodKey === 'LAST_6_MONTHS') {
+        } else if (relativePeriodKey === 'LAST_6_MONTHS') {
             periods = periods.concat(this._getLastNMonth(6, currentYear, date.getMonth()));
         }
-        // monthsLastYear
 
         return periods;
     },
@@ -387,8 +382,8 @@ const Interpretation = React.createClass({
             link = 'dhis-web-mapping';
         } else if (this.props.data.type === 'EVENT_REPORT') {
             link = 'dhis-web-event-reports';
-        } else if (this.props.data.type === 'EVENT_CHART') {
-            link = 'dhis-web-event-visualizer';
+        } else {
+            link = 'dhis-web-event-visualizer'; // Event chart
         }
 
         window.location.href = `../../../${link}/index.html?id=${this.props.data.objId}`;
@@ -438,7 +433,8 @@ const Interpretation = React.createClass({
                             <Tooltip
                                 placement="left"
                                 overlay={this._getPeopleLikeList()}
-                                arrowContent={<div className="rc-tooltip-arrow-inner"></div>} >
+                                arrowContent={<div className="rc-tooltip-arrow-inner"></div>}
+                            >
                                     <a onClick={this._openPeopleLikedHandler} id={peopleLikeLinkTagId}>{this.state.likes} people </a>
                             </Tooltip>
                             <span> liked this</span><label className="linkArea">·</label><span>{this.state.comments.length} people commented</span>

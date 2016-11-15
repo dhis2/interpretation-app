@@ -35,31 +35,6 @@ const InterpretationList = React.createClass({
         window.addEventListener('resize', this._handleWindowResize);
     },
 
-    _handleWindowResize() {
-        // If browser window width is less than 900, do not request for redraw   
-        if ($('.intpreContents').width() < 650) {
-            $('.intpreContents').width(650);
-        }
-        else {
-            $('.intpreContents').width(dataInfo.getleftAreaWidth());
-        }
-
-    },
-
-
-    searchLoading(loading) {
-        if (loading) {
-            $('.intpreContents').hide();
-            $('.intpreLoading').show();
-        } else {
-            $('.intpreLoading').hide();
-            $('.intpreContents').show();
-        }
-    },
-
-    curAggchartItems: [],
-    aggReportItems: [],
-
     onSearchChanged(searchTerm) {
         this.searchLoading(true);
         // console.log( 'onSearchChanged called');
@@ -146,6 +121,30 @@ const InterpretationList = React.createClass({
         return searchTermUrl;
     },
 
+    curAggchartItems: [],
+    aggReportItems: [],
+
+    searchLoading(loading) {
+        if (loading) {
+            $('.intpreContents').hide();
+            $('.intpreLoading').show();
+        } else {
+            $('.intpreLoading').hide();
+            $('.intpreContents').show();
+        }
+    },
+
+    _handleWindowResize() {
+        // If browser window width is less than 900, do not request for redraw
+        if ($('.intpreContents').width() < 650) {
+            $('.intpreContents').width(650);
+        }
+        else {
+            $('.intpreContents').width(dataInfo.getleftAreaWidth());
+        }
+
+    },
+
     loadCharts(aggchartItems) {
         getD2().then(d2 => {
             const url = d2.Api.getApi().baseUrl.replace('api', '');
@@ -155,7 +154,7 @@ const InterpretationList = React.createClass({
             for (let i = 0; i < aggchartItems.length; i++) {
                 const id = aggchartItems[i].objId;
                 const divId = aggchartItems[i].id;
-               
+
                 const options = {};
                 options.uid = id;
                 options.el = divId;

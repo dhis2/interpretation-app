@@ -1,12 +1,7 @@
 
 import React, { Component } from 'react';
 import { DatePicker, TextField, SelectField, MenuItem } from 'material-ui';
-// import { Button, FormControl } from 'react-bootstrap';
-// import DatePicker from 'react-bootstrap-date-picker';
 import AutoCompleteUsers from './AutoCompleteUsers.component';
-// import DatePicker from 'react-datepicker';
-import { getInstance as getD2 } from 'd2/lib/d2';
-
 
 export default class AdvanceSearchForm extends Component {
     constructor(props) {

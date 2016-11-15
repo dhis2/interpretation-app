@@ -55,7 +55,7 @@ const PostComment = React.createClass({
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <textarea className="commentArea" placeholder="Add a comment..." value={this.state.text} onChange={this._onChange}/>
+                                                <textarea className="commentArea" placeholder="Add a comment..." value={this.state.text} onChange={this._onChange} />
                                                 <br />
                                                 <a onClick={this._addComment}>Share you comment</a>
                                             </td>
