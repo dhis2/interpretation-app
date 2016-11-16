@@ -212,18 +212,14 @@ const Interpretation = React.createClass({
         });
     },
 
-    _convertToNumber(n) {
-        return (n.startsWith('0')) ? eval(n[1]) : eval(n);
-    },
-
     // Quaterly && 6-month period
     _converRelativePeriods(relativePeriodKey, createdDate) {
         let periods = [];
 
         const created = createdDate.substring(0, 10).split('-');
-        let month = this._convertToNumber(created[1]);
+        let month = Number(created[1]);
         month = month - 1;
-        const day = this._convertToNumber(created[2]);
+        const day = Number(created[2]);
         const date = new Date(created[0], month, day);
 
         const currentYear = date.getFullYear();

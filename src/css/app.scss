@@ -379,10 +379,23 @@ a{
 
 .divLoadingPlaceHolder
 {
-  margin: 1px;
+  margin: 1px 1px 1px 4px;
   padding: 3px;
   background-color: #EEE;
   color: #555;
+}
+
+.searchItemStyle
+{
+  margin: 1px 1px 1px 4px;
+  padding: 3px;
+  font-size: 13px;
+  cursor:pointer;  
+}
+
+.searchItemStyle:hover
+{
+    background-color: #EEE;
 }
 
 /*----------------------------------------------------------------------------*/
