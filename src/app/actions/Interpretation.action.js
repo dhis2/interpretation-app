@@ -9,7 +9,7 @@ const actions = Action.createActionsFromNames(['listInterpretation', 'getMap', '
 actions.listInterpretation
 .subscribe(({ data: [model, searchData, page], complete, error }) => {
     getD2().then(d2 => {
-        let url = `interpretations?fields=id,type,text,created,likes,likedBy[id,name],user[id,name],comments[id,created,text,user[id,name]],eventReport[id,name],eventChart[id,name],chart[id,name],map[id,name],reportTable[id,name]${searchData}`;
+        let url = `interpretations?fields=id,type,text,created,likes,likedBy[id,name],user[id,name],comments[id,created,text,user[id,name]],eventReport[id,name,relativePeriods],eventChart[id,name,relativePeriods],chart[id,name,relativePeriods],map[id,name,mapViews[relativePeriods]],reportTable[id,name,relativePeriods]${searchData}`;
         if (page !== undefined) {
             url += `&page=${page}&pageSize=10`;
         } else {

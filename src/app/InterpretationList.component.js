@@ -114,11 +114,41 @@ const InterpretationList = React.createClass({
 
                 if (searchTerm.moreTerms.dateModiTo) searchTermUrl += `&filter=lastUpdated:le:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateModiTo, '-')}`;
 
-                if (searchTerm.moreTerms.contains) searchTermUrl += `&filter=text:ilike:${searchTerm.moreTerms.contains}`;
+                if (searchTerm.moreTerms.interpretationText) searchTermUrl += `&filter=text:ilike:${searchTerm.moreTerms.interpretationText}`;
+
+                // depending on the type, do other search..
+                if (searchTerm.moreTerms.favoritesName && searchTerm.moreTerms.type) searchTermUrl += `&filter=${this.getFavoriteSearchKeyName(searchTerm.moreTerms.type)}:ilike:${searchTerm.moreTerms.favoritesName}`;
+
+                if (searchTerm.moreTerms.commentText) searchTermUrl += `&filter=comments.text:ilike:${searchTerm.moreTerms.commentText}`;
             }
         }
 
         return searchTermUrl;
+    },
+
+    getFavoriteSearchKeyName(favoriteType) {
+        let searchFavoriteKeyName = '';
+        switch (favoriteType) {
+        case 'CHART':
+            searchFavoriteKeyName = 'chart.name';
+            break;
+        case 'REPORT_TABLE':
+            searchFavoriteKeyName = 'reportTable.name';
+            break;
+        case 'EVENT_CHART':
+            searchFavoriteKeyName = 'eventChart.name';
+            break;
+        case 'EVENT_REPORT':
+            searchFavoriteKeyName = 'eventReport.name';
+            break;
+        case 'MAP':
+            searchFavoriteKeyName = 'map.name';
+            break;
+        default:
+            break;
+        }
+
+        return searchFavoriteKeyName;
     },
 
     curAggchartItems: [],
@@ -135,14 +165,14 @@ const InterpretationList = React.createClass({
     },
 
     _handleWindowResize() {
-        // If browser window width is less than 900, do not request for redraw
+       // If browser window width is less than 900, do not request for redraw
         if ($('.intpreContents').width() < 650) {
             $('.intpreContents').width(650);
-        }
-        else {
+             $('.searchDiv').width(649);
+        } else {
             $('.intpreContents').width(dataInfo.getleftAreaWidth());
+            $('.searchDiv').width(dataInfo.getleftAreaWidth() - 1);
         }
-
     },
 
     loadCharts(aggchartItems) {

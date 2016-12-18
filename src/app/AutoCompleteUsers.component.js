@@ -9,6 +9,7 @@ const AutoCompleteUsers = React.createClass({
     propTypes: {
         searchId: React.PropTypes.string,
         item: React.PropTypes.object,
+        hintStyle: React.PropTypes.object,
     },
 
     getInitialState() {
@@ -64,12 +65,15 @@ const AutoCompleteUsers = React.createClass({
 
     render() {
         return (
-            <AutoComplete hintText="Enter User Name"
+            <AutoComplete
+                hintText="Enter User Name"
+                hintStyle={this.props.hintStyle}
                 filter={AutoComplete.noFilter}
                 onUpdateInput={this._onUpdateUsers}
                 onNewRequest={this._onSelectUser}
                 dataSource={this.state.userDataSource}
                 searchText={this.state.value}
+                fullWidth
             />
         );
     },

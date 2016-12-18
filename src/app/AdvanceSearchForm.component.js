@@ -19,7 +19,9 @@ export default class AdvanceSearchForm extends Component {
         this._authorSelected = this._authorSelected.bind(this);
         this._commentatorSelected = this._commentatorSelected.bind(this);
         this._onSelectAuthor = this._onSelectAuthor.bind(this);
-        this._onChangeContains = this._onChangeContains.bind(this);
+        this._onChangeInterpretationText = this._onChangeInterpretationText.bind(this);
+        this._onChangeFavoritesName = this._onChangeFavoritesName.bind(this);
+        this._onChangeCommentText = this._onChangeCommentText.bind(this);    
     }
 
     getInitialData() {
@@ -33,7 +35,11 @@ export default class AdvanceSearchForm extends Component {
             authorDataSource: [],
             commentator: { id: '', displayName: '' },
             commentatorDataSource: [],
-            contains: '',
+            interpretationText: '',
+            favoritesName: '',
+            commentText: '',
+            showFavoritesNameSearch: false,
+            favoritesNameSearchHint: '',
         };
     }
 
@@ -54,6 +60,12 @@ export default class AdvanceSearchForm extends Component {
 
     _typeChanged(event, index, value) {
         this.setState({ type: value });
+
+        this.setState({ favoritesNameSearchHint: 'Partial Favorites Name' });
+        // Show Hide the line..
+
+        const showFavoritesNameSearchRow = { value } ? true : false;
+        this.setState({ showFavoritesNameSearch: showFavoritesNameSearchRow });
     }
 
     _setDateCreatedFrom(event, date) {
@@ -85,11 +97,23 @@ export default class AdvanceSearchForm extends Component {
         this.state.author = this.state.authorDataSource[i].source;
     }
 
-    _onChangeContains(event) {
-        this.setState({ contains: event.target.value });
+    _onChangeInterpretationText(event) {
+        this.setState({ interpretationText: event.target.value });
+    }
+    _onChangeFavoritesName(event) {
+        this.setState({ favoritesName: event.target.value });
+    }
+    _onChangeCommentText(event) {
+        this.setState({ commentText: event.target.value });
     }
 
     render() {
+        //const inputStyle = { width: '400px' };
+        const hintStyle = { fontSize: '14px' };
+        const underlineStyle = { width: '400px' };
+        const menuStyle = { fontSize: '14px' };
+        const fontStyle =  { fontSize: '14px' };
+
         return (
             <div className="advanceSearchForm">
                 <div tabIndex="0" aria-label="Close search options" className="btnImages seachPopupCloseImg" role="button" onClick={this._clickCloseBtn}>
@@ -102,14 +126,29 @@ export default class AdvanceSearchForm extends Component {
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Type</span></td>
                             <td className="tdData">
-                                <SelectField value={this.state.type} onChange={this._typeChanged}>
+                                <SelectField value={this.state.type} style={fontStyle} menuStyle={menuStyle} hintText="Type" hintStyle={hintStyle} onChange={this._typeChanged}>
                                     <MenuItem value="" primaryText="" />
                                     <MenuItem value="CHART" primaryText="Chart" />
                                     <MenuItem value="REPORT_TABLE" primaryText="Report Table" />
+                                    <MenuItem value="EVENT_CHART" primaryText="Event Chart" />
+                                    <MenuItem value="EVENT_REPORT" primaryText="Event Report Table" />
                                     <MenuItem value="MAP" primaryText="Map" />
                                 </SelectField>
                             </td>
                         </tr>
+                        { this.state.showFavoritesNameSearch ? <tr>
+                            <td className="tdTitle"><span className="searchStyle">Favorites Name</span></td>
+                            <td className="tdData">
+                                <TextField
+                                    hintText={this.state.favoritesNameSearchHint}
+                                    hintStyle={hintStyle}
+                                    value={this.state.favoritesName}
+                                    fullWidth
+                                    underlineStyle={underlineStyle}
+                                    onChange={this._onChangeFavoritesName}
+                                />
+                            </td>
+                        </tr> : null }
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Date created</span></td>
                             <td className="tdData">
@@ -117,13 +156,13 @@ export default class AdvanceSearchForm extends Component {
                                 <tbody>
                                 <tr>
                                 <td>
-                                    <DatePicker value={this.state.dateCreatedFrom} style={{ width: '130px' }} hintText="From" onChange={this._setDateCreatedFrom} />
+                                    <DatePicker value={this.state.dateCreatedFrom} style={{ width: '130px' }} hintText="From" hintStyle={hintStyle} onChange={this._setDateCreatedFrom} />
                                 </td>
                                 <td>
                                     <div>-</div>
                                 </td>
                                 <td>
-                                    <DatePicker value={this.state.dateCreatedTo} style={{ width: '130px' }} hintText="To" onChange={this._setDateCreatedTo} />
+                                    <DatePicker value={this.state.dateCreatedTo} style={{ width: '130px' }} hintText="To" hintStyle={hintStyle} onChange={this._setDateCreatedTo} />
                                 </td>
                                 </tr>
                                 </tbody>
@@ -137,13 +176,13 @@ export default class AdvanceSearchForm extends Component {
                                 <tbody>
                                 <tr>
                                     <td>
-                                        <DatePicker value={this.state.dateModiFrom} style={{ width: '130px' }} hintText="From" onChange={this._setDateModiFrom} />
+                                        <DatePicker value={this.state.dateModiFrom} style={{ width: '130px' }} hintText="From" hintStyle={hintStyle} onChange={this._setDateModiFrom} />
                                     </td>
                                     <td>
                                         <div>-</div>
                                     </td>
                                     <td>
-                                        <DatePicker value={this.state.dateModiTo} style={{ width: '130px' }} hintText="To" onChange={this._setDateModiTo} />
+                                        <DatePicker value={this.state.dateModiTo} style={{ width: '130px' }} hintText="To" hintStyle={hintStyle} onChange={this._setDateModiTo} />
                                     </td>
                                 </tr>
                                 </tbody>
@@ -153,24 +192,37 @@ export default class AdvanceSearchForm extends Component {
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Author (user)</span></td>
                             <td className="tdData">
-                                <AutoCompleteUsers searchId="author" fullWidth item={this.state.author} ref="author" />
+                                <AutoCompleteUsers searchId="author" fullWidth hintStyle={hintStyle} item={this.state.author} ref="author" />
                             </td>
                         </tr>
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Commentator (user)</span></td>
                             <td className="tdData">
-                                <AutoCompleteUsers searchId="commentator" fullWidth item={this.state.commentator} ref="commentator" />
+                                <AutoCompleteUsers searchId="commentator" fullWidth hintStyle={hintStyle} item={this.state.commentator} ref="commentator" />
                             </td>
                         </tr>
 
                         <tr>
-                            <td className="tdTitle"><span className="searchStyle">Contains</span></td>
+                            <td className="tdTitle"><span className="searchStyle">Interpretation Text</span></td>
                             <td className="tdData">
                                 <TextField
                                     hintText="Partial Interpretation Text"
-                                    value={this.state.contains}
+                                    hintStyle={hintStyle}
+                                    value={this.state.interpretationText}
                                     fullWidth
-                                    onChange={this._onChangeContains}
+                                    onChange={this._onChangeInterpretationText}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="tdTitle"><span className="searchStyle">Comment Text</span></td>
+                            <td className="tdData">
+                                <TextField
+                                    hintText="Partial Comment Text"
+                                    hintStyle={hintStyle}
+                                    value={this.state.commentText}
+                                    fullWidth
+                                    onChange={this._onChangeCommentText}
                                 />
                             </td>
                         </tr>

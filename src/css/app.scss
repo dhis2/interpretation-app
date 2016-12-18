@@ -87,6 +87,11 @@ html {
   margin-bottom: 10px;
 }
 
+.interpretations
+{
+  padding-top:10px;   
+}
+
 .interpretationContainer
 {
   border: 1px solid #ddd;
@@ -178,8 +183,8 @@ html {
 
 .interpretationCommentArea
 {
-  margin-top: 5px;
-  border-radius: 3px;
+  margin: 5px;
+  border: 1px solid #bfb8b8;
   font-size: 12px;
 }
 
@@ -240,6 +245,7 @@ html {
     text-align: center;
     line-height: 14px;
     letter-spacing: -.1px;
+    margin-top: 8px;
 }
 
 .contentTable
@@ -247,6 +253,8 @@ html {
 	overflow: auto;
 	width: 600;
 	height: 400;
+  //padding-left: 100px;
+  //padding-right: 100px;
 }
 
 .linkTag
@@ -379,23 +387,44 @@ a{
 
 .divLoadingPlaceHolder
 {
-  margin: 1px 1px 1px 4px;
-  padding: 3px;
+  margin: 2px 0px 2px 0px;
+  padding: 4px;
   background-color: #EEE;
   color: #555;
 }
 
 .searchItemStyle
 {
-  margin: 1px 1px 1px 4px;
-  padding: 3px;
+  margin: 2px 0px 2px 0px;
+  padding: 3px 3px 3px 12px;
   font-size: 13px;
+  color: #3162C5;
   cursor:pointer;  
+}
+
+.searchItemName
+{
+  margin-left: 7px;
 }
 
 .searchItemStyle:hover
 {
     background-color: #EEE;
+}
+
+.divSearchItemHeaderPart
+{
+    margin: 10px 0px 4px 0px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #dddddd;
+}
+
+.spanSearchItemHeaderName
+{
+  font-size: 13px;
+  color: #336C8B;
+  font-weight: bold;
+  margin-left: 15px;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -416,6 +445,11 @@ div.advancedSearchForm
   border: 1px solid #bbb;
 }
 
+.advanceSearchFormTable
+{
+  font-size: 14px;
+}
+
 .tdTitle
 {
   padding: 8px;
@@ -424,7 +458,7 @@ div.advancedSearchForm
 
 .searchStyle
 {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .calendar
@@ -516,10 +550,23 @@ div.advancedSearchForm
 .center 
 {
   text-align: center;
+  display: flex;
+  justify-content: center;
 }
 
 .smallFont
 {
   font-size: 11px;
   font-weight: normal;
+}
+
+.relativePeriodWarming
+{
+    font-style: italic;
+    color: #b76363;
+    margin-left: 100px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 13px;
 }

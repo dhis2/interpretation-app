@@ -15,31 +15,34 @@ const CommentArea = React.createClass({
     },
 
     getInitialState() {
-        const comments = this._getSubComments(this.props.comments, 1);
+        const comments = this._getSubComments(this.props.comments, false);
         return {
             showComments: comments.showComments,
             hideComments: comments.hideComments,
-            indexShowRecord: comments.indexShowRecord,
+            showAll: comments.showAll,
         };
     },
 
     noComment: 3,
 
-    _getSubComments(list, indexShowRecord) {
-        let showComments = [];
+    _getSubComments(list, showAll) {
         let hideComments = [];
-        const idx = this.noComment * indexShowRecord;
-        if (list.length >= this.noComment) {
-            showComments = list.slice(0, idx);
-            if (list.length > this.noComment) {
-                hideComments = list.slice(idx, list.length);
+        let showComments = list;
+        if (!showAll) {
+            let index = list.length - this.noComment;
+            if (index < 0) {
+                index = 0;
             }
-        } else {
-            showComments = list;
+
+            showComments = list.slice(index, list.length);
+            hideComments = [];
+            if (showComments.length < list.length) {
+                hideComments = list.slice(0, list.length - showComments.length);
+            }
         }
 
         return {
-            indexShowRecord,
+            showAll,
             showComments,
             hideComments,
         };
@@ -52,7 +55,7 @@ const CommentArea = React.createClass({
                 showComments: [],
             });
 
-            this.setState(this._getSubComments(result.comments.reverse(), this.state.indexShowRecord), function () {
+            this.setState(this._getSubComments(result.comments, this.state.showAll), function () {
                 const postComentTagId = `postComent_${this.props.interpretationId}`;
                 $(`#${postComentTagId}`).closest('.interpretationCommentArea').show();
             });
@@ -87,7 +90,7 @@ const CommentArea = React.createClass({
                 showComments: [],
             });
 
-            this.setState(this._getSubComments(result.comments.reverse(), this.state.indexShowRecord));
+            this.setState(this._getSubComments(result.comments, this.state.showAll));
         });
     },
 
@@ -113,29 +116,23 @@ const CommentArea = React.createClass({
     },
 
     _showMore() {
-        const me = this;
-        let list = this.state.showComments;
-        list = list.concat(this.state.hideComments);
-
-        this.setState({
-            hideComments: [],
-            showComments: [],
-        });
+        let list = this.state.hideComments;
+        list = list.concat(this.state.showComments);
 
         setTimeout(() => {
-            const indexShowRecord = me.state.indexShowRecord + 1;
-            me.setState(me._getSubComments(list, indexShowRecord), () => {
-                const hasMoreTagLinkId = `hasMoreCommentLink_${me.props.interpretationId}`;
-                const hasMoreTagId = `hideCommentList_${me.props.interpretationId}`;
-
-                const commentListLength = me.state.showComments.length + me.state.hideComments.length;
-                const idx = me.state.indexShowRecord * me.noComment;
-                if (idx > commentListLength) {
-                $(`#${hasMoreTagLinkId}`).hide();
-                $(`#${hasMoreTagId}`).show();
-                }
+            this.setState({
+                hideComments: [],
+                showComments: [],
             });
         }, 100);
+
+        setTimeout(() => {
+            this.setState({
+                hideComments: [],
+                showComments: list,
+                showAll: true,
+            });
+        }, 300);
     },
 
     render() {
@@ -144,12 +141,15 @@ const CommentArea = React.createClass({
 
         return (
             <div key={commentAreaKey}>
-                <PostComment currentUser={this.props.currentUser} interpretationId={this.props.interpretationId} postCommentSuccess={this._addCommentSuccess} />
-                {this._getShowCommentListTag()}
 
-                {this.state.hideComments.length > 0 ? <div className="greyBackground paddingLeft" id={hasMoreTagLinkId}><a onClick={this._showMore}>[{this.state.hideComments.length} more comments]</a></div> : ''}
+                {!this.state.showAll && this.state.hideComments.length > 0 ? <div className="greyBackground paddingLeft" id={hasMoreTagLinkId}><a onClick={this._showMore}>[{this.state.hideComments.length} more comments]</a></div> : ''}
 
                 {this._getHideCommentListTag()}
+
+                {this._getShowCommentListTag()}
+
+                <PostComment currentUser={this.props.currentUser} interpretationId={this.props.interpretationId} postCommentSuccess={this._addCommentSuccess} />
+
             </div>
 		);
     },

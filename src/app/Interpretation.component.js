@@ -26,7 +26,7 @@ const Interpretation = React.createClass({
             likes: this.props.data.likes,
             likedBy: this.props.data.likedBy,
             open: false,
-            comments: this.props.data.comments.reverse(),
+            comments: this.props.data.comments,
             isTooltipActive: false,
         };
     },
@@ -44,14 +44,15 @@ const Interpretation = React.createClass({
 
     _handleWindowResize() {
         // If browser window width is less than 900, do not request for redraw
-        if ($('.intpreContents').width() < 650) {
+        if ($('.intpreContents').width() < 650 || dataInfo.getleftAreaWidth() < 650) {
             $('.intpreContents').width(650);
-        }
-        else {
+            $('.searchDiv').width(649);
+        } else {
             $('.intpreContents').width(dataInfo.getleftAreaWidth());
+            $('.searchDiv').width(dataInfo.getleftAreaWidth() - 1);
         }
 
-        this._drawIntepretation(true);
+        // this._drawIntepretation(true);
     },
 
 
@@ -85,6 +86,30 @@ const Interpretation = React.createClass({
         });
     },
 
+    _hasRelativePeriods(relativePeriods) {
+        if (this.props.data.type === 'MAP') {
+            for (const key in relativePeriods) {
+                if (relativePeriods[key] && this.relativePeriodKeys.indexOf(key) < 0) {
+                    return true;
+                }
+            }
+        } else if (this.props.data.type === 'EVENT_REPORT') {
+            for (const key in relativePeriods) {
+                if (relativePeriods[key]) {
+                    return true;
+                }
+            }
+        } else if (this.props.data.type === 'EVENT_CHART') {
+            for (const key in relativePeriods) {
+                if (relativePeriods[key]) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    },
+
     _setReportTable() {
         const width = dataInfo.getleftAreaWidth();
         const divId = this.props.data.id;
@@ -115,6 +140,13 @@ const Interpretation = React.createClass({
             options.relativePeriodDate = this.props.data.created;
 
             DHIS.getEventReport(options);
+
+            const hasRelative = this._hasRelativePeriods(this.props.data.eventReport.relativePeriods);
+            if (hasRelative) {
+                const relativePeriodMsgId = `relativePeriodMsg_${this.props.data.id}`;
+                $(`#${relativePeriodMsgId}`).html('*** Relative periods is not supportted for the event report.');
+                $(`#${relativePeriodMsgId}`).show();
+            }
         });
     },
 
@@ -157,12 +189,21 @@ const Interpretation = React.createClass({
             };
 
             DHIS.getEventChart(options);
+
+            const hasRelative = this._hasRelativePeriods(this.props.data.eventChart.relativePeriods);
+            if (hasRelative) {
+                const relativePeriodMsgId = `relativePeriodMsg_${this.props.data.id}`;
+                $(`#${relativePeriodMsgId}`).html('*** Relative periods is not supportted for the event chart.');
+                $(`#${relativePeriodMsgId}`).show();
+            }
+
         });
     },
 
     relativePeriodKeys: [
         'THIS_MONTH',
         'LAST_MONTH',
+        'monthsThisYear',
         'LAST_3_MONTHS',
         'LAST_6_MONTHS',
         'LAST_12_MONTHS',
@@ -209,6 +250,14 @@ const Interpretation = React.createClass({
             }
 
             DHIS.getMap(options);
+
+            const hasRelative = this._hasRelativePeriods(this.props.data.map.mapViews.relativePeriods);
+            if (hasRelative) {
+                const relativePeriodMsgId = `relativePeriodMsg_${this.props.data.id}`;
+                $(`#${relativePeriodMsgId}`).html('*** Relative periods is not supportted for the map.');
+                $(`#${relativePeriodMsgId}`).show();
+            }
+
         });
     },
 
@@ -393,6 +442,7 @@ const Interpretation = React.createClass({
         const commentAreaKey = `commentArea_${this.props.data.id}`;
         const messageOwnerKey = `messageOwnerKey_${this.props.data.id}`;
         const likeDialogKey = `likeDialogKey_${this.props.data.id}`;
+        const relativePeriodMsgId = `relativePeriodMsg_${this.props.data.id}`;
 
         const peopleLikedByDialogActions = [
             <FlatButton type="button"
@@ -403,15 +453,17 @@ const Interpretation = React.createClass({
         ];
 
         return (
-			<div id={interpretationTagId} key={interpretationTagId}>
+			<div id={interpretationTagId} key={interpretationTagId} className="interpretations">
 				<div className="interpretationContainer" >
 
                     <div>
                         <div className="interpretationItem">
                             <div className="title"><span>{this.props.data.name}</span> <label className="linkArea"> <span className="smallFont">|</span> <a onClick={this._exploreInterpretation} className="smallFont" target="_blank">Explore</a></label></div>
-                            <div id={this.props.data.id} className="center"><img className="loadingImg" src="images/ajax-loader-circle.gif" /></div>
+                            <div id={this.props.data.id} ><img className="loadingImg" src="images/ajax-loader-circle.gif" /></div>
                         </div>
                     </div>
+
+                    <div id={relativePeriodMsgId} className="relativePeriodWarming"></div>
 
                     <MessageOwner key={messageOwnerKey} data={this.props.data} text={this.state.text} editInterpretationTextSuccess={this._editInterpretationTextSuccess} />
 
