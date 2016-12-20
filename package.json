@@ -1,13 +1,13 @@
 {
-  "name": "web-interpretations",
-  "version": "0.1.19",
+  "name": "Interpretation-Wall",
+  "version": "0.1.20",
   "description": "Interpretations Wall for a DHIS2 web app",
   "main": "src/index.html",
   "scripts": {
     "coverage": "babel-node node_modules/.bin/isparta cover --root ./src --report text --report html --report lcov node_modules/mocha/bin/_mocha -- --reporter dot --require config/setup.js --recursive test",
     "prebuild": "rm -rf build && mkdir build && d2-manifest package.json manifest.webapp",
     "build": "webpack",
-    "postbuild": "cp index.html build/ && cp icon.png build/ && cp node_modules/jquery/dist/jquery.min.js build/ && cp node_modules/babel-polyfill/dist/polyfill.min.js build/ && cp manifest.webapp build/",
+    "postbuild": "cp index.html build/ && cp -rf images build/ && cp icon.png build/ && cp node_modules/jquery/dist/jquery.min.js build/ && cp node_modules/babel-polyfill/dist/polyfill.min.js build/ && cp manifest.webapp build/",
     "test": "mocha --reporter spec --compilers js:babel-core/register --require config/setup.js --recursive test",
     "test-watch": "mocha --reporter spec --compilers js:babel-core/register --require config/setup.js --recursive test --watch",
     "lint": "eslint --fix src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,sinon,spy,stub --rule 'no-unused-expressions: 0' test && scss-lint",
@@ -17,7 +17,8 @@
   },
   "keywords": [
     "DHIS2",
-    "App"
+    "App",
+    "Interpretation"
   ],
   "author": "James Chang",
   "license": "BSD-3-Clause",

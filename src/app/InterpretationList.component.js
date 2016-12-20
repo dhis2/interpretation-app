@@ -172,8 +172,7 @@ const InterpretationList = React.createClass({
         } else {
             $('.intpreContents').width(dataInfo.getleftAreaCalcWidth());
             $('.searchDiv').width(dataInfo.getleftAreaCalcWidth() - 1);
-            console.log( 'LIST: leftAreaWidth: ' + dataInfo.getleftAreaCalcWidth() );            
-        }        
+        }
     },
 
     loadCharts(aggchartItems) {
@@ -257,10 +256,21 @@ const InterpretationList = React.createClass({
             this.loadAggregateReports();
 
             if (afterFunc) afterFunc();
+
+            this.setTableCentering();
         });
     },
-    // TODO: Does not have fail response, or always response!!!
 
+    setTableCentering() {
+        // TODO: If postback function after chart/table render is available, use that instead.
+        // loop it for 15 times, once a 0.5 sec?
+        let timesRun = 0;
+        const interval = setInterval(function() {
+            timesRun++;
+            if (timesRun >= 15) clearInterval(interval);
+            $('table.pivot').css('margin', '0 auto');
+        }, 500);
+    },
 
     createDiv(dataList, page) {
         const divKey = `list_${page}`;

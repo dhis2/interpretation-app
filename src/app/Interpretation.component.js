@@ -51,7 +51,6 @@ const Interpretation = React.createClass({
         } else {
             $('.intpreContents').width(dataInfo.getleftAreaCalcWidth());
             $('.searchDiv').width(dataInfo.getleftAreaCalcWidth() - 1);
-            console.log( 'INT: leftAreaWidth: ' + dataInfo.getleftAreaCalcWidth() + ', windowWith: ' + $(window).width() );
         }
 
         // this._drawIntepretation(true);
@@ -117,6 +116,7 @@ const Interpretation = React.createClass({
         const divId = this.props.data.id;
 
         $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
+        $(`#${divId}`).css('maxHeight', '600px');
         //$(`#${divId}`).css('width', width).css('maxHeight', '600px');
     },
 
@@ -127,6 +127,7 @@ const Interpretation = React.createClass({
 
 
         $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
+        $(`#${divId}`).css('maxHeight', '600px');
         //$(`#${divId}`).css('width', width).css('maxHeight', '600px');
 
         // Report Table do not need to redraw when browser window side changes
