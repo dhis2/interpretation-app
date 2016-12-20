@@ -35,6 +35,7 @@ const Interpretation = React.createClass({
     componentDidMount() {
         window.addEventListener('resize', this._handleWindowResize);
         this._drawIntepretation();
+        this._handleWindowResize();
     },
 
 
@@ -44,12 +45,13 @@ const Interpretation = React.createClass({
 
     _handleWindowResize() {
         // If browser window width is less than 900, do not request for redraw
-        if ($('.intpreContents').width() < 650 || dataInfo.getleftAreaWidth() < 650) {
+        if ($('.intpreContents').width() < 650 || dataInfo.getleftAreaCalcWidth() < 650) {
             $('.intpreContents').width(650);
             $('.searchDiv').width(649);
         } else {
-            $('.intpreContents').width(dataInfo.getleftAreaWidth());
-            $('.searchDiv').width(dataInfo.getleftAreaWidth() - 1);
+            $('.intpreContents').width(dataInfo.getleftAreaCalcWidth());
+            $('.searchDiv').width(dataInfo.getleftAreaCalcWidth() - 1);
+            console.log( 'INT: leftAreaWidth: ' + dataInfo.getleftAreaCalcWidth() + ', windowWith: ' + $(window).width() );
         }
 
         // this._drawIntepretation(true);
@@ -111,21 +113,21 @@ const Interpretation = React.createClass({
     },
 
     _setReportTable() {
-        const width = dataInfo.getleftAreaWidth();
+        const width = dataInfo.getInterpDivWidth();
         const divId = this.props.data.id;
 
         $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
-        $(`#${divId}`).css('width', width).css('maxHeight', '600px');
+        //$(`#${divId}`).css('width', width).css('maxHeight', '600px');
     },
 
     _setEventReport() {
-        const width = dataInfo.getleftAreaWidth();
+        const width = dataInfo.getInterpDivWidth(); //dataInfo.getleftAreaCalcWidth();
         const id = this.props.data.objId;
         const divId = this.props.data.id;
 
 
         $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
-        $(`#${divId}`).css('width', width).css('maxHeight', '600px');
+        //$(`#${divId}`).css('width', width).css('maxHeight', '600px');
 
         // Report Table do not need to redraw when browser window side changes
         getD2().then(d2 => {
@@ -153,7 +155,7 @@ const Interpretation = React.createClass({
     _setEventChart() {
         const id = this.props.data.objId;
         const divId = this.props.data.id;
-        const width = dataInfo.getleftAreaWidth();
+        const width = dataInfo.getInterpDivWidth(); //dataInfo.getleftAreaCalcWidth();
 
         getD2().then(d2 => {
             const options = {};
@@ -215,7 +217,7 @@ const Interpretation = React.createClass({
     _setMap(data) {
         const me = this;
         getD2().then(d2 => {
-            const width = dataInfo.getleftAreaWidth();
+            const width = dataInfo.getInterpDivWidth();
             const divId = this.props.data.id;
             const createdDate = this.props.data.created;
 

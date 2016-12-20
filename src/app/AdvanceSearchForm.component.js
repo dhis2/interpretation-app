@@ -39,7 +39,7 @@ export default class AdvanceSearchForm extends Component {
             favoritesName: '',
             commentText: '',
             showFavoritesNameSearch: false,
-            favoritesNameSearchHint: '',
+            //favoritesNameSearchHint: '',
         };
     }
 
@@ -61,10 +61,9 @@ export default class AdvanceSearchForm extends Component {
     _typeChanged(event, index, value) {
         this.setState({ type: value });
 
-        this.setState({ favoritesNameSearchHint: 'Partial Favorites Name' });
+        //this.setState({ favoritesNameSearchHint: 'Partial Type Favorites Name' });
         // Show Hide the line..
-
-        const showFavoritesNameSearchRow = { value } ? true : false;
+        const showFavoritesNameSearchRow = (value); // ? true : false;
         this.setState({ showFavoritesNameSearch: showFavoritesNameSearchRow });
     }
 
@@ -126,8 +125,8 @@ export default class AdvanceSearchForm extends Component {
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Type</span></td>
                             <td className="tdData">
-                                <SelectField value={this.state.type} style={fontStyle} menuStyle={menuStyle} hintText="Type" hintStyle={hintStyle} onChange={this._typeChanged}>
-                                    <MenuItem value="" primaryText="" />
+                                <SelectField value={this.state.type} style={fontStyle} menuStyle={menuStyle} hintStyle={hintStyle} onChange={this._typeChanged}>
+                                    <MenuItem value="" primaryText="No Selection" />
                                     <MenuItem value="CHART" primaryText="Chart" />
                                     <MenuItem value="REPORT_TABLE" primaryText="Report Table" />
                                     <MenuItem value="EVENT_CHART" primaryText="Event Chart" />
@@ -140,7 +139,7 @@ export default class AdvanceSearchForm extends Component {
                             <td className="tdTitle"><span className="searchStyle">Favorites Name</span></td>
                             <td className="tdData">
                                 <TextField
-                                    hintText={this.state.favoritesNameSearchHint}
+                                    hintText="Partial Favorites Name"
                                     hintStyle={hintStyle}
                                     value={this.state.favoritesName}
                                     fullWidth

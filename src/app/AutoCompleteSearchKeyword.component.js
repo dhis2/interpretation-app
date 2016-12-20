@@ -175,7 +175,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 for (const interpretation of result.interpretations) {
                     const source = this.getKeywordObj(interpretation.id, interpretation.text);
 
-                    keywordList.push(this.createSelectionObj(source, 'images/interpretation_small.png', 'Interpretation Text'));
+                    keywordList.push(this.createSelectionObj(source, 'images/interpretation.png', 'Interpretation Text', true));
                 }
 
                 updateItemList(keywordList, 'Interpretation Text', 'Interpretation Text');
@@ -211,10 +211,11 @@ const AutoCompleteSearchKeyword = React.createClass({
                 source: { id: '', text: '' } };
     },
 
-    createSelectionObj(source, imageSrc, title) {
+    createSelectionObj(source, imageSrc, title, sizeOverride) {
+        const props = (sizeOverride) ? { width: '14px', height: '14px' } : {};
         return { text: source.text,
                 value: <div value={source.id} className="searchItemStyle">
-                            <img alt={title} src={imageSrc} title={title} />
+                            <img alt={title} src={imageSrc} title={title} {...props} />
                             <span className="searchItemName">{source.text}</span>
                         </div>,
                 source };

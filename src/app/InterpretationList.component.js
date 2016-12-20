@@ -170,15 +170,16 @@ const InterpretationList = React.createClass({
             $('.intpreContents').width(650);
              $('.searchDiv').width(649);
         } else {
-            $('.intpreContents').width(dataInfo.getleftAreaWidth());
-            $('.searchDiv').width(dataInfo.getleftAreaWidth() - 1);
-        }
+            $('.intpreContents').width(dataInfo.getleftAreaCalcWidth());
+            $('.searchDiv').width(dataInfo.getleftAreaCalcWidth() - 1);
+            console.log( 'LIST: leftAreaWidth: ' + dataInfo.getleftAreaCalcWidth() );            
+        }        
     },
 
     loadCharts(aggchartItems) {
         getD2().then(d2 => {
             const url = d2.Api.getApi().baseUrl.replace('api', '');
-            const width = dataInfo.getleftAreaWidth();
+            const width = dataInfo.getInterpDivWidth();
 
             const chartItems = [];
             for (let i = 0; i < aggchartItems.length; i++) {
@@ -206,7 +207,7 @@ const InterpretationList = React.createClass({
     loadAggregateReports() {
         getD2().then(d2 => {
             const url = d2.Api.getApi().baseUrl.replace('api', '');
-            const width = dataInfo.getleftAreaWidth();
+            const width = dataInfo.getInterpDivWidth();
 
             const items = [];
             for (let i = 0; i < this.aggReportItems.length; i++) {
