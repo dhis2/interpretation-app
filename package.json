@@ -87,6 +87,11 @@
   "manifest.webapp": {
     "icons": {
       "48": "icon.png"
+    },
+    "activities": {
+      "dhis": {
+        "href": ".."
+      }
     }
   }
 }
