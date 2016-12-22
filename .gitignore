@@ -3,10 +3,11 @@
 *.iml
 
 # Project folders/dependencies
-node_modules
-build
-coverage
+node_modules/
+build/
+coverage/
 manifest.webapp
+target/
 
 # Misc files
 npm-debug.log
