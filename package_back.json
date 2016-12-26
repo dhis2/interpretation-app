@@ -1,7 +1,7 @@
 {
-  "name": "Interpretations",
-  "version": "0.1.21",
-  "description": "Interpretations app",
+  "name": "Interpretation-Wall",
+  "version": "0.1.20",
+  "description": "Interpretations Wall for a DHIS2 web app",
   "main": "src/index.html",
   "scripts": {
     "coverage": "babel-node node_modules/.bin/isparta cover --root ./src --report text --report html --report lcov node_modules/mocha/bin/_mocha -- --reporter dot --require config/setup.js --recursive test",

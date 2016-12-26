@@ -32,6 +32,8 @@ const InterpretationList = React.createClass({
     },
 
     componentDidMount() {
+        this._handleWindowResize();
+
         window.addEventListener('resize', this._handleWindowResize);
     },
 
@@ -151,8 +153,6 @@ const InterpretationList = React.createClass({
         return searchFavoriteKeyName;
     },
 
-    curAggchartItems: [],
-    aggReportItems: [],
 
     searchLoading(loading) {
         if (loading) {
@@ -165,14 +165,20 @@ const InterpretationList = React.createClass({
     },
 
     _handleWindowResize() {
-       // If browser window width is less than 900, do not request for redraw
-        if ($('.intpreContents').width() < 650) {
+        const width = dataInfo.getleftAreaCalcWidth();
+        // If browser window width is less than 900, do not request for redraw
+        if ($('.intpreContents').width() < 650 || width < 650) {
             $('.intpreContents').width(650);
-             $('.searchDiv').width(649);
+            $('.searchDiv').width(649);
+            $('.divRightArea').css('position', '');
+            $('.divRightArea').css('right', '');
         } else {
-            $('.intpreContents').width(dataInfo.getleftAreaCalcWidth());
-            $('.searchDiv').width(dataInfo.getleftAreaCalcWidth() - 1);
+            $('.intpreContents').width(width);
+            $('.searchDiv').width(width - 1);
+            $('.divRightArea').css('position', 'fixed');
+            $('.divRightArea').css('right', '0px');
         }
+        console.log( 'width: ' + $('.intpreContents').width() );
     },
 
     loadCharts(aggchartItems) {
@@ -261,11 +267,14 @@ const InterpretationList = React.createClass({
         });
     },
 
+    curAggchartItems: [],
+    aggReportItems: [],
+
     setTableCentering() {
         // TODO: If postback function after chart/table render is available, use that instead.
         // loop it for 15 times, once a 0.5 sec?
         let timesRun = 0;
-        const interval = setInterval(function() {
+        const interval = setInterval(() => {
             timesRun++;
             if (timesRun >= 15) clearInterval(interval);
             $('table.pivot').css('margin', '0 auto');

@@ -33,27 +33,7 @@ const Interpretation = React.createClass({
 
 
     componentDidMount() {
-        window.addEventListener('resize', this._handleWindowResize);
         this._drawIntepretation();
-        this._handleWindowResize();
-    },
-
-
-    componentWillUnmount() {
-        window.removeEventListener('resize', this._handleWindowResize);
-    },
-
-    _handleWindowResize() {
-        // If browser window width is less than 900, do not request for redraw
-        if ($('.intpreContents').width() < 650 || dataInfo.getleftAreaCalcWidth() < 650) {
-            $('.intpreContents').width(650);
-            $('.searchDiv').width(649);
-        } else {
-            $('.intpreContents').width(dataInfo.getleftAreaCalcWidth());
-            $('.searchDiv').width(dataInfo.getleftAreaCalcWidth() - 1);
-        }
-
-        // this._drawIntepretation(true);
     },
 
 

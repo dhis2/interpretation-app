@@ -86,14 +86,14 @@ const AutoCompleteSearchKeyword = React.createClass({
             });
 
 
-        // Chart Favorit Search
+        // Event Chart Favorit Search
         restUtil.requestGetHelper(d2Api,
-            `interpretations?paging=false&fields=id,text,eventCart[id,name,title]&filter=eventChart.name:ilike:${value}`,
+            `interpretations?paging=false&fields=id,text,eventChart[id,name,title]&filter=eventChart.name:ilike:${value}`,
             (result) => {
                 const keywordList = [];
 
                 for (const interpretation of result.interpretations) {
-                    const source = this.getKeywordObj(interpretation.id, interpretation.chart.name);
+                    const source = this.getKeywordObj(interpretation.id, interpretation.eventChart.name);
 
                     keywordList.push(this.createSelectionObj(source, 'images/chart_small.png', 'Event Chart Favorite'));
                 }
@@ -101,14 +101,14 @@ const AutoCompleteSearchKeyword = React.createClass({
                 updateItemList(keywordList, 'Event Chart Favorite', 'Event Chart');
             });
 
-        // Report Table Favorite Search
+        // Event Report Table Favorite Search
         restUtil.requestGetHelper(d2Api,
             `interpretations?paging=false&fields=id,text,eventReport[id,name,title]&filter=eventReport.name:ilike:${value}`,
             (result) => {
                 const keywordList = [];
 
                 for (const interpretation of result.interpretations) {
-                    const source = this.getKeywordObj(interpretation.id, interpretation.reportTable.name);
+                    const source = this.getKeywordObj(interpretation.id, interpretation.eventReport.name);
 
                     keywordList.push(this.createSelectionObj(source, 'images/table_small.png', 'Event Report Table Favorite'));
                 }
