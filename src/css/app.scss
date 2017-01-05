@@ -40,6 +40,7 @@ html {
 .divMainPage
 {
   padding-top: 6px;
+  max-width: 1300px;
 }
 
 .tblMainPage
@@ -67,13 +68,11 @@ html {
 .divMainArea
 {
   min-width: 650px;
-  max-width: 1300px;
 }
 
 .divRightArea
 {
   vertical-align: top;
-  width: 210px;
   border: 1px solid #ddd;
   border-radius: 3px;
   margin-left: 8px;

@@ -8,6 +8,8 @@ import SearchBox from './SearchBox.component';
 import InterpretationList from './InterpretationList.component';
 import TopRankItems from './TopRankItems.component';
 
+import { dataInfo } from './data';
+
 const injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
@@ -53,6 +55,7 @@ export default React.createClass({
     },
 
     render() {
+        const rightAreaWidth = `${dataInfo.rightAreaWidth}px`;
         return (
             <div className="app-wrapper">
 
@@ -78,7 +81,7 @@ export default React.createClass({
                             </div>
                         </td>
                         <td>
-                            <div className="divRightArea">
+                            <div className="divRightArea" style={{ width: rightAreaWidth }}>
                                 <div style={{ minHeight: '500px' }}>
                                     <TopRankItems currentUser={this.state.currentUser} onTopRankItemClicked={this._onTopRankItemClicked} />
                                 </div>

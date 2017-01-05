@@ -118,7 +118,7 @@ const TopRankItems = React.createClass({
     },
 
     _topInterpretationClicked(id) {
-        this.props.onTopRankItemClicked({ id });
+        this.props.onTopRankItemClicked({ idList: [id] });
     },
 
     _topAuthorClicked(id) {

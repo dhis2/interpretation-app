@@ -82,4 +82,9 @@ export const otherUtils = {
     parseStringToHTML(str) {
         return $.parseHTML(str);
     },
+
+    trim(input) {
+        return input.replace(/^\s+|\s+$/gm, '');
+    },
+
 };

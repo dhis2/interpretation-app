@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { DatePicker, TextField, SelectField, MenuItem } from 'material-ui';
 import AutoCompleteUsers from './AutoCompleteUsers.component';
+import { otherUtils } from './utils';
 
 export default class AdvanceSearchForm extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ export default class AdvanceSearchForm extends Component {
         this._onSelectAuthor = this._onSelectAuthor.bind(this);
         this._onChangeInterpretationText = this._onChangeInterpretationText.bind(this);
         this._onChangeFavoritesName = this._onChangeFavoritesName.bind(this);
-        this._onChangeCommentText = this._onChangeCommentText.bind(this);    
+        this._onChangeCommentText = this._onChangeCommentText.bind(this);
     }
 
     getInitialData() {
@@ -52,6 +53,32 @@ export default class AdvanceSearchForm extends Component {
 
         this.refs.author.clear();
         this.refs.commentator.clear();
+    }
+
+    generateAdvSearchText() {
+        let summaryStr = '';
+
+        // TODO: Trim - otherUtils.trim
+        if (this.state.type) summaryStr += `Type: ${this.state.type}`;
+        if (this.state.dateCreatedFrom) summaryStr += `dateCreatedFrom: ${this.state.dateCreatedFrom}`;
+        if (this.state.dateCreatedTo) summaryStr += `dateCreatedTo: ${this.state.dateCreatedTo}`;
+        if (this.state.dateModiFrom) summaryStr += `dateModiFrom: ${this.state.dateModiFrom}`;
+        if (this.state.dateModiTo) summaryStr += `dateModiTo: ${this.state.dateModiTo}`;
+        if (this.state.author.id) summaryStr += `author: ${this.state.author.displayName}`;
+        if (this.state.commentator.id) summaryStr += `commentator: ${this.state.commentator.displayName}`;
+        if (this.state.interpretationText) summaryStr += `interpretationText: ${this.state.interpretationText}`;
+        if (this.state.favoritesName) summaryStr += `favoritesName: ${this.state.favoritesName}`;
+        if (this.state.commentText) summaryStr += `commentText: ${this.state.commentText}`;
+
+        if (summaryStr) summaryStr = `[ADV]: ${summaryStr}`;
+
+        console.log( 'summaryStr: ' + summaryStr );
+
+        return summaryStr;
+    }
+
+    checkAdvancedSearch(inputStr) {
+        return (otherUtils.trim(inputStr).indexOf('[ADV]') === 0);
     }
 
     _clickCloseBtn() {
@@ -111,7 +138,7 @@ export default class AdvanceSearchForm extends Component {
         const hintStyle = { fontSize: '14px' };
         const underlineStyle = { width: '400px' };
         const menuStyle = { fontSize: '14px' };
-        const fontStyle =  { fontSize: '14px' };
+        const fontStyle = { fontSize: '14px' };
 
         return (
             <div className="advanceSearchForm">

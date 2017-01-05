@@ -33,29 +33,34 @@ export default class SearchBox extends Component {
     }
 
     _searchKeywordChanged(event, value) {
+        // to pass the value down to 'autocomplete' control
         this.setState({ value });
     }
 
     _searchIconClicked() {
         if (this.refs.advancedSearchForm) this.refs.advancedSearchForm.collapseMenu();
-        this.props.onChangeEvent({ keyword: this.state.value });
+
+        // need to update the state with what's on the text fields..'
+        // <-- or on update of the field in advanced.., set this state...
+        const keyword = this.refs.searchKeyword.getInputKeyword();
+
+        this.props.onChangeEvent({ keyword });
     }
 
     _openAdvancedSearchForm() {
         // Remove the search text (value) when opening advanced Search
-        this.setState({ open: true, value: '' });
+        //this.setState({ open: true, value: '' });
+        this.setState({ open: true });
         this.bodyscrollingDisable(true);
-
-        this.refs.searchKeyword.clear();
+        //this.refs.searchKeyword.clear();
     }
 
     _closeAdvancedSearchForm() {
         // get data from advanced search form
-        const moreTerms = this.refs.advancedSearchForm.getSearchConditions();
+        //const moreTerms = this.refs.advancedSearchForm.getSearchConditions();       
+        this.refs.advancedSearchForm.resetForm();
 
-        // TODO: If data exists, highlight the down-arrow with color
-
-        this.setState({ open: false, moreTerms });
+        this.setState({ open: false, moreTerms: undefined });
         this.bodyscrollingDisable(false);
     }
 
@@ -67,19 +72,26 @@ export default class SearchBox extends Component {
         // get data from advanced search form
         const moreTerms = this.refs.advancedSearchForm.getSearchConditions();
 
-        // Call back with search term and keyword
-        this.props.onChangeEvent({ keyword: this.state.value, moreTerms });
+        // Call back with search term
+        this.props.onChangeEvent({ keyword: '', moreTerms });
 
         // Save the moreTerms in memory..
         this.setState({ open: false, moreTerms });
         this.bodyscrollingDisable(false);
+
+        // Populate the search text input with advanced content ('ADV: ---')
+        this.refs.searchKeyword.setInputKeyword(this.refs.advancedSearchForm.generateAdvSearchText());
     }
 
     _searchedItemSelected(item) {
         this.state.value = item.text;
-        // if ID exists (selected from list), do not pass keyword
-        const keywordToPass = (item.id) ? '' : item.text;
-        this.props.onChangeEvent({ id: item.id, keyword: keywordToPass });
+
+        // If 'Enter Key' was pressed rather than selection from the dropdown
+        // , 'id' is empty string and 'keyword' is 'item.text' (keywordToPass)
+        // If ID exists (selected from list), do not pass keyword
+        // 'moreTerms' is not passed - set it as undefined 
+        const keywordToPass = (item.idList && item.idList.length > 0) ? '' : item.text;
+        this.props.onChangeEvent({ idList: item.idList, keyword: keywordToPass });
     }
 
     render() {

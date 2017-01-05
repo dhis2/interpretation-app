@@ -96,8 +96,7 @@ const Interpretation = React.createClass({
         const divId = this.props.data.id;
 
         $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
-        $(`#${divId}`).css('maxHeight', '600px');
-        //$(`#${divId}`).css('width', width).css('maxHeight', '600px');
+        $(`#${divId}`).css('maxHeight', `${dataInfo.interpObjMaxHeight}px`);
     },
 
     _setEventReport() {
@@ -107,8 +106,7 @@ const Interpretation = React.createClass({
 
 
         $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
-        $(`#${divId}`).css('maxHeight', '600px');
-        //$(`#${divId}`).css('width', width).css('maxHeight', '600px');
+        $(`#${divId}`).css('maxHeight', `${dataInfo.interpObjMaxHeight}px`);
 
         // Report Table do not need to redraw when browser window side changes
         getD2().then(d2 => {
@@ -117,7 +115,7 @@ const Interpretation = React.createClass({
             options.id = id;
             options.url = d2.Api.getApi().baseUrl.replace('api', '');
             options.width = width;
-            options.height = 400;
+            options.height = dataInfo.interpObjHeight;
             options.displayDensity = 'compact';
             options.fontSize = 'small';
             options.relativePeriodDate = this.props.data.created;
@@ -145,7 +143,7 @@ const Interpretation = React.createClass({
             options.id = id;
             options.url = d2.Api.getApi().baseUrl.replace('api', '');
             options.width = width;
-            options.height = 400;
+            options.height = dataInfo.interpObjHeight;
             options.relativePeriodDate = this.props.data.created;
 
             options.domainAxisStyle = {
@@ -202,14 +200,14 @@ const Interpretation = React.createClass({
             const divId = this.props.data.id;
             const createdDate = this.props.data.created;
 
-            $(`#${divId}`).css('height', '308px');
+            $(`#${divId}`).css('height', `${dataInfo.mapHeight}px`);
 
             const options = {};
 
             options.el = divId;
             options.url = d2.Api.getApi().baseUrl.replace('api', '');
             options.width = width;
-            options.height = 400;
+            options.height = dataInfo.interpObjHeight;
 
             options.mapViews = data.mapViews;
 

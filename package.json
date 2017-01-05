@@ -1,6 +1,6 @@
 {
   "name": "Interpretations",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "description": "Interpretations app",
   "main": "src/index.html",
   "scripts": {

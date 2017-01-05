@@ -19,7 +19,7 @@ const AutoCompleteSearchKeyword = React.createClass({
             loading: false,
             open: false,
             keywordDataSource: [],
-            keyword: this.getKeywordObj(),
+            keyword: this.getEmptyKeywordObj(),
         };
     },
 
@@ -28,10 +28,15 @@ const AutoCompleteSearchKeyword = React.createClass({
         $('div.autoCompleteTextField').find('input[type="text"]').attr('type', 'search');
     },
 
-    getKeywordObj(idInput, textInput) {
-        const id = (!idInput) ? '' : idInput;
+    getKeywordObj(idListInput, textInput, sourceIdInput) {
+        const idList = (!idListInput) ? [] : idListInput;
         const text = (!textInput) ? '' : textInput;
-        return { id, text };
+        const sourceId = (!sourceIdInput) ? '' : sourceIdInput;
+        return { idList, text, sourceId };
+    },
+
+    getEmptyKeywordObj() {
+        return this.getKeywordObj();
     },
 
     getPlaceHolderItems() {
@@ -48,6 +53,43 @@ const AutoCompleteSearchKeyword = React.createClass({
         return placeHolderItems;
     },
 
+    getInputKeyword() {
+        return this.state.value;
+    },
+
+    setInputKeyword(inputStr) {
+        this.setState({ value: inputStr });
+    },
+
+    checkExistingSource(keywordList, sourceId) {
+        const existingSourceInfo = { exists: false, source: undefined };
+
+        for (const keywordItem of keywordList) {
+            if (keywordItem.source.sourceId === sourceId) {
+                existingSourceInfo.exists = true;
+                existingSourceInfo.source = keywordItem.source;
+                break;
+            }
+        }
+
+        return existingSourceInfo;
+    },
+
+    // Method for adding multiple source on a keyword list item
+    updateKeywordList(keywordList, sourceId, itemId, itemText, imageSrc, title) {
+        // If keywordList has same source (id), add to the list.. 
+        const existingSourceInfo = this.checkExistingSource(keywordList, sourceId);
+
+        if (existingSourceInfo.exists) {
+            existingSourceInfo.source.idList.push(itemId);
+        } else {
+            const sizeOverride = (title === 'Interpretation Text');
+            const source = this.getKeywordObj([itemId], itemText, sourceId);
+
+            keywordList.push(this.createSelectionObj(source, imageSrc, title, sizeOverride));
+        }
+    },
+
     performMultiItemSearch(d2, value, updateItemList) {
         const d2Api = d2.Api.getApi();
 
@@ -62,9 +104,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 const keywordList = [];
 
                 for (const interpretation of result.interpretations) {
-                    const source = this.getKeywordObj(interpretation.id, interpretation.chart.name);
-
-                    keywordList.push(this.createSelectionObj(source, 'images/chart_small.png', 'Chart Favorite'));
+                    this.updateKeywordList(keywordList, interpretation.chart.id, interpretation.id, interpretation.chart.name, 'images/chart_small.png', 'Chart Favorite');
                 }
 
                 updateItemList(keywordList, 'Chart Favorite', 'Chart');
@@ -77,9 +117,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 const keywordList = [];
 
                 for (const interpretation of result.interpretations) {
-                    const source = this.getKeywordObj(interpretation.id, interpretation.reportTable.name);
-
-                    keywordList.push(this.createSelectionObj(source, 'images/table_small.png', 'Report Table Favorite'));
+                    this.updateKeywordList(keywordList, interpretation.reportTable.id, interpretation.id, interpretation.reportTable.name, 'images/table_small.png', 'Report Table Favorite');
                 }
 
                 updateItemList(keywordList, 'Report Table Favorite', 'Report Table');
@@ -93,9 +131,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 const keywordList = [];
 
                 for (const interpretation of result.interpretations) {
-                    const source = this.getKeywordObj(interpretation.id, interpretation.eventChart.name);
-
-                    keywordList.push(this.createSelectionObj(source, 'images/chart_small.png', 'Event Chart Favorite'));
+                    this.updateKeywordList(keywordList, interpretation.eventChart.id, interpretation.id, interpretation.eventChart.name, 'images/chart_small.png', 'Event Chart Favorite');
                 }
 
                 updateItemList(keywordList, 'Event Chart Favorite', 'Event Chart');
@@ -108,9 +144,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 const keywordList = [];
 
                 for (const interpretation of result.interpretations) {
-                    const source = this.getKeywordObj(interpretation.id, interpretation.eventReport.name);
-
-                    keywordList.push(this.createSelectionObj(source, 'images/table_small.png', 'Event Report Table Favorite'));
+                    this.updateKeywordList(keywordList, interpretation.eventReport.id, interpretation.id, interpretation.eventReport.name, 'images/table_small.png', 'Event Report Table Favorite');
                 }
 
                 updateItemList(keywordList, 'Event Report Table Favorite', 'Event Report Table');
@@ -123,9 +157,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 const keywordList = [];
 
                 for (const interpretation of result.interpretations) {
-                    const source = this.getKeywordObj(interpretation.id, interpretation.map.name);
-
-                    keywordList.push(this.createSelectionObj(source, 'images/map_small.png', 'Map Favorite'));
+                    this.updateKeywordList(keywordList, interpretation.map.id, interpretation.id, interpretation.map.name, 'images/map_small.png', 'Map Favorite');
                 }
 
                 updateItemList(keywordList, 'Map Favorite', 'Map');
@@ -138,9 +170,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 const keywordList = [];
 
                 for (const interpretation of result.interpretations) {
-                    const source = this.getKeywordObj(interpretation.id, interpretation.user.name);
-
-                    keywordList.push(this.createSelectionObj(source, 'images/user_small.png', 'Author'));
+                    this.updateKeywordList(keywordList, interpretation.user.id, interpretation.id, interpretation.user.name, 'images/user_small.png', 'Author');
                 }
 
                 updateItemList(keywordList, 'Author', 'Author');
@@ -155,9 +185,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 for (const interpretation of result.interpretations) {
                     for (const comment of interpretation.comments) {
                         if (comment.user.name.search(new RegExp(value, 'i')) >= 0) {
-                            const source = this.getKeywordObj(interpretation.id, comment.user.name);
-
-                            keywordList.push(this.createSelectionObj(source, 'images/user_small.png', 'Commentator'));
+                            this.updateKeywordList(keywordList, comment.user.id, interpretation.id, comment.user.name, 'images/user_small.png', 'Commentator');
                         }
                     }
                 }
@@ -173,9 +201,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 const keywordList = [];
 
                 for (const interpretation of result.interpretations) {
-                    const source = this.getKeywordObj(interpretation.id, interpretation.text);
-
-                    keywordList.push(this.createSelectionObj(source, 'images/interpretation.png', 'Interpretation Text', true));
+                    this.updateKeywordList(keywordList, interpretation.id, interpretation.id, interpretation.text, 'images/interpretation.png', 'Interpretation Text');
                 }
 
                 updateItemList(keywordList, 'Interpretation Text', 'Interpretation Text');
@@ -192,9 +218,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 for (const interpretation of result.interpretations) {
                     for (const comment of interpretation.comments) {
                         if (comment.text.search(new RegExp(value, 'i')) >= 0) {
-                            const source = this.getKeywordObj(interpretation.id, comment.text);
-
-                            keywordList.push(this.createSelectionObj(source, 'images/comment.png', 'Comment Text'));
+                            this.updateKeywordList(keywordList, comment.id, interpretation.id, comment.text, 'images/comment.png', 'Comment Text');
                         }
                     }
                 }
@@ -208,7 +232,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 value: <div className="divSearchItemHeaderPart">
                             <span className="spanSearchItemHeaderName">{title}</span>
                         </div>,
-                source: { id: '', text: '' } };
+                source: this.getEmptyKeywordObj() };
     },
 
     createSelectionObj(source, imageSrc, title, sizeOverride) {
@@ -227,11 +251,11 @@ const AutoCompleteSearchKeyword = React.createClass({
                         <img src="images/loadingSmall.gif" /> Loading -&nbsp;
                         <img alt={text} height="14" width="14" src={imageSrc} /> {title}
                     </div>,
-                source: { id: '', text: '' } };
+                source: this.getEmptyKeywordObj() };
     },
 
     clear() {
-        this.setState({ value: '', keyword: this.getKeywordObj() });
+        this.setState({ value: '', keyword: this.getEmptyKeywordObj() });
     },
 
     collapseMenu() {
@@ -246,19 +270,44 @@ const AutoCompleteSearchKeyword = React.createClass({
         return newArray;
     },
 
-    _onUpdatekeywords(value) {
-        this.setState({ value, loading: true, open: false });
-        // Call back the parent passed in method for change
-        this.props.onChange(event, value);
+    checkAdvancedSearch(inputStr) {
+        return (otherUtils.trim(inputStr).indexOf('[ADV]') === 0);
+    },
 
-        delayOnceTimeAction.bind(500, this.props.searchId, () => {
-            if (value === '') {
-                this.setState({ keywordDataSource: [], keyword: this.getKeywordObj() });
-                this.props.onSelect(this.getKeywordObj());
-            } else {
+    isCurrentAdvancedStr() {
+        return this.checkAdvancedSearch(this.state.value);
+    },
+
+    _onUpdatekeywords(value) {
+        // Clear the dropdown List
+        this.setState({ keywordDataSource: [] });
+
+        if (this.isCurrentAdvancedStr()) {
+            //console.log( '-- advanced - previous [ADV], CLEARING --');
+            // Clear the searches?
+            this.setState({ value: '' });
+        } else if (this.checkAdvancedSearch(value)) {
+            //console.log( '-- advanced text - Not calling search.');
+        } else if (otherUtils.trim(value) === '') {
+            // If empty values are entered, do not perform search
+            // - but 'enter key' press on empty string will do - by _onSelectkeyword
+            // but need to clear the list..
+            this.setState({ value: '' });            
+            // Question: Should we empty out the advanced form?
+        } else {
+            this.setState({ value, loading: true, open: false });
+            // Call back the parent passed in method for change
+            this.props.onChange(event, value);
+
+            delayOnceTimeAction.bind(500, this.props.searchId, () => {
+
+                //if (value === '') {
+                //    this.setState({ keywordDataSource: [], keyword: this.this.getEmptyKeywordObj() });
+                //    this.props.onSelect(this.this.getEmptyKeywordObj());
+                //} else {
                 getD2().then(d2 => {
                     // Clear the dropdown List
-                    this.setState({ keywordDataSource: [] });
+                    //this.setState({ keywordDataSource: [] });
 
                     this.performMultiItemSearch(d2, value, (resultItems, loadTypeName, sectionName) => {
                         if (resultItems.length > 0) resultItems.unshift(this.createHeaderPart(loadTypeName, sectionName));
@@ -272,14 +321,19 @@ const AutoCompleteSearchKeyword = React.createClass({
                         this.setState({ keywordDataSource: newList });
                     });
                 });
-            }
-        });
+                //}
+            });
+        }
     },
 
     _onSelectkeyword(value, i) {
         if (i === undefined) {
             // Enter Key was pressed without selection
-            this.props.onSelect(this.getKeywordObj('', value));
+            if (this.checkAdvancedSearch(value)) {
+                //console.log( '-- keyword has advanced search string - Not calling search.');
+            } else {
+                this.props.onSelect(this.getKeywordObj('', otherUtils.trim(value)));
+            }
         } else {
             // Set real keyword here with setstate!!
             this.state.keyword = this.state.keywordDataSource[i].source;
