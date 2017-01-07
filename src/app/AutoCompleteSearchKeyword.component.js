@@ -10,11 +10,12 @@ const AutoCompleteSearchKeyword = React.createClass({
         searchId: React.PropTypes.string,
         onSelect: React.PropTypes.func,
         onChange: React.PropTypes.func,
+        onEnterKey: React.PropTypes.func,
     },
 
     getInitialState() {
         return {
-            value: this.props.value,
+            value: '',
             itemList: [],
             loading: false,
             open: false,
@@ -270,73 +271,69 @@ const AutoCompleteSearchKeyword = React.createClass({
         return newArray;
     },
 
-    checkAdvancedSearch(inputStr) {
-        return (otherUtils.trim(inputStr).indexOf('[ADV]') === 0);
-    },
-
-    isCurrentAdvancedStr() {
-        return this.checkAdvancedSearch(this.state.value);
+    isChangedFromAdvancedStr() {
+        return otherUtils.checkAdvancedSearch(this.state.value);
     },
 
     _onUpdatekeywords(value) {
+        let changeStatus = '';
         // Clear the dropdown List
         this.setState({ keywordDataSource: [] });
 
-        if (this.isCurrentAdvancedStr()) {
-            //console.log( '-- advanced - previous [ADV], CLEARING --');
-            // Clear the searches?
+        if (this.isChangedFromAdvancedStr()) {
+            // Clear text if changed from '[ADV] --' text
+            changeStatus = 'ADV_CLEARED';
             this.setState({ value: '' });
-        } else if (this.checkAdvancedSearch(value)) {
-            //console.log( '-- advanced text - Not calling search.');
+        } else if (otherUtils.checkAdvancedSearch(value)) {
+            // If entered value is '[ADV] --', no action
+            changeStatus = 'ADV_CASE';
         } else if (otherUtils.trim(value) === '') {
-            // If empty values are entered, do not perform search
-            // - but 'enter key' press on empty string will do - by _onSelectkeyword
-            // but need to clear the list..
-            this.setState({ value: '' });            
-            // Question: Should we empty out the advanced form?
+            // If empty values are entered, no action.  'EnterKey' on emptyString handled by _onSelectkeyword
+            changeStatus = 'EMPTY_STR';
+            this.setState({ value: '' });
         } else {
+            changeStatus = 'AUTO_SEARCHING';
             this.setState({ value, loading: true, open: false });
-            // Call back the parent passed in method for change
-            this.props.onChange(event, value);
 
             delayOnceTimeAction.bind(500, this.props.searchId, () => {
-
-                //if (value === '') {
-                //    this.setState({ keywordDataSource: [], keyword: this.this.getEmptyKeywordObj() });
-                //    this.props.onSelect(this.this.getEmptyKeywordObj());
-                //} else {
                 getD2().then(d2 => {
-                    // Clear the dropdown List
-                    //this.setState({ keywordDataSource: [] });
-
                     this.performMultiItemSearch(d2, value, (resultItems, loadTypeName, sectionName) => {
                         if (resultItems.length > 0) resultItems.unshift(this.createHeaderPart(loadTypeName, sectionName));
 
                         // Add to the result
                         const newList = this.combineList(this.state.keywordDataSource, resultItems);
 
-                        // remove previous list??
+                        // Remove previous list
                         otherUtils.removeFromList(newList, 'text', loadTypeName);
 
                         this.setState({ keywordDataSource: newList });
                     });
                 });
-                //}
             });
         }
+
+        // Call back the parent passed in method for change
+        this.props.onChange(this.state.value, changeStatus);
     },
 
     _onSelectkeyword(value, i) {
         if (i === undefined) {
             // Enter Key was pressed without selection
-            if (this.checkAdvancedSearch(value)) {
+            if (otherUtils.checkAdvancedSearch(value)) {
                 //console.log( '-- keyword has advanced search string - Not calling search.');
             } else {
-                this.props.onSelect(this.getKeywordObj('', otherUtils.trim(value)));
+                //this.props.onSelect(this.getKeywordObj('', otherUtils.trim(value)));
+                this.props.onEnterKey(otherUtils.trim(value));
             }
         } else {
-            // Set real keyword here with setstate!!
+            // Set keyword as 'value' (input) as well and pass back to parent control.
+            /*const keyword = this.state.keywordDataSource[i].source;
+            this.setState({ value: keyword, keyword });
+            this.props.onSelect(keyword);
+            */
+
             this.state.keyword = this.state.keywordDataSource[i].source;
+            //this.state.value = this.state.keyword;
             this.props.onSelect(this.state.keyword);
         }
     },

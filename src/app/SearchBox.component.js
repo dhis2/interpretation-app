@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { FlatButton, Dialog } from 'material-ui';
 import AdvanceSearchForm from './AdvanceSearchForm.component';
 import AutoCompleteSearchKeyword from './AutoCompleteSearchKeyword.component';
-
+import { otherUtils } from './utils';
 
 export default class SearchBox extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            value: '',
+            //value: '',
             open: false,
             searchList: [],
             moreTerms: undefined,
@@ -22,6 +22,7 @@ export default class SearchBox extends Component {
         this._advSearchFormReset = this._advSearchFormReset.bind(this);
         this._performAdvancedSearch = this._performAdvancedSearch.bind(this);
         this._searchedItemSelected = this._searchedItemSelected.bind(this);
+        this._searchEnterKeyPressed = this._searchEnterKeyPressed.bind(this);
     }
 
     bodyscrollingDisable(enable) {
@@ -32,27 +33,21 @@ export default class SearchBox extends Component {
         }
     }
 
-    _searchKeywordChanged(event, value) {
-        // to pass the value down to 'autocomplete' control
-        this.setState({ value });
-    }
-
     _searchIconClicked() {
         if (this.refs.advancedSearchForm) this.refs.advancedSearchForm.collapseMenu();
 
-        // need to update the state with what's on the text fields..'
-        // <-- or on update of the field in advanced.., set this state...
         const keyword = this.refs.searchKeyword.getInputKeyword();
 
         this.props.onChangeEvent({ keyword });
     }
 
     _openAdvancedSearchForm() {
-        // Remove the search text (value) when opening advanced Search
-        //this.setState({ open: true, value: '' });
         this.setState({ open: true });
         this.bodyscrollingDisable(true);
-        //this.refs.searchKeyword.clear();
+
+        if (this.refs.advancedSearchForm !== undefined && !otherUtils.checkAdvancedSearch(this.refs.searchKeyword.getInputKeyword())) {
+            this._advSearchFormReset();
+        }
     }
 
     _closeAdvancedSearchForm() {
@@ -83,15 +78,15 @@ export default class SearchBox extends Component {
         this.refs.searchKeyword.setInputKeyword(this.refs.advancedSearchForm.generateAdvSearchText());
     }
 
-    _searchedItemSelected(item) {
-        this.state.value = item.text;
+    _searchKeywordChanged(value, type) {
+    }
 
-        // If 'Enter Key' was pressed rather than selection from the dropdown
-        // , 'id' is empty string and 'keyword' is 'item.text' (keywordToPass)
-        // If ID exists (selected from list), do not pass keyword
-        // 'moreTerms' is not passed - set it as undefined 
-        const keywordToPass = (item.idList && item.idList.length > 0) ? '' : item.text;
-        this.props.onChangeEvent({ idList: item.idList, keyword: keywordToPass });
+    _searchedItemSelected(item) {
+        this.props.onChangeEvent({ idList: item.idList });
+    }
+
+    _searchEnterKeyPressed(input) {
+        this.props.onChangeEvent({ keyword: input });
     }
 
     render() {
@@ -120,7 +115,7 @@ export default class SearchBox extends Component {
                     </svg>
                 </td>
                 <td className="tdSearchTextInput">
-                    <AutoCompleteSearchKeyword searchId="searchKeyword" onChange={this._searchKeywordChanged} onSelect={this._searchedItemSelected} value={this.state.value} ref="searchKeyword" />
+                    <AutoCompleteSearchKeyword searchId="searchKeyword" onChange={this._searchKeywordChanged} onEnterKey={this._searchEnterKeyPressed} onSelect={this._searchedItemSelected} ref="searchKeyword" />
                 </td>
                 <td className="tdAdvancedSearch">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#BBB" height="30" viewBox="0 0 24 24" width="30" className="searchImg" onClick={this._openAdvancedSearchForm}>
@@ -140,13 +135,14 @@ export default class SearchBox extends Component {
                     contentStyle={{ position: 'absolute', top: '33px', left: '20px', right: 'auto', bottom: 'auto', width: '645px' }}
                     autoDetectWindowHeight={false}
                 >
-                    <AdvanceSearchForm ref="advancedSearchForm" savedTerms={this.state.moreTerms} askPopupClose={this._closeAdvancedSearchForm} />                
+                    <AdvanceSearchForm ref="advancedSearchForm" savedTerms={this.state.moreTerms} askPopupClose={this._closeAdvancedSearchForm} />
                 </Dialog>
             </div>
         );
     }
 }
 
+// below property 'value' probably is not needed anymore.  - Also remove 'value' from interpretationWall as well
 SearchBox.propTypes = { value: React.PropTypes.any,
     multiLine: React.PropTypes.bool,
     onChangeEvent: React.PropTypes.func,

@@ -70,15 +70,9 @@ export default class AdvanceSearchForm extends Component {
         if (this.state.favoritesName) summaryStr += `favoritesName: ${this.state.favoritesName}`;
         if (this.state.commentText) summaryStr += `commentText: ${this.state.commentText}`;
 
-        if (summaryStr) summaryStr = `[ADV]: ${summaryStr}`;
-
-        console.log( 'summaryStr: ' + summaryStr );
+        if (summaryStr) summaryStr = `${otherUtils.advSearchStr}: ${summaryStr}`;
 
         return summaryStr;
-    }
-
-    checkAdvancedSearch(inputStr) {
-        return (otherUtils.trim(inputStr).indexOf('[ADV]') === 0);
     }
 
     _clickCloseBtn() {

@@ -87,4 +87,15 @@ export const otherUtils = {
         return input.replace(/^\s+|\s+$/gm, '');
     },
 
+    // App specific help methods
+    advSearchStr: '[ADV]',
+
+    checkAdvancedSearch(inputStr) {
+        let check = false;
+        if (inputStr) {
+            const trimmedStr = this.trim(inputStr);
+            check = (trimmedStr.indexOf(this.advSearchStr) === 0);
+        }
+        return check;
+    },
 };
