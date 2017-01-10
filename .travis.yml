@@ -8,9 +8,9 @@ cache:
 script:
 - npm run build
 after_success:
-- if ( [ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ] ) && [ "$TRAVIS_REPO_SLUG"
-  == "dhis2/interpretation-app" ]  &&  [ "$TRAVIS_PULL_REQUEST" == "false" ] ; then
-  mvn clean deploy --settings deploy/settings.xml && exit 0; fi
+- if ( [ "$TRAVIS_BRANCH" == "master" ] || [ ! -z "$TRAVIS_TAG" ] ) && [ "$TRAVIS_REPO_SLUG"  == "dhis2/interpretation-app" ]  &&  [ "$TRAVIS_PULL_REQUEST" == "false" ];then
+      mvn clean deploy --settings deploy/settings.xml && exit 0;
+  fi 
 env:
   global:
   - secure: d3IUjn1Up7iIczFEJefWLmmbtIecWr3Yf1ZDuTly65XOcT7yMbg4E2dz4UcWlbNx/A9xUDB0QS0aE1JawXVnme2rjpIe8xt4SdmveXttEetM20/Fc9IVHbK/19CZf3dGWKed4Sa+ZM0VIEH0rl4x0tWUzQx0M3nlkU057VtbIQT77qfTRjCiP+04C0QiqNJ+PxbG894jaNnIStVAgdOlH/
