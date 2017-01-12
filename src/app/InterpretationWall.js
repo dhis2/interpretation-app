@@ -7,6 +7,7 @@ import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 import SearchBox from './SearchBox.component';
 import InterpretationList from './InterpretationList.component';
 import TopRankItems from './TopRankItems.component';
+import AppVersionInfo from './AppVersionInfo.component';
 
 import { dataInfo } from './data';
 
@@ -84,6 +85,9 @@ export default React.createClass({
                             <div className="divRightArea" style={{ width: rightAreaWidth }}>
                                 <div style={{ minHeight: '500px' }}>
                                     <TopRankItems currentUser={this.state.currentUser} onTopRankItemClicked={this._onTopRankItemClicked} />
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <AppVersionInfo linkSrc="https://docs.google.com/document/d/12ob_Ptufu8d7RMq1XJvcYNdWpCx23Zk9kxJx2VijjCk" />
                                 </div>
                             </div>
                         </td>

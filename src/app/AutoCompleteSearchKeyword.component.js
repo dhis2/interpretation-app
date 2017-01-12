@@ -327,13 +327,13 @@ const AutoCompleteSearchKeyword = React.createClass({
             }
         } else {
             // Set keyword as 'value' (input) as well and pass back to parent control.
-            /*const keyword = this.state.keywordDataSource[i].source;
+            /* const keyword = this.state.keywordDataSource[i].source;
             this.setState({ value: keyword, keyword });
             this.props.onSelect(keyword);
             */
 
             this.state.keyword = this.state.keywordDataSource[i].source;
-            //this.state.value = this.state.keyword;
+            // this.state.value = this.state.keyword;
             this.props.onSelect(this.state.keyword);
         }
     },

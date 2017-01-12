@@ -42,17 +42,14 @@ export default class SearchBox extends Component {
     }
 
     _openAdvancedSearchForm() {
+        if (!otherUtils.checkAdvancedSearch(this.refs.searchKeyword.getInputKeyword())) this._advSearchFormReset();
+
         this.setState({ open: true });
         this.bodyscrollingDisable(true);
-
-        if (this.refs.advancedSearchForm !== undefined && !otherUtils.checkAdvancedSearch(this.refs.searchKeyword.getInputKeyword())) {
-            this._advSearchFormReset();
-        }
     }
 
     _closeAdvancedSearchForm() {
         // get data from advanced search form
-        //const moreTerms = this.refs.advancedSearchForm.getSearchConditions();       
         this.refs.advancedSearchForm.resetForm();
 
         this.setState({ open: false, moreTerms: undefined });
@@ -60,7 +57,8 @@ export default class SearchBox extends Component {
     }
 
     _advSearchFormReset() {
-        this.refs.advancedSearchForm.resetForm();
+        // Reset the ADV Search data - on next open
+        this.setState({ moreTerms: undefined });
     }
 
     _performAdvancedSearch() {
@@ -79,6 +77,8 @@ export default class SearchBox extends Component {
     }
 
     _searchKeywordChanged(value, type) {
+        // Adv Form Reset set on open
+        // if (type === 'ADV_CLEARED') this._advSearchFormReset();
     }
 
     _searchedItemSelected(item) {
