@@ -23,6 +23,15 @@ export const dateUtil = {
 
         return `${date.getFullYear()}${separator}${monthStr}${separator}${dateStr}`;
     },
+    formatDateMMDDYYYY(date, separator) {
+        let monthStr = (date.getMonth() + 1).toString();
+        monthStr = (monthStr[1]) ? monthStr : `0${monthStr[0]}`;
+
+        let dateStr = date.getDate().toString();
+        dateStr = (dateStr[1]) ? dateStr : `0${dateStr[0]}`;
+
+        return `${monthStr}${separator}${dateStr}${separator}${date.getFullYear()}`;
+    },
 };
 
 export const restUtil = {

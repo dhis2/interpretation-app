@@ -77,8 +77,10 @@ export default class SearchBox extends Component {
     }
 
     _searchKeywordChanged(value, type) {
-        // Adv Form Reset set on open
-        // if (type === 'ADV_CLEARED') this._advSearchFormReset();
+        if (type === 'ADV_CLEARED' || type === 'EMPTY_STR') {
+            // perform default search..
+            this.props.onChangeEvent({ keyword: '' });
+        }
     }
 
     _searchedItemSelected(item) {

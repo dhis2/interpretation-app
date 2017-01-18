@@ -80,8 +80,14 @@ const InterpretationList = React.createClass({
 
             let data = {};
             data = interpretation;
-            data.userId = interpretation.user.id;
-            data.user = interpretation.user.name;
+
+            if (interpretation.user === undefined) {
+                data.userId = '';
+                data.user = 'UNKNOWN';
+            } else {
+                data.userId = interpretation.user.id;
+                data.user = interpretation.user.name;
+            }
             // data.comments = JSON.stringify(interpretation.comments);
 
             if (interpretation.type === 'CHART') {
@@ -286,9 +292,8 @@ const InterpretationList = React.createClass({
     loadMore(page, afterFunc) {
         const searchQuery = this.getSearchTerms(this.state.searchTerm);
 
-        //console.log( 'loadMore query: ' + searchQuery );
-
         actions.listInterpretation('', searchQuery, page).subscribe(result => {
+        // actions.listInterpretation('', searchQuery, undefined).subscribe(result => {
             const d2 = this.props.d2;
             const d2Api = d2.Api.getApi();
 
@@ -354,7 +359,6 @@ const InterpretationList = React.createClass({
                 this.combineIdList(result, searchIdListObject);
 
                 searchItem.performed = true;
-                //console.log(searchItem);
 
                 this.checkDoneList(searchPerformList, doneFunc, searchIdListObject);
             });

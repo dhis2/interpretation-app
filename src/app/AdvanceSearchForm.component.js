@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { DatePicker, TextField, SelectField, MenuItem } from 'material-ui';
 import AutoCompleteUsers from './AutoCompleteUsers.component';
-import { otherUtils } from './utils';
+import { otherUtils, dateUtil } from './utils';
 
 export default class AdvanceSearchForm extends Component {
     constructor(props) {
@@ -60,10 +60,10 @@ export default class AdvanceSearchForm extends Component {
 
         // TODO: Trim - otherUtils.trim
         if (this.state.type) summaryStr += `Type: ${this.state.type}, `;
-        if (this.state.dateCreatedFrom) summaryStr += `dateCreatedFrom: ${this.state.dateCreatedFrom}, `;
-        if (this.state.dateCreatedTo) summaryStr += `dateCreatedTo: ${this.state.dateCreatedTo}, `;
-        if (this.state.dateModiFrom) summaryStr += `dateModiFrom: ${this.state.dateModiFrom}, `;
-        if (this.state.dateModiTo) summaryStr += `dateModiTo: ${this.state.dateModiTo}, `;
+        if (this.state.dateCreatedFrom) summaryStr += `dateCreatedFrom: ${dateUtil.formatDateMMDDYYYY(this.state.dateCreatedFrom, '/')}, `;
+        if (this.state.dateCreatedTo) summaryStr += `dateCreatedTo: ${dateUtil.formatDateMMDDYYYY(this.state.dateCreatedTo, '/')}, `;
+        if (this.state.dateModiFrom) summaryStr += `dateModiFrom: ${dateUtil.formatDateMMDDYYYY(this.state.dateModiFrom, '/')}, `;
+        if (this.state.dateModiTo) summaryStr += `dateModiTo: ${dateUtil.formatDateMMDDYYYY(this.state.dateModiTo, '/')}, `;
         if (this.state.author.id) summaryStr += `author: ${this.state.author.displayName}, `;
         if (this.state.commentator.id) summaryStr += `commentator: ${this.state.commentator.displayName}, `;
         if (this.state.interpretationText) summaryStr += `interpretationText: ${this.state.interpretationText}, `;
