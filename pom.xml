@@ -8,8 +8,8 @@
   <artifactId>dhis-app-interpretation</artifactId>
   <version>2.26-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Interpretation Wall</name>
-  <description>DHIS 2 interpretation wall app</description>
+  <name>Interpretations</name>
+  <description>DHIS 2 interpretations app</description>
   <url>https://github.com/dhis2/interpretation-app</url>
   
   <organization>
