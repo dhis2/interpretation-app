@@ -114,6 +114,30 @@ html {
   padding: 4px 0 0px 6px;
 }
 
+.intprePageLoading
+{
+  margin-top: 5px;
+  padding-left: 30px;
+  padding-top: 7px;
+  font-size: 14px;
+  color: #444;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.intpreHasNextPage
+{
+  margin-top: 7px;
+  height: 30px;
+  border: 1px solid #777;
+  background-color: #aaa;
+  color: #444;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 7px;
+}
+
 .interpretationButton
 {
   width: 120px;
@@ -172,7 +196,7 @@ html {
 .interpretationItem
 {
   width: 100%;
-  padding: 2px;
+  padding: 2px 2px 2px 30px;
 }
 
 .interpretationItem img

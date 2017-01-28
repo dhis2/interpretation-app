@@ -424,7 +424,9 @@ const InterpretationList = React.createClass({
                     <CircularProgress size={2} />
                 </div>
                 <div className="intpreContents">
-                    <InfiniteScroll key="interpretationListKey" loader={<div><img src="images/ajaxLoaderBar.gif" /></div>} loadMore={this.loadMore} hasMore={this.state.hasMore} useWindow>
+                    <InfiniteScroll key="interpretationListKey"
+                        loader={<div className="intprePageLoading"><CircularProgress size={1} /><span style={{ marginLeft: '20px' }}> Loading Interpretations...</span></div>}
+                        loadMore={this.loadMore} hasMore={this.state.hasMore} useWindow>
                         {this.state.items}
                     </InfiniteScroll>
                 </div>

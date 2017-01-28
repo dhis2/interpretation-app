@@ -6,7 +6,7 @@ export const dataInfo = {
     maxLeftAreaWidth: 1000,
     rightAreaWidth: 210,
     offSetTotalWidth: 46,
-    contentDivOffSet: 20,
+    contentDivOffSet: 45,
     offSetRightAreaPosition: 23,
 
     interpObjHeight: 400,
