@@ -17,6 +17,6 @@ export const dataInfo = {
         return $(window).width() - this.rightAreaWidth - this.offSetTotalWidth;
     },
     getInterpDivWidth() {
-        return $('.intpreContents').width() - this.contentDivOffSet;
+        return $('.interpretationContainer').width() - this.contentDivOffSet;
     },
 };
