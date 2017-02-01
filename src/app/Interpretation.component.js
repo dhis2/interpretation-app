@@ -92,7 +92,7 @@ const Interpretation = React.createClass({
     },
 
     _setReportTable() {
-        const width = dataInfo.getInterpDivWidth();
+        //const width = dataInfo.getInterpDivWidth();
         const divId = this.props.data.id;
 
         $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
@@ -412,7 +412,7 @@ const Interpretation = React.createClass({
             link = 'dhis-web-event-visualizer'; // Event chart
         }
 
-        window.location.href = `../../../${link}/index.html?id=${this.props.data.objId}`;
+        window.location.href = `${_dhisLoc}${link}/index.html?id=${this.props.data.objId}`;
     },
 
     render() {

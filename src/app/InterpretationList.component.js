@@ -206,7 +206,7 @@ const InterpretationList = React.createClass({
     loadCharts(aggchartItems) {
         getD2().then(d2 => {
             const url = d2.Api.getApi().baseUrl.replace('api', '');
-            const width = dataInfo.getInterpDivWidth();
+            //const width = dataInfo.getInterpDivWidth();
 
             const chartItems = [];
             for (let i = 0; i < aggchartItems.length; i++) {
@@ -234,7 +234,7 @@ const InterpretationList = React.createClass({
     loadAggregateReports() {
         getD2().then(d2 => {
             const url = d2.Api.getApi().baseUrl.replace('api', '');
-            const width = dataInfo.getInterpDivWidth();
+            //const width = dataInfo.getInterpDivWidth();
 
             const items = [];
             for (let i = 0; i < this.aggReportItems.length; i++) {
