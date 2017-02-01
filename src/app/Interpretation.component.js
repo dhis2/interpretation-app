@@ -100,7 +100,7 @@ const Interpretation = React.createClass({
     },
 
     _setEventReport() {
-        const width = dataInfo.getInterpDivWidth(); //dataInfo.getleftAreaCalcWidth();
+        //const width = dataInfo.getInterpDivWidth(); //dataInfo.getleftAreaCalcWidth();
         const id = this.props.data.objId;
         const divId = this.props.data.id;
 
@@ -114,7 +114,7 @@ const Interpretation = React.createClass({
             options.el = divId;
             options.id = id;
             options.url = d2.Api.getApi().baseUrl.replace('api', '');
-            options.width = width;
+            //options.width = width;
             options.height = dataInfo.interpObjHeight;
             options.displayDensity = 'compact';
             options.fontSize = 'small';
@@ -134,7 +134,7 @@ const Interpretation = React.createClass({
     _setEventChart() {
         const id = this.props.data.objId;
         const divId = this.props.data.id;
-        const width = dataInfo.getInterpDivWidth(); //dataInfo.getleftAreaCalcWidth();
+        //const width = dataInfo.getInterpDivWidth(); //dataInfo.getleftAreaCalcWidth();
 
         getD2().then(d2 => {
             const options = {};
@@ -142,7 +142,7 @@ const Interpretation = React.createClass({
             options.el = divId;
             options.id = id;
             options.url = d2.Api.getApi().baseUrl.replace('api', '');
-            options.width = width;
+            //options.width = width;
             options.height = dataInfo.interpObjHeight;
             options.relativePeriodDate = this.props.data.created;
 
@@ -171,14 +171,29 @@ const Interpretation = React.createClass({
 
             DHIS.getEventChart(options);
 
+            this.removeDivWidth(divId);
+
             const hasRelative = this._hasRelativePeriods(this.props.data.eventChart.relativePeriods);
             if (hasRelative) {
                 const relativePeriodMsgId = `relativePeriodMsg_${this.props.data.id}`;
                 $(`#${relativePeriodMsgId}`).html('*** Relative periods is not supportted for the event chart.');
                 $(`#${relativePeriodMsgId}`).show();
             }
-
         });
+    },
+
+    removeDivWidth(divId) {
+        let timesRun = 0;
+        const interval = setInterval(() => {
+            timesRun++;
+            const panelTag = $(`#${divId}`).find('div.x-panel');
+
+            if (timesRun >= 15) clearInterval(interval);
+            else if (panelTag.length > 0) {
+                panelTag.css('width', '');
+                clearInterval(interval);
+            }
+        }, 500);
     },
 
     relativePeriodKeys: [
