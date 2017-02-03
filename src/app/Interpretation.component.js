@@ -61,7 +61,7 @@ const Interpretation = React.createClass({
             }
         });
 
-        delayOnceTimeAction.bind(5000, `imgLoading${this.props.data.id}`, () => {
+        delayOnceTimeAction.bind(8000, `imgLoading${this.props.data.id}`, () => {
             const divId = this.props.data.id;
             $(`#${divId}`).find('img.loadingImg').remove();
         });
@@ -171,7 +171,13 @@ const Interpretation = React.createClass({
 
             DHIS.getEventChart(options);
 
-            this.removeDivWidth(divId);
+            this.detectRendered(divId, (rendered, panelTag) => {
+                if (rendered) {
+                    panelTag.css('width', '');
+                    // hide the loading progress images
+                    $(`#${divId}`).find('img.loadingImg').remove();
+                }
+            });
 
             const hasRelative = this._hasRelativePeriods(this.props.data.eventChart.relativePeriods);
             if (hasRelative) {
@@ -182,18 +188,23 @@ const Interpretation = React.createClass({
         });
     },
 
-    removeDivWidth(divId) {
+    detectRendered(divId, returnFunc) {
+        const maxTimesRun = 15;
+        const intervalTime = 500;
         let timesRun = 0;
+
         const interval = setInterval(() => {
             timesRun++;
             const panelTag = $(`#${divId}`).find('div.x-panel');
 
-            if (timesRun >= 15) clearInterval(interval);
-            else if (panelTag.length > 0) {
-                panelTag.css('width', '');
+            if (timesRun >= maxTimesRun) {
                 clearInterval(interval);
+                returnFunc(false, panelTag);
+            } else if (panelTag.length > 0) {
+                clearInterval(interval);
+                returnFunc(true, panelTag);
             }
-        }, 500);
+        }, intervalTime);
     },
 
     relativePeriodKeys: [

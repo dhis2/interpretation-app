@@ -11,14 +11,15 @@ const AppVersionInfo = React.createClass({
     },
 
     componentDidMount() {
-        /*
-        $.get('manifest.webapp', function(data) {
-            const versionInfo = $.parseJSON(data);
-            if (versionInfo.version) {
-                const versionInfoStr = `ver ${versionInfo.version}`;
-                $('.appVersionInfo').text(versionInfoStr).attr('title', versionInfoStr);
-            }
-        });*/
+        if (_appUse !== undefined && _appUse === "app") {
+            $.get('manifest.webapp', data => {
+                const versionInfo = $.parseJSON(data);
+                if (versionInfo.version) {
+                    const versionInfoStr = `ver ${versionInfo.version}`;
+                    $('.appVersionInfo').text(versionInfoStr).attr('title', versionInfoStr);
+                }
+            });
+        }
     },
 
     render() {
