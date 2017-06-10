@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <title>Interpretations App</title>
 
+  <script type="text/javascript">
+	var _appUse = "integrated"; // integrated vs app
+	var _dhisLoc = "../"; // '../' vs '../../../'
+  </script>
+
+  <script src="jquery.min.js"></script>
   <script type="text/javascript" src="../dhis-web-commons/javascripts/ext/ext-all.js"></script>
   <script type="text/javascript" src="../dhis-web-commons/javascripts/openlayers/OpenLayers.js"></script>
   <script type="text/javascript" src="../dhis-web-pivot/reporttable.js"></script>
@@ -11,21 +17,13 @@
   <script type="text/javascript" src="../dhis-web-mapping/map.js"></script>
   <script type="text/javascript" src="../dhis-web-dashboard-integration/plugin/eventreport.js"></script>
   <script type="text/javascript" src="../dhis-web-dashboard-integration/plugin/eventchart.js"></script>
-
-
-	<script type="text/javascript">
-		var _appUse = "integrated"; // integrated vs app
-		var _dhisLoc = "../"; // '../' vs '../../../'
-	</script>
+  <script src="polyfill.min.js"></script>
+  <script src="app.js"></script>
 
 </head>
 <body>
 
 <div id="app"></div>
-
-<script src="polyfill.min.js"></script>
-<script src="jquery.min.js"></script>
-<script src="app.js"></script>
 
 </body>
 </html>
