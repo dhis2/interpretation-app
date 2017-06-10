@@ -10,7 +10,6 @@ const MessageOwner = React.createClass({
         data: React.PropTypes.object,
         text: React.PropTypes.string,
         editInterpretationTextSuccess: React.PropTypes.func,
-        sourceLink: React.PropTypes.string,
     },
 
     getInitialState() {
@@ -101,10 +100,10 @@ const MessageOwner = React.createClass({
         }
 
         return (
-			<div className="interpretationDescSection">
-				<div className="interpretationName">
-                    <a href={this.props.sourceLink} className="bold userLink" target="_blank">{this.props.data.user}</a>
-					<span className="tipText leftSpace">
+			<div className="interpretationName">
+				<div className="interpretationUser">
+					<a className="bold userLink">{this.props.data.user} </a>
+					<span className="tipText">
 					<IntlProvider locale="en">
 					<FormattedDate
     value={date}

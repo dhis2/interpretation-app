@@ -174,16 +174,16 @@ html {
   padding-right: 15px;
 }
 
-.interpretationDescSection
+.interpretationUser
 {
-  margin-bottom: 3px;
-  padding: 5px 5px 5px 7px;
-  font-size: 12px;
+  display: inline-block;
 }
 
 .interpretationName
 {
-  display: inline-block;
+  margin-bottom: 3px;
+  padding: 5px 5px 5px 7px;
+  font-size: 12px;
 }
 
 .interpretationText
@@ -305,10 +305,6 @@ a{
 
 .valignTop{
   vertical-align: top;
-}
-
-.leftSpace{
-  margin-left: 4px;
 }
 
 /*----------------------------------------------------------------------------*/

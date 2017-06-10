@@ -17,7 +17,7 @@ const Interpretation = React.createClass({
         data: React.PropTypes.object,
         currentUser: React.PropTypes.object,
         deleteInterpretationSuccess: React.PropTypes.func,
-        //aggChartList: React.PropTypes.array,
+        aggChartList: React.PropTypes.array,
     },
 
     getInitialState() {
@@ -51,14 +51,14 @@ const Interpretation = React.createClass({
                     this._setMap(result);
                 });
             } else if (this.props.data.type === 'EVENT_REPORT') {
-                this._setReportTable();
-            }
-            // CHANGE - #4
-            /* else if (this.props.data.type === 'EVENT_CHART') {
+                if (!isRedraw) {
+                    this._setEventReport();
+                }
+            } else if (this.props.data.type === 'EVENT_CHART') {
                 if (!isRedraw) {
                     this._setEventChart();
                 }
-            }*/
+            }
         });
 
         delayOnceTimeAction.bind(8000, `imgLoading${this.props.data.id}`, () => {
@@ -74,9 +74,7 @@ const Interpretation = React.createClass({
                     return true;
                 }
             }
-        }
-        // CHANGE - #5
-        /* else if (this.props.data.type === 'EVENT_REPORT') {
+        } else if (this.props.data.type === 'EVENT_REPORT') {
             for (const key in relativePeriods) {
                 if (relativePeriods[key]) {
                     return true;
@@ -88,7 +86,7 @@ const Interpretation = React.createClass({
                     return true;
                 }
             }
-        }*/
+        }
 
         return false;
     },
@@ -99,6 +97,95 @@ const Interpretation = React.createClass({
 
         $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
         $(`#${divId}`).css('maxHeight', `${dataInfo.interpObjMaxHeight}px`);
+    },
+
+    _setEventReport() {
+        //const width = dataInfo.getInterpDivWidth(); //dataInfo.getleftAreaCalcWidth();
+        const id = this.props.data.objId;
+        const divId = this.props.data.id;
+
+
+        $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
+        $(`#${divId}`).css('maxHeight', `${dataInfo.interpObjMaxHeight}px`);
+
+        // Report Table do not need to redraw when browser window side changes
+        getD2().then(d2 => {
+            const options = {};
+            options.el = divId;
+            options.id = id;
+            options.url = d2.Api.getApi().baseUrl.replace('api', '');
+            //options.width = width;
+            options.height = dataInfo.interpObjHeight;
+            options.displayDensity = 'compact';
+            options.fontSize = 'small';
+            options.relativePeriodDate = this.props.data.created;
+
+            DHIS.getEventReport(options);
+
+            const hasRelative = this._hasRelativePeriods(this.props.data.eventReport.relativePeriods);
+            if (hasRelative) {
+                const relativePeriodMsgId = `relativePeriodMsg_${this.props.data.id}`;
+                $(`#${relativePeriodMsgId}`).html('*** Relative periods is not supportted for the event report.');
+                $(`#${relativePeriodMsgId}`).show();
+            }
+        });
+    },
+
+    _setEventChart() {
+        const id = this.props.data.objId;
+        const divId = this.props.data.id;
+        //const width = dataInfo.getInterpDivWidth(); //dataInfo.getleftAreaCalcWidth();
+
+        getD2().then(d2 => {
+            const options = {};
+            options.uid = id;
+            options.el = divId;
+            options.id = id;
+            options.url = d2.Api.getApi().baseUrl.replace('api', '');
+            //options.width = width;
+            options.height = dataInfo.interpObjHeight;
+            options.relativePeriodDate = this.props.data.created;
+
+            options.domainAxisStyle = {
+                labelRotation: 45,
+                labelFont: '10px sans-serif',
+                labelColor: '#111',
+            };
+
+            options.rangeAxisStyle = {
+                labelFont: '9px sans-serif',
+            };
+
+            options.legendStyle = {
+                labelFont: 'normal 10px sans-serif',
+                labelColor: '#222',
+                labelMarkerSize: 10,
+                titleFont: 'bold 12px sans-serif',
+                titleColor: '#333',
+            };
+
+            options.seriesStyle = {
+                labelColor: '#333',
+                labelFont: '9px sans-serif',
+            };
+
+            DHIS.getEventChart(options);
+
+            this.detectRendered(divId, (rendered, panelTag) => {
+                if (rendered) {
+                    panelTag.css('width', '');
+                    // hide the loading progress images
+                    $(`#${divId}`).find('img.loadingImg').remove();
+                }
+            });
+
+            const hasRelative = this._hasRelativePeriods(this.props.data.eventChart.relativePeriods);
+            if (hasRelative) {
+                const relativePeriodMsgId = `relativePeriodMsg_${this.props.data.id}`;
+                $(`#${relativePeriodMsgId}`).html('*** Relative periods is not supportted for the event chart.');
+                $(`#${relativePeriodMsgId}`).show();
+            }
+        });
     },
 
     detectRendered(divId, returnFunc) {
@@ -337,7 +424,7 @@ const Interpretation = React.createClass({
         return <div>{list.map(likedByUserName => <span key={likedByUserName.id}>{likedByUserName.name}<br /></span>)} {this.state.likedBy.length > 10 ? <span>more...</span> : '' }</div>;
     },
 
-    _getSourceInterpretationLink() {
+    _exploreInterpretation() {
         let link = '';
         if (this.props.data.type === 'REPORT_TABLE') {
             link = 'dhis-web-pivot';
@@ -347,16 +434,11 @@ const Interpretation = React.createClass({
             link = 'dhis-web-mapping';
         } else if (this.props.data.type === 'EVENT_REPORT') {
             link = 'dhis-web-event-reports';
-        } else if (this.props.data.type === 'EVENT_CHART') {
+        } else {
             link = 'dhis-web-event-visualizer'; // Event chart
         }
 
-        // ?? ${_dhisLoc}??
-        return (link === '') ? '' : `${_dhisLoc}${link}/index.html?id=${this.props.data.objId}&interpretationId=${this.props.data.id}`;
-    },
-
-    _exploreInterpretation() {
-        window.location.href = this._getSourceInterpretationLink();
+        window.location.href = `${_dhisLoc}${link}/index.html?id=${this.props.data.objId}`;
     },
 
     render() {
@@ -368,7 +450,6 @@ const Interpretation = React.createClass({
         const messageOwnerKey = `messageOwnerKey_${this.props.data.id}`;
         const likeDialogKey = `likeDialogKey_${this.props.data.id}`;
         const relativePeriodMsgId = `relativePeriodMsg_${this.props.data.id}`;
-        const sourceLink = this._getSourceInterpretationLink();
 
         const peopleLikedByDialogActions = [
             <FlatButton type="button"
@@ -384,20 +465,14 @@ const Interpretation = React.createClass({
 
                     <div>
                         <div className="interpretationItem">
-                            <div className="title">
-                                <span>{this.props.data.name}</span>
-                                <label className="linkArea">
-                                    <span className="smallFont">|</span>
-                                    <a href={sourceLink} className="userLink leftSpace smallFont" target="_blank">Explore</a>
-                                </label>
-                            </div>
+                            <div className="title"><span>{this.props.data.name}</span> <label className="linkArea"> <span className="smallFont">|</span> <a onClick={this._exploreInterpretation} className="smallFont" target="_blank">Explore</a></label></div>
                             <div id={this.props.data.id} ><img className="loadingImg" src="images/ajax-loader-circle.gif" /></div>
                         </div>
                     </div>
 
                     <div id={relativePeriodMsgId} className="relativePeriodWarming"></div>
 
-                    <MessageOwner key={messageOwnerKey} data={this.props.data} sourceLink={sourceLink} text={this.state.text} editInterpretationTextSuccess={this._editInterpretationTextSuccess} />
+                    <MessageOwner key={messageOwnerKey} data={this.props.data} text={this.state.text} editInterpretationTextSuccess={this._editInterpretationTextSuccess} />
 
                     <div className="linkTag">
                         {otherUtils.findItemFromList(this.props.data.likedBy, 'id', this.props.currentUser.id) === undefined ? <a onClick={this._likeHandler} id={likeLinkTagId}>Like</a> : <a onClick={this._unlikeHandler} id={likeLinkTagId}>Unlike</a> } 
