@@ -367,9 +367,16 @@ const InterpretationList = React.createClass({
         const searchQuery = this.getSearchTerms(this.state.searchTerm);
 
         actions.listInterpretation('', searchQuery, page).subscribe(result => {
-        // actions.listInterpretation('', searchQuery, undefined).subscribe(result => {
             const d2 = this.props.d2;
             const d2Api = d2.Api.getApi();
+
+            if (page === 1) {
+                // Update the 'READ' timestamp
+                const queryUrl = 'me/dashboard/interpretations/read';
+                restUtil.requestPostHelper(d2Api, queryUrl, '', () => {
+                    console.log('successfully updated read timestamp');
+                });
+            }
 
             // NOTE: Changed the name of the method to long and descriptive.  Break up the method purpose if you can.
             const dataList = this.structureData_AndPutInGlobalList(result.interpretations, d2Api.baseUrl);

@@ -40,6 +40,22 @@ export const restUtil = {
             successFunc(result);
         });
     },
+    requestPostHelper(d2Api, url, value, successFunc) {
+        d2Api.post(url, value, { contentType: 'text/plain' })
+            .then(successFunc)
+            .catch(errorResponse => {
+                console.log(errorResponse);
+            });
+    },
+    requestHelper(d2Api, url, value, successFunc, requestType, returnContentType) {
+        const reqType = (requestType === undefined) ? 'POST' : requestType;
+        const returnContType = (returnContentType === undefined) ? 'text/plain' : returnContentType;
+        d2Api.request(reqType, url, value, { contentType: returnContType })
+        .then(successFunc)
+        .catch(errorResponse => {
+            console.log(errorResponse);
+        });
+    },
 };
 
 export const otherUtils = {
@@ -106,5 +122,9 @@ export const otherUtils = {
             check = (trimmedStr.indexOf(this.advSearchStr) === 0);
         }
         return check;
+    },
+
+    convertToNumber(n) {
+        return (n.startsWith('0')) ? eval(n[1]) : eval(n);
     },
 };
