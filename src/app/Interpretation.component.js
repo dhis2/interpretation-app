@@ -4,9 +4,8 @@ import { Dialog, FlatButton } from 'material-ui';
 import MessageOwner from './MessageOwner.component';
 import CommentArea from './CommentArea.component';
 import { getInstance as getD2 } from 'd2/lib/d2';
-import { delayOnceTimeAction } from './utils';
+import { delayOnceTimeAction, restUtil, otherUtils } from './utils';
 import { dataInfo } from './data';
-import { otherUtils } from './utils';
 
 import actions from './actions/Interpretation.action';
 import Tooltip from 'rc-tooltip';
@@ -144,7 +143,7 @@ const Interpretation = React.createClass({
             const options = {};
 
             options.el = divId;
-            options.url = d2.Api.getApi().baseUrl.replace('api', '');
+            options.url = restUtil.getUrlBase_Formatted( d2 );
             options.width = width;
             options.height = dataInfo.interpObjHeight;
 

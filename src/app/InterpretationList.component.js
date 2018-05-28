@@ -209,7 +209,6 @@ const InterpretationList = React.createClass({
 
     loadCharts(aggchartItems) {
         getD2().then(d2 => {
-            const url = d2.Api.getApi().baseUrl.replace('api', '');
             //const width = dataInfo.getInterpDivWidth();
 
             const chartItems = [];
@@ -228,7 +227,7 @@ const InterpretationList = React.createClass({
                 chartItems.push(options);
             }
 
-            chartPlugin.url = url;
+            chartPlugin.url = restUtil.getUrlBase_Formatted( d2 );
             chartPlugin.showTitles = false;
             chartPlugin.preventMask = false;
             chartPlugin.load(chartItems);
@@ -237,9 +236,7 @@ const InterpretationList = React.createClass({
 
     loadAggregateReports() {
         getD2().then(d2 => {
-            const url = d2.Api.getApi().baseUrl.replace('api', '');
             //const width = dataInfo.getInterpDivWidth();
-
             const items = [];
             for (let i = 0; i < this.aggReportItems.length; i++) {
                 const id = this.aggReportItems[i].objId;
@@ -255,7 +252,7 @@ const InterpretationList = React.createClass({
                 items.push(options);
             }
 
-            reportTablePlugin.url = url;
+            reportTablePlugin.url = restUtil.getUrlBase_Formatted( d2 );
             reportTablePlugin.showTitles = false;
             reportTablePlugin.load(items);
         });
@@ -264,7 +261,7 @@ const InterpretationList = React.createClass({
     // CHANGED - #1
     loadEventReports() {
         getD2().then(d2 => {
-            const url = d2.Api.getApi().baseUrl.replace('api', '');
+            //const url = restUtil.getUrlBase_Formatted( d2 );
             //const width = dataInfo.getInterpDivWidth();
 
             const items = [];
@@ -281,7 +278,6 @@ const InterpretationList = React.createClass({
                 options.relativePeriodDate = this.aggReportItems[i].created;
                 items.push(options); */
 
-
                 const options = {};
                 options.url = '..';
                 options.el = divId;
@@ -292,7 +288,7 @@ const InterpretationList = React.createClass({
                 items.push(options);
             }
 
-            eventReportPlugin.url = url;
+            eventReportPlugin.url = restUtil.getUrlBase_Formatted( d2 );
             eventReportPlugin.showTitles = false;
             eventReportPlugin.load(items);
         });
@@ -301,7 +297,7 @@ const InterpretationList = React.createClass({
 
     loadEventCharts(eventChartItems) {
         getD2().then(d2 => {
-            const url = d2.Api.getApi().baseUrl.replace('api', '');
+            //const url = restUtil.getUrlBase_Formatted( d2 );
             //const width = dataInfo.getInterpDivWidth();
 
             const chartItems = [];
@@ -320,7 +316,7 @@ const InterpretationList = React.createClass({
                 chartItems.push(options);
             }
 
-            eventChartPlugin.url = url;
+            eventChartPlugin.url = restUtil.getUrlBase_Formatted( d2 );
             eventChartPlugin.showTitles = false;
             eventChartPlugin.preventMask = false;
             eventChartPlugin.load(chartItems);

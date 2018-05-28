@@ -35,6 +35,15 @@ export const dateUtil = {
 };
 
 export const restUtil = {
+    getUrlBase_Formatted( d2 ) {        
+        let url = d2.Api.getApi().baseUrl.replace( '/api', '' );
+        const lastChar = url.substring( url.length - 1 );
+
+        if ( lastChar === '/' ) url = url.substring( 0, url.length - 1 )
+
+        return url;
+    },
+    
     requestGetHelper(d2Api, url, successFunc) {
         d2Api.get(url).then(result => {
             successFunc(result);
