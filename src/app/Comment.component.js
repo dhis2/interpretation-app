@@ -120,20 +120,16 @@ const Comment = React.createClass({
         });
     },
 
-    _convertToNumber(n) {
-        return (n.startsWith('0')) ? eval(n[1]) : eval(n);
-    },
-
     render() {
         const created = this.state.data.created.substring(0, 10).split('-');
         const time = this.state.data.created.substring(11, 19).split(':');
 
-        let month = this._convertToNumber(created[1]);
+        let month = otherUtils.convertToNumber(created[1]);
         month = month - 1;
-        const day = this._convertToNumber(created[2]);
-        const hour = this._convertToNumber(time[0]);
-        const minute = this._convertToNumber(time[1]);
-        const second = this._convertToNumber(time[2]);
+        const day = otherUtils.convertToNumber(created[2]);
+        const hour = otherUtils.convertToNumber(time[0]);
+        const minute = otherUtils.convertToNumber(time[1]);
+        const second = otherUtils.convertToNumber(time[2]);
 
 
         const date = new Date(eval(created[0]), month, day, hour, minute, second);

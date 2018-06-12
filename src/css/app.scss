@@ -319,6 +319,19 @@ a{
 .tooltip { display: none; }
 .tooltip-on-hover:hover + .tooltip { display: block; }
 
+.interpTopRightDiv {
+    display: inline-block;
+    float: right;
+}
+
+.topRightIcons {
+  cursor: pointer;
+  width: 15px;
+}
+
+.topRightAnchors {
+  margin-right: 7px;
+}
 /*----------------------------------------------------------------------------*/
 /* Search and Advanced Search Popup Related                                 */
 /*----------------------------------------------------------------------------*/
@@ -603,3 +616,53 @@ div.advancedSearchForm
     font-weight: bold;
     font-size: 13px;
 }
+
+
+/*----------------------------------------------------------------------------*/
+/* Access information table                                                   */
+/*----------------------------------------------------------------------------*/
+
+
+.accessDiv
+{
+    border-collapse: collapse;
+    border: 1px #dddddd solid;
+    width: 100%;
+}
+
+.accessDiv td
+{
+    border: 1px solid #ddd;
+    vertical-align: top;
+    width: 50%;
+}
+
+.accessTb
+{
+    border-collapse: collapse;
+}
+
+.accessTb th
+{
+    background-color: #efefef;
+    text-align: left;
+    font-size: 16px;
+}
+
+.accessTb td, th
+{
+    line-height: 30px;
+}
+
+
+.accessSubHeader
+{
+    font-size: 14px;
+    background-color: #f7f7f7;
+}
+
+.accessUser
+{
+  background-color: #f9f9f9; 
+}
+

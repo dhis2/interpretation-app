@@ -49,12 +49,15 @@ export const restUtil = {
             successFunc(result);
         });
     },
-    requestPostHelper(d2Api, url, value, successFunc) {
-        d2Api.post(url, value, { contentType: 'text/plain' })
+    requestPostHelper(d2Api, url, value, successFunc, returnContentType) {
+        const returnContType = (returnContentType === undefined) ? 'text/plain' : returnContentType;
+        restUtil.requestHelper(d2Api, url, value, successFunc, 'POST', returnContType);
+        /*d2Api.post(url, value, { contentType: 'text/plain' })
             .then(successFunc)
             .catch(errorResponse => {
                 console.log(errorResponse);
             });
+        */
     },
     requestHelper(d2Api, url, value, successFunc, requestType, returnContentType) {
         const reqType = (requestType === undefined) ? 'POST' : requestType;
@@ -64,6 +67,25 @@ export const restUtil = {
         .catch(errorResponse => {
             console.log(errorResponse);
         });
+    },
+};
+
+export const dhisUtils = {
+    getMatchingApiObjTypeName( dataType ) {
+        let dhisApiObjName = '';
+        if (dataType === 'REPORT_TABLE') {
+            dhisApiObjName = 'reportTables';
+        } else if (dataType === 'CHART') {
+            dhisApiObjName = 'charts';
+        } else if (dataType === 'MAP') {
+            dhisApiObjName = 'maps';
+        } else if (dataType === 'EVENT_REPORT') {
+            dhisApiObjName = 'eventReports';
+        } else if (dataType === 'EVENT_CHART') {
+            dhisApiObjName = 'eventCharts'; // Event chart
+        }
+
+        return dhisApiObjName;
     },
 };
 
@@ -97,6 +119,17 @@ export const otherUtils = {
         }
 
         return foundData;
+    },
+
+    findInArray( arr, valueStr ) {
+        let foundIndex = -1;
+
+        if ( arr !== undefined && valueStr !== undefined )
+        {
+            foundIndex = arr.indexOf( valueStr );
+        }
+
+        return foundIndex;
     },
 
     sortByKey(array, key) {
@@ -136,4 +169,25 @@ export const otherUtils = {
     convertToNumber(n) {
         return (n.startsWith('0')) ? eval(n[1]) : eval(n);
     },
+    // nameBeginsWith - 'srcObj_'
+    getClassName_ByBeginName( tag, nameBeginsWith ) {
+        const classNameArr = tag.attr('class').split(' ');
+        let foundName = '';
+
+        for (let i = 0; i < classNameArr.length; i++) {
+            const className = classNameArr[i];
+            if (className.startsWith(nameBeginsWith)) {
+                foundName = className;
+                break;
+            }
+        }
+
+        return foundName;
+    },
+
+    getSameSourceInterpIconTags( tag, typeStr, nameBeginsWith ) {
+        const scrObjName = otherUtils.getClassName_ByBeginName( tag, nameBeginsWith );
+
+        return ( scrObjName !== '' ) ? $( 'img.' + scrObjName ).filter( '.' + typeStr ) : tag;
+    }
 };

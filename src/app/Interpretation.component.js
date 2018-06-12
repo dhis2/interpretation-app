@@ -3,8 +3,9 @@ import React from 'react';
 import { Dialog, FlatButton } from 'material-ui';
 import MessageOwner from './MessageOwner.component';
 import CommentArea from './CommentArea.component';
+import AccessInfo from './AccessInfo.component';
 import { getInstance as getD2 } from 'd2/lib/d2';
-import { delayOnceTimeAction, restUtil, otherUtils } from './utils';
+import { delayOnceTimeAction, restUtil, dhisUtils, otherUtils } from './utils';
 import { dataInfo } from './data';
 
 import actions from './actions/Interpretation.action';
@@ -15,8 +16,8 @@ const Interpretation = React.createClass({
     propTypes: {
         data: React.PropTypes.object,
         currentUser: React.PropTypes.object,
+        d2Api: React.PropTypes.object,
         deleteInterpretationSuccess: React.PropTypes.func,
-        //aggChartList: React.PropTypes.array,
     },
 
     getInitialState() {
@@ -25,18 +26,18 @@ const Interpretation = React.createClass({
             likes: this.props.data.likes,
             likedBy: this.props.data.likedBy,
             open: false,
+            openAccessInfo: false,
             comments: this.props.data.comments,
             isTooltipActive: false,
         };
     },
 
-
     componentDidMount() {
         this._drawIntepretation();
     },
 
+    _drawIntepretation( isRedraw ) {
 
-    _drawIntepretation(isRedraw) {
         delayOnceTimeAction.bind(1000, `resultInterpretation${this.props.data.id}`, () => {
             const divId = this.props.data.id;
 
@@ -297,8 +298,55 @@ const Interpretation = React.createClass({
     _deleteHandler() {
         actions.deleteInterpretation(this.props.data, this.props.data.id)
 			.subscribe(() => {
-    this.props.deleteInterpretationSuccess(this.props.data.id);
+            this.props.deleteInterpretationSuccess(this.props.data.id);
 		});
+    },
+
+    _starHandler( e ) {
+        //const starImgTag = this._getTopRightIconImgByType( 'star' );
+        this._switchMark( 'star', 'favorite', 'marked.png', 'unmarked.png', 'Starred', 'Not Starred' );
+    },
+
+    _subscribeHandler() {
+        //const starImgTag = this._getTopRightIconImgByType( 'subscribe' );
+        this._switchMark( 'subscribe', 'subscriber', 'start_yes.png', 'start_no.png', 'Subscribed', 'Not Subscribed' );
+    },
+
+    // -------------------------------------------
+    _getTopRightIconImgByType( typeStr ) {
+        const interpretationTagId = `interpretation_${this.props.data.id}`;
+        //console.log( 'interpretationTagId: ' + interpretationTagId );
+        const interpDivTag = $( '#' + interpretationTagId );
+
+        return interpDivTag.find( 'img.' + typeStr );
+    },
+
+    _switchMark( typeStr, typeName, markImgSrcStr, unmarkImgSrcStr, markTitleStr, unmarkTitleStr ) {
+        const dataType = dhisUtils.getMatchingApiObjTypeName(this.props.data.type);
+        const queryUrl = _dhisLoc + 'api/' + dataType + '/' + this.props.data.objId + '/' + typeName;
+
+        const imgTag = this._getTopRightIconImgByType( typeStr );
+        // Do universal same sourceId icon change        
+        const imgTags_All = otherUtils.getSameSourceInterpIconTags( imgTag, typeStr, 'srcObj_' );
+                
+        if ( imgTag.hasClass( 'unmarked' ) )
+        {
+            restUtil.requestPostHelper(this.props.d2Api, queryUrl, '', () => {
+                imgTags_All.removeClass( 'unmarked' );
+                imgTags_All.addClass( 'marked' );
+                imgTags_All.attr( 'src', 'images/' + markImgSrcStr );
+                imgTags_All.attr( 'title', markTitleStr );
+            }, 'application/json' );
+        }
+        else if ( imgTag.hasClass( 'marked' ) )
+        {
+            restUtil.requestHelper(this.props.d2Api, queryUrl, '', () => {
+                imgTags_All.removeClass( 'marked' );
+                imgTags_All.addClass( 'unmarked' );
+                imgTags_All.attr( 'src', 'images/' + unmarkImgSrcStr );
+                imgTags_All.attr( 'title', unmarkTitleStr );                
+            }, 'DELETE', 'application/json' );
+        }        
     },
 
     _showEditHandler() {
@@ -334,6 +382,18 @@ const Interpretation = React.createClass({
     _getPeopleLikeList() {
         const list = this.state.likedBy.slice(0, 10);
         return <div>{list.map(likedByUserName => <span key={likedByUserName.id}>{likedByUserName.name}<br /></span>)} {this.state.likedBy.length > 10 ? <span>more...</span> : '' }</div>;
+    },
+
+    _openAccessInfoHandler() {
+        this.setState({
+            openAccessInfo: true,
+        });
+    },
+
+    _closeAccessInfoHandler() {
+        this.setState({
+            openAccessInfo: false,
+        });
     },
 
     _getSourceInterpretationLink() {
@@ -388,7 +448,29 @@ const Interpretation = React.createClass({
                                 <label className="linkArea">
                                     <span className="smallFont">|</span>
                                     <a href={sourceLink} className="userLink leftSpace smallFont" target="_blank">Explore</a>
+                                    
+                                    <span className="smallFont"> |</span>
+                                    <a onClick={this._openAccessInfoHandler} className="userLink leftSpace smallFont" id={accessLinkTagId}>Access</a>
                                 </label>
+                                <div className="interpTopRightDiv">
+                                    { this.props.data.objData !== undefined 
+                                    ?   <div>
+                                            <a onClick={this._starHandler} className="topRightAnchors">
+                                            { otherUtils.findInArray( this.props.data.objData.favorites, this.props.currentUser.id ) >= 0 
+                                                ? <img src="images/marked.png" title="Starred" className={`topRightIcons star marked srcObj_${this.props.data.objId}`} />
+                                                : <img src="images/unmarked.png" title="Not Starred" className={`topRightIcons star unmarked srcObj_${this.props.data.objId}`} /> 
+                                            }
+                                            </a>
+                                            <a onClick={this._subscribeHandler} className="topRightAnchors">
+                                                { otherUtils.findInArray( this.props.data.objData.subscribers, this.props.currentUser.id ) >= 0 
+                                                    ? <img src="images/start_yes.png" title="Subscribed" className={`topRightIcons subscribe marked srcObj_${this.props.data.objId}`} />
+                                                    : <img src="images/start_no.png" title="Not Subscribed" className={`topRightIcons subscribe unmarked srcObj_${this.props.data.objId}`} /> 
+                                                }
+                                            </a>
+                                        </div>
+                                    : <div></div>
+                                    }
+                                </div>
                             </div>
                             <div id={this.props.data.id} ><img className="loadingImg" src="images/ajax-loader-circle.gif" /></div>
                         </div>

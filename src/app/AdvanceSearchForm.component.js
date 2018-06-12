@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { DatePicker, TextField, SelectField, MenuItem } from 'material-ui';
+import { DatePicker, TextField, SelectField, MenuItem, Checkbox } from 'material-ui';
 import AutoCompleteUsers from './AutoCompleteUsers.component';
 import { otherUtils, dateUtil } from './utils';
 
@@ -23,6 +23,9 @@ export default class AdvanceSearchForm extends Component {
         this._onChangeInterpretationText = this._onChangeInterpretationText.bind(this);
         this._onChangeFavoritesName = this._onChangeFavoritesName.bind(this);
         this._onChangeCommentText = this._onChangeCommentText.bind(this);
+        this._onCheckStar = this._onCheckStar.bind(this);
+        this._onCheckSubscribe = this._onCheckSubscribe.bind(this);
+        this._onCheckMention = this._onCheckMention.bind(this);
     }
 
     getInitialData() {
@@ -41,6 +44,9 @@ export default class AdvanceSearchForm extends Component {
             commentText: '',
             showFavoritesNameSearch: false,
             //favoritesNameSearchHint: '',
+            star: false,
+            subscribe: false,
+            mention: false,
         };
     }
 
@@ -69,6 +75,11 @@ export default class AdvanceSearchForm extends Component {
         if (this.state.interpretationText) summaryStr += `interpretationText: ${this.state.interpretationText}, `;
         if (this.state.favoritesName) summaryStr += `favoritesName: ${this.state.favoritesName}, `;
         if (this.state.commentText) summaryStr += `commentText: ${this.state.commentText}, `;
+
+        // TODO: Need to use Star/Subscribe/Mention..  <-- DOES THIS WORK?  
+        if (this.state.star) summaryStr += `star: ${this.state.star}, `;
+        if (this.state.subscribe) summaryStr += `subscribe: ${this.state.subscribe}, `;
+        if (this.state.mention) summaryStr += `mention: ${this.state.mention}, `;
 
         if (summaryStr) summaryStr = `${otherUtils.advSearchStr}: ${summaryStr.substring(0, summaryStr.length - 2)}`;
 
@@ -127,6 +138,26 @@ export default class AdvanceSearchForm extends Component {
         this.setState({ commentText: event.target.value });
     }
 
+    _onCheckStar(event) {
+        setTimeout(() => {
+            this.setState((oldState) => { return { star: !oldState.star }; });    
+        }, 1 );
+    }
+    _onCheckSubscribe(event) {
+        setTimeout(() => {
+            this.setState((oldState) => { return { subscribe: !oldState.subscribe }; });    
+        }, 1 );
+    }
+    _onCheckMention(event) {
+        setTimeout(() => {
+            this.setState((oldState) => { return { mention: !oldState.mention }; });
+        }, 1 );
+    }
+
+    _tempClickFix( returnFunc ) {
+        setTimeout( returnFunc, 1 );
+    }
+
     render() {
         const hintStyle = { fontSize: '14px' };
         const underlineStyle = { width: '400px' };
@@ -175,13 +206,13 @@ export default class AdvanceSearchForm extends Component {
                                 <tbody>
                                 <tr>
                                 <td>
-                                    <DatePicker value={this.state.dateCreatedFrom} style={{ width: '130px' }} hintText="From" hintStyle={hintStyle} onChange={this._setDateCreatedFrom} />
+                                    <DatePicker value={this.state.dateCreatedFrom} style={{ width: '130px' }} underlineStyle={{ width: '130px' }} hintText="From" hintStyle={hintStyle} onChange={this._setDateCreatedFrom} />
                                 </td>
                                 <td>
                                     <div>-</div>
                                 </td>
                                 <td>
-                                    <DatePicker value={this.state.dateCreatedTo} style={{ width: '130px' }} hintText="To" hintStyle={hintStyle} onChange={this._setDateCreatedTo} />
+                                    <DatePicker value={this.state.dateCreatedTo} style={{ width: '130px' }} underlineStyle={{ width: '130px' }} hintText="To" hintStyle={hintStyle} onChange={this._setDateCreatedTo} />
                                 </td>
                                 </tr>
                                 </tbody>
@@ -195,19 +226,39 @@ export default class AdvanceSearchForm extends Component {
                                 <tbody>
                                 <tr>
                                     <td>
-                                        <DatePicker value={this.state.dateModiFrom} style={{ width: '130px' }} hintText="From" hintStyle={hintStyle} onChange={this._setDateModiFrom} />
+                                        <DatePicker value={this.state.dateModiFrom} style={{ width: '130px' }} underlineStyle={{ width: '130px' }} hintText="From" hintStyle={hintStyle} onChange={this._setDateModiFrom} />
                                     </td>
                                     <td>
                                         <div>-</div>
                                     </td>
                                     <td>
-                                        <DatePicker value={this.state.dateModiTo} style={{ width: '130px' }} hintText="To" hintStyle={hintStyle} onChange={this._setDateModiTo} />
+                                        <DatePicker value={this.state.dateModiTo} style={{ width: '130px' }} underlineStyle={{ width: '130px' }} hintText="To" hintStyle={hintStyle} onChange={this._setDateModiTo} />
                                     </td>
                                 </tr>
                                 </tbody>
                                 </table>
                             </td>
                         </tr>
+                        <tr>
+                            <td className="tdTitle"><span className="searchStyle">Follow-ups</span></td>
+                            <td className="tdData">
+                                <table>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <Checkbox label="Star" value={this.state.star} checked={this.state.star} onCheck={this._onCheckStar} disabled iconStyle={{left: "7"}} />
+                                    </td>
+                                    <td>
+                                        <Checkbox label="Subscribe" value={this.state.subscribe} checked={this.state.subscribe} onCheck={this._onCheckSubscribe} disabled iconStyle={{left: "7"}} />
+                                    </td>
+                                    <td>
+                                        <Checkbox label="Mention" value={this.state.mention} checked={this.state.mention} onCheck={this._onCheckMention} iconStyle={{left: "7"}} />
+                                    </td>
+                                </tr>
+                                </tbody>
+                                </table>
+                            </td>
+                        </tr>                        
                         <tr>
                             <td className="tdTitle"><span className="searchStyle">Author (user)</span></td>
                             <td className="tdData">
