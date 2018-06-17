@@ -4,6 +4,8 @@ DHIS 2 Interpretation app
 This repo contains the DHIS 2 interpretation wall app.
 
 ## Prerequisites
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdhis2%2Finterpretation-app.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdhis2%2Finterpretation-app?ref=badge_shield)
+
 Make sure you have at least the following versions of `node` and `npm`.
 
 + Node version v5.6.0 or higher
@@ -108,3 +110,7 @@ To make sure the code is in line with the code style, we use [eslint](http://esl
 
 ### enzyme
 [Enzyme](https://github.com/airbnb/enzyme) tool to make testing of React components easier. They provide a pretty clean api to get information from your rendered react components. 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdhis2%2Finterpretation-app.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdhis2%2Finterpretation-app?ref=badge_large)
