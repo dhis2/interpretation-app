@@ -448,9 +448,6 @@ const Interpretation = React.createClass({
                                 <label className="linkArea">
                                     <span className="smallFont">|</span>
                                     <a href={sourceLink} className="userLink leftSpace smallFont" target="_blank">Explore</a>
-                                    
-                                    <span className="smallFont"> |</span>
-                                    <a onClick={this._openAccessInfoHandler} className="userLink leftSpace smallFont" id={accessLinkTagId}>Access</a>
                                 </label>
                                 <div className="interpTopRightDiv">
                                     { this.props.data.objData !== undefined 
