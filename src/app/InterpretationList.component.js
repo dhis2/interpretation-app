@@ -96,22 +96,25 @@ const InterpretationList = React.createClass({
             if (interpretation.type === 'CHART') {
                 data.objId = interpretation.chart.id;
                 data.name = interpretation.chart.name;
+                data.objData = interpretation.chart;
                 this.curAggchartItems.push(interpretation);
             } else if (interpretation.type === 'MAP') {
                 data.objId = interpretation.map.id;
                 data.name = interpretation.map.name;
+                data.objData = interpretation.map;
             } else if (interpretation.type === 'REPORT_TABLE') {
                 data.objId = interpretation.reportTable.id;
                 data.name = interpretation.reportTable.name;
+                data.objData = interpretation.reportTable;
                 this.aggReportItems.push(interpretation);
             } else if (interpretation.type === 'EVENT_REPORT') {
                 data.objId = interpretation.eventReport.id;
                 data.name = interpretation.eventReport.name;
-                this.eventReportItems.push(interpretation);
+                data.objData = interpretation.eventReport;
             } else if (interpretation.type === 'EVENT_CHART') {
                 data.objId = interpretation.eventChart.id;
                 data.name = interpretation.eventChart.name;
-                this.curEventChartItems.push(interpretation);
+                data.objData = interpretation.eventChart;
             }
 
             dataList.push(data);
