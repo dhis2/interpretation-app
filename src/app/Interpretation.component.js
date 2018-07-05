@@ -452,12 +452,6 @@ const Interpretation = React.createClass({
                                 <div className="interpTopRightDiv">
                                     { this.props.data.objData !== undefined 
                                     ?   <div>
-                                            <a onClick={this._starHandler} className="topRightAnchors">
-                                            { otherUtils.findInArray( this.props.data.objData.favorites, this.props.currentUser.id ) >= 0 
-                                                ? <img src="images/marked.png" title="Starred" className={`topRightIcons star marked srcObj_${this.props.data.objId}`} />
-                                                : <img src="images/unmarked.png" title="Not Starred" className={`topRightIcons star unmarked srcObj_${this.props.data.objId}`} /> 
-                                            }
-                                            </a>
                                             <a onClick={this._subscribeHandler} className="topRightAnchors">
                                                 { otherUtils.findInArray( this.props.data.objData.subscribers, this.props.currentUser.id ) >= 0 
                                                     ? <img src="images/start_yes.png" title="Subscribed" className={`topRightIcons subscribe marked srcObj_${this.props.data.objId}`} />
