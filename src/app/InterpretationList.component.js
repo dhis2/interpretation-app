@@ -269,6 +269,7 @@ const InterpretationList = React.createClass({
         });
     },
 
+    /*
     // CHANGED - #1
     loadEventReports() {
         getD2().then(d2 => {
@@ -279,15 +280,6 @@ const InterpretationList = React.createClass({
             for (let i = 0; i < this.eventReportItems.length; i++) {
                 const id = this.eventReportItems[i].objId;
                 const divId = this.eventReportItems[i].id;
-
-               /* const options = {};
-                options.el = divId;
-                options.id = id;
-                //options.width = width;
-                options.height = dataInfo.interpObjHeight;
-                options.displayDensity = 'compact';
-                options.relativePeriodDate = this.aggReportItems[i].created;
-                items.push(options); */
 
                 const options = {};
                 options.url = '..';
@@ -304,7 +296,6 @@ const InterpretationList = React.createClass({
             eventReportPlugin.load(items);
         });
     },
-
 
     loadEventCharts(eventChartItems) {
         getD2().then(d2 => {
@@ -333,7 +324,7 @@ const InterpretationList = React.createClass({
             eventChartPlugin.load(chartItems);
         });
     },
-
+*/
     addToDivList(dataList, hasMore, resultPage) {
         this.setState({
             items: this.state.items.concat([this.createDiv(dataList, resultPage)]), hasMore,
@@ -357,8 +348,8 @@ const InterpretationList = React.createClass({
             this.loadCharts(this.curAggchartItems);
             this.loadAggregateReports();
             // CHANGED - #2
-            this.loadEventCharts(this.curEventChartItems);
-            this.loadEventReports();
+            //this.loadEventCharts(this.curEventChartItems);
+            //this.loadEventReports();
 
             if (afterFunc) afterFunc();
 
@@ -389,8 +380,8 @@ const InterpretationList = React.createClass({
             this.loadCharts(this.curAggchartItems);
             this.loadAggregateReports();
             // CHANGED - #3
-            this.loadEventCharts(this.curEventChartItems);
-            this.loadEventReports();
+            //this.loadEventCharts(this.curEventChartItems);
+            //this.loadEventReports();
 
             if (afterFunc) afterFunc();
 

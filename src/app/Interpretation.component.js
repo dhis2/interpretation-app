@@ -51,14 +51,14 @@ const Interpretation = React.createClass({
                     this._setMap(result);
                 });
             } else if (this.props.data.type === 'EVENT_REPORT') {
-                this._setReportTable();
-            }
-            // CHANGE - #4
-            /* else if (this.props.data.type === 'EVENT_CHART') {
+                if (!isRedraw) {
+                    this._setEventReport();
+                }
+            } else if (this.props.data.type === 'EVENT_CHART') {
                 if (!isRedraw) {
                     this._setEventChart();
                 }
-            }*/
+            }
         });
 
         delayOnceTimeAction.bind(8000, `imgLoading${this.props.data.id}`, () => {
@@ -74,9 +74,7 @@ const Interpretation = React.createClass({
                     return true;
                 }
             }
-        }
-        // CHANGE - #5
-        /* else if (this.props.data.type === 'EVENT_REPORT') {
+        } else if (this.props.data.type === 'EVENT_REPORT') {
             for (const key in relativePeriods) {
                 if (relativePeriods[key]) {
                     return true;
@@ -88,7 +86,7 @@ const Interpretation = React.createClass({
                     return true;
                 }
             }
-        }*/
+        }
 
         return false;
     },
@@ -99,6 +97,26 @@ const Interpretation = React.createClass({
 
         $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable');
         $(`#${divId}`).css('maxHeight', `${dataInfo.interpObjMaxHeight}px`);
+    },
+
+    _setEventReport() {
+        getD2().then(d2 => {
+            eventReportPlugin.url = restUtil.getUrlBase_Formatted(d2);
+            eventReportPlugin.load([{
+                id: this.props.data.objId,
+                el: this.props.data.id,
+            }]);
+        });
+    },
+
+    _setEventChart() {
+        getD2().then(d2 => {
+            eventChartPlugin.url = restUtil.getUrlBase_Formatted(d2);
+            eventChartPlugin.load([{
+                id: this.props.data.objId,
+                el: this.props.data.id,
+            }]);
+        });
     },
 
     detectRendered(divId, returnFunc) {
@@ -134,7 +152,20 @@ const Interpretation = React.createClass({
 
     _setMap(data) {
         const me = this;
-        getD2().then(d2 => {
+        getD2().then(d2 => {			
+            const divId = this.props.data.id;
+            $(`#${divId}`).css('height', `${dataInfo.mapHeight}px`);
+            mapPlugin.url = restUtil.getUrlBase_Formatted( d2 );
+            mapPlugin.load({
+                id: data.id,
+                el: divId,
+            });
+        });
+    },
+
+   /* _setMap(data) {
+        const me = this;
+        getD2().then(d2 => {			
             const width = dataInfo.getInterpDivWidth();
             const divId = this.props.data.id;
             const createdDate = this.props.data.created;
@@ -180,6 +211,7 @@ const Interpretation = React.createClass({
 
         });
     },
+    */
 
     // Quaterly && 6-month period
     _converRelativePeriods(relativePeriodKey, createdDate) {
