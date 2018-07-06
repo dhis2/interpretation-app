@@ -67,7 +67,7 @@ const Interpretation = React.createClass({
         });
     },
 
-    _hasRelativePeriods(relativePeriods) {
+    /* _hasRelativePeriods(relativePeriods) {
         if (this.props.data.type === 'MAP') {
             for (const key in relativePeriods) {
                 if (relativePeriods[key] && this.relativePeriodKeys.indexOf(key) < 0) {
@@ -89,7 +89,7 @@ const Interpretation = React.createClass({
         }
 
         return false;
-    },
+    }, */
 
     _setReportTable() {
         //const width = dataInfo.getInterpDivWidth();
@@ -105,6 +105,7 @@ const Interpretation = React.createClass({
             eventReportPlugin.load([{
                 id: this.props.data.objId,
                 el: this.props.data.id,
+                relativePeriodDate: this.props.data.created,
             }]);
         });
     },
@@ -115,6 +116,7 @@ const Interpretation = React.createClass({
             eventChartPlugin.load([{
                 id: this.props.data.objId,
                 el: this.props.data.id,
+                relativePeriodDate: this.props.data.created,
             }]);
         });
     },
@@ -159,59 +161,10 @@ const Interpretation = React.createClass({
             mapPlugin.load({
                 id: data.id,
                 el: divId,
+                relativePeriodDate: this.props.data.created,                
             });
         });
     },
-
-   /* _setMap(data) {
-        const me = this;
-        getD2().then(d2 => {			
-            const width = dataInfo.getInterpDivWidth();
-            const divId = this.props.data.id;
-            const createdDate = this.props.data.created;
-
-            $(`#${divId}`).css('height', `${dataInfo.mapHeight}px`);
-
-            const options = {};
-
-            options.el = divId;
-            options.url = restUtil.getUrlBase_Formatted( d2 );
-            options.width = width;
-            options.height = dataInfo.interpObjHeight;
-
-            options.mapViews = data.mapViews;
-
-            for (let i = 0; i < data.mapViews.length; i++) {
-                const mapView = data.mapViews[i];
-               // mapView.relativePeriodDate = createdDate.substring(0, 10);
-                if (otherUtils.findItemFromList(mapView.filters, 'dimension', 'pe') !== undefined) {
-                    let relativePeriods = [];
-                    for (let j = 0; j < mapView.filters.length; j++) {
-                        const items = mapView.filters[j].items;
-                        for (let k = 0; k < items.length; k++) {
-                            if (this.relativePeriodKeys.indexOf(items[k].id) >= 0) {
-                                relativePeriods = relativePeriods.concat(me._converRelativePeriods(items[k].id, createdDate));
-                            }
-                        }
-                        if (relativePeriods.length > 0) {
-                            options.mapViews[i].filters[j].items = relativePeriods;
-                        }
-                    }
-                }
-            }
-
-            DHIS.getMap(options);
-
-            const hasRelative = this._hasRelativePeriods(this.props.data.map.mapViews.relativePeriods);
-            if (hasRelative) {
-                const relativePeriodMsgId = `relativePeriodMsg_${this.props.data.id}`;
-                $(`#${relativePeriodMsgId}`).html('*** Relative periods is not supportted for the map.');
-                $(`#${relativePeriodMsgId}`).show();
-            }
-
-        });
-    },
-    */
 
     // Quaterly && 6-month period
     _converRelativePeriods(relativePeriodKey, createdDate) {
