@@ -41,7 +41,6 @@ const webpackConfig = {
         loaders: [
             {
                 test: /\.jsx?$/,
-                exclude: /node_modules/,
                 loader: 'babel',
                 query: {
                     presets: ['es2015', 'stage-0', 'react'],
@@ -70,23 +69,20 @@ const webpackConfig = {
         inline: true,
         compress: true,
         proxy: [
+            { path: '/api/**', target: dhisConfig.baseUrl, bypass: log },
+            { path: '/dhis-web-commons/**', target: dhisConfig.baseUrl, bypass: log },
+            { path: '/dhis-web-core-resource/**', target: dhisConfig.baseUrl, bypass: log },
+            { path: '/dhis-web-event-reports/**', target: dhisConfig.baseUrl, bypass: log },
+            { path: '/dhis-web-event-visualizer/**', target: dhisConfig.baseUrl, bypass: log },
+            { path: '/dhis-web-pivot/**', target: dhisConfig.baseUrl, bypass: log },
+            { path: '/dhis-web-visualizer/**', target: dhisConfig.baseUrl, bypass: log },
+            { path: '/dhis-web-maps/**', target: dhisConfig.baseUrl, bypass: log },
+            { path: '/jquery.min.js', target: 'http://localhost:8081/node_modules/jquery/dist', bypass: log },
             {
-                context: [
-                    '/api/**',
-                    '/dhis-web-commons/**',
-                    '/icons/**',
-                    '/css/**',
-                    '/dhis-web-pivot/**',
-                    '/dhis-web-visualizer/**',
-                    '/dhis-web-mapping/**',
-                    '/dhis-web-event-reports/**',
-                    '/dhis-web-event-visualizer/**',
-                ],
-                target: dhisConfig.baseUrl,
+                path: '/i18n/**',
+                target: 'http://localhost:8081/src',
                 bypass: log,
             },
-            { path: '/jquery.min.js', target: 'http://localhost:8081/node_modules/jquery/dist', bypass: log },
-            { path: '/polyfill.min.js', target: 'http://localhost:8081/node_modules/babel-polyfill/dist', bypass: log },
         ],
     },
 };

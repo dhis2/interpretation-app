@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Dialog, FlatButton } from 'material-ui';
+import SharingDialog from 'd2-ui/lib/sharing/SharingDialog.component';
 import MessageOwner from './MessageOwner.component';
 import CommentArea from './CommentArea.component';
 import AccessInfo from './AccessInfo.component';
@@ -29,6 +30,7 @@ const Interpretation = React.createClass({
             openAccessInfo: false,
             comments: this.props.data.comments,
             isTooltipActive: false,
+            isSharingDialogOpen: false,
         };
     },
 
@@ -287,6 +289,14 @@ const Interpretation = React.createClass({
 		});
     },
 
+    _openSharingDialog() {
+        this.setState({ isSharingDialogOpen: true });
+    },
+
+    _closeSharingDialog() {
+        this.setState({ isSharingDialogOpen: false });
+    },
+
     _starHandler( e ) {
         //const starImgTag = this._getTopRightIconImgByType( 'star' );
         this._switchMark( 'star', 'favorite', 'marked.png', 'unmarked.png', 'Starred', 'Not Starred' );
@@ -413,6 +423,7 @@ const Interpretation = React.createClass({
         const likeDialogKey = `likeDialogKey_${this.props.data.id}`;
         const relativePeriodMsgId = `relativePeriodMsg_${this.props.data.id}`;
         const sourceLink = this._getSourceInterpretationLink();
+        const { isSharingDialogOpen } = this.state;
 
         const peopleLikedByDialogActions = [
             <FlatButton type="button"
@@ -460,9 +471,17 @@ const Interpretation = React.createClass({
                         {otherUtils.findItemFromList(this.props.data.likedBy, 'id', this.props.currentUser.id) === undefined ? <a onClick={this._likeHandler} id={likeLinkTagId}>Like</a> : <a onClick={this._unlikeHandler} id={likeLinkTagId}>Unlike</a> } 
                         <span className={this.props.currentUser.id === this.props.data.userId || this.props.currentUser.superUser ? '' : 'hidden'} >
                         <label className="linkArea">·</label><a onClick={this._showEditHandler}>Edit</a>
+                        <label className="linkArea">·</label><a onClick={this._openSharingDialog}>Share</a>
                         <label className="linkArea">·</label><a onClick={this._deleteHandler}>Delete</a>
                         </span>
                     </div>
+
+                    <SharingDialog
+                        open={isSharingDialogOpen}
+                        id={this.props.data.id}
+                        type="interpretation"
+                        onRequestClose={this._closeSharingDialog}
+                    />
 
                      <div className="interpretationCommentArea">
                         <div id={peopleLikeTagId} className={this.state.likes > 0 ? 'greyBackground likeArea paddingLeft' : 'hidden greyBackground likeArea'}>

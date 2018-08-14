@@ -1,6 +1,6 @@
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { CircularProgress } from 'material-ui';
+import CircularProgress from 'material-ui/CircularProgress';
 import Interpretation from './Interpretation.component';
 import actions from './actions/Interpretation.action';
 import { dataInfo } from './data';
@@ -495,11 +495,11 @@ const InterpretationList = React.createClass({
         return (
 			<div>
                 <div className="intpreLoading" style={{ display: 'none' }}>
-                    <CircularProgress size={2} />
+                    <CircularProgress size={60} />
                 </div>
                 <div className="intpreContents">
                     <InfiniteScroll key="interpretationListKey"
-                        loader={<div className="intprePageLoading"><CircularProgress size={1} /><span style={{ marginLeft: '20px' }}> Loading Interpretations...</span></div>}
+                        loader={<div className="intprePageLoading"><CircularProgress size={30} /><span style={{ marginLeft: '20px' }}> Loading Interpretations...</span></div>}
                         loadMore={this.loadMore} hasMore={this.state.hasMore} useWindow>
                         {this.state.items}
                     </InfiniteScroll>
