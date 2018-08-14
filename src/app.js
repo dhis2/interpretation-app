@@ -13,9 +13,10 @@ if (process.env.NODE_ENV !== 'production') {
 import React from 'react';
 import { render } from 'react-dom';
 import log from 'loglevel';
-import { init, config, getManifest } from 'd2/lib/d2';
+import { init, config, getManifest, getUserSettings } from 'd2/lib/d2';
 
 import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 // The react-tap-event-plugin is required by material-ui to make touch screens work properly with onClick events
 import 'react-tap-event-plugin';
@@ -23,13 +24,18 @@ import 'react-tap-event-plugin';
 import InterpretationWall from './app/InterpretationWall';
 import './css/app.scss';
 import './css/datepicker.scss';
+import appTheme from './app.theme';
 //import './css/w3.css';
 //import './css/w3-theme-blue-grey.css';
 
 // Render the a LoadingMask to show the user the app is in loading
 // The consecutive render after we did our setup will replace this loading mask
 // with the rendered version of the application.
-render(<LoadingMask />, document.getElementById('app'));
+render(
+    <MuiThemeProvider muiTheme={appTheme}>
+        <LoadingMask />
+    </MuiThemeProvider>, document.getElementById('app')
+);
 
 /**
  * Renders the application into the page.
@@ -37,9 +43,24 @@ render(<LoadingMask />, document.getElementById('app'));
  * @param d2 Instance of the d2 library that is returned by the `init` function.
  */
 function startApp(d2) {
-    render(<InterpretationWall d2={d2} />, document.querySelector('#app'));
+    render(
+        <MuiThemeProvider muiTheme={appTheme}>
+            <InterpretationWall d2={d2} />
+        </MuiThemeProvider>, document.querySelector('#app')
+    );
 }
 
+function configI18n(userSettings) {
+    const uiLocale = userSettings.keyUiLocale;
+
+    if (uiLocale && uiLocale !== 'en') {
+        // Add the language sources for the preferred locale
+        config.i18n.sources.add(`./i18n/i18n_module_${uiLocale}.properties`);
+    }
+
+    // Add english as locale for all cases (either as primary or fallback)
+    config.i18n.sources.add('./i18n/i18n_module_en.properties');
+}
 
 // Load the application manifest to be able to determine the location of the Api
 // After we have the location of the api, we can set it onto the d2.config object
@@ -51,6 +72,8 @@ getManifest('./manifest.webapp')
         const baseUrl = process.env.NODE_ENV === 'production' ? manifest.getBaseUrl() : dhisDevConfig.baseUrl;
         config.baseUrl = `${baseUrl}/api`;
     })
+    .then(getUserSettings)
+    .then(configI18n)
     .then(init)
     .then(startApp)
 	.then(d2 => {

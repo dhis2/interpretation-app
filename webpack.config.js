@@ -41,7 +41,6 @@ const webpackConfig = {
         loaders: [
             {
                 test: /\.jsx?$/,
-                exclude: /node_modules/,
                 loader: 'babel',
                 query: {
                     presets: ['es2015', 'stage-0', 'react'],
@@ -79,6 +78,11 @@ const webpackConfig = {
             { path: '/dhis-web-visualizer/**', target: dhisConfig.baseUrl, bypass: log },
             { path: '/dhis-web-maps/**', target: dhisConfig.baseUrl, bypass: log },
             { path: '/jquery.min.js', target: 'http://localhost:8081/node_modules/jquery/dist', bypass: log },
+            {
+                path: '/i18n/**',
+                target: 'http://localhost:8081/src',
+                bypass: log,
+            },
         ],
     },
 };
