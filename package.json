@@ -1,5 +1,5 @@
 {
-  "name": "Interpretations",
+  "name": "interpretation-app",
   "version": "0.1.29",
   "description": "Interpretations app",
   "main": "src/index.html",
