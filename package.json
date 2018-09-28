@@ -13,8 +13,7 @@
     "lint": "eslint --fix src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,sinon,spy,stub --rule 'no-unused-expressions: 0' test && scss-lint",
     "validate": "npm ls",
     "prestart": "d2-manifest package.json manifest.webapp",
-    "start": "webpack-dev-server",
-    "deploy": "deploy-build"
+    "start": "webpack-dev-server"
   },
   "keywords": [
     "DHIS2",
@@ -27,7 +26,6 @@
     "jquery": "^2.2.3"
   },
   "devDependencies": {
-    "@dhis2/deploy-build": "^1.0.4",
     "babel-core": "^6.7.2",
     "babel-eslint": "^6.1.2",
     "babel-loader": "^6.2.4",
