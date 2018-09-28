@@ -1,5 +1,5 @@
 {
-  "name": "Interpretations",
+  "name": "interpretation-app",
   "version": "0.1.29",
   "description": "Interpretations app",
   "main": "src/index.html",
@@ -13,8 +13,7 @@
     "lint": "eslint --fix src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,sinon,spy,stub --rule 'no-unused-expressions: 0' test && scss-lint",
     "validate": "npm ls",
     "prestart": "d2-manifest package.json manifest.webapp",
-    "start": "webpack-dev-server",
-    "deploy": "npm run build && mvn clean deploy"
+    "start": "webpack-dev-server"
   },
   "keywords": [
     "DHIS2",
