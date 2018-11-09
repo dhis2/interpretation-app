@@ -11,11 +11,6 @@ deploy:
   skip_cleanup: true
   on:
     all_branches: true
-- provider: script
-  script: publish-build
-  skip_cleanup: true
-  on:
-    tags: true
 notifications:
   slack:
     secure: WdXbIGwUMzGp2O2m+EmeMy+CrCr3cOkkQU7UW9Q5dAORJl9L5FdxDA04C+NjDCwLyKnpFBR1uassTRG9opBn6rI6adAuAAPInoo7zCK4H8nCVvLsHfllOZOdZt85y5JXLDY+XIkmdg8QaX9MTf0r+oOzDnUikemWsLLgeHOtgkaqw4wq+x2CYYEr6k3lwhuZIHWe0t18xTnkRSKfFw69BoIa7GibL2+7tn3wXBtpHXN01dHkoU9vSqtJ5sYBvz/udGfvIRDU0hACKwnbXdnM6qcfU4pMKYp0pUM64AH9AjLSR0GKrENrCJYGAMNttDFOxZ5hcqF4wFop0Qg1e/gWGMoqwEBejUrlBj2p1okyjeag+NJinwoSDqqJm/1jumyfHUCf4hOfE3Lz6FKnbkegnI4DGxzN6JVUvzMwjRF7A3l9buEC3GYDjbkD0BT0+rdeQIy6rxyeD72Vwe6dw/EZXtozhGWMvdW5Qdzft3SIdGOIuJv73FiL5v40mpQYeJ9Hhg4fM/l30H/QQVWbPoiRn4oJQGD10Sj+c82bMgMfqX537OcTYTO/ntiP9GDby/jFgDf9ttxXC3yEKuGZC+deQJBz9Tu+ErDpewRUg/Kv3z/skVcyOtdUin0/8yejCH+AttwzJETBmOI0hQlr3VBeSSpvF5JL6Dz/25okajrYUN0=
