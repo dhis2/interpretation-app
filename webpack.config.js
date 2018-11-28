@@ -81,12 +81,13 @@ const webpackConfig = {
                     '/dhis-web-mapping/**',
                     '/dhis-web-event-reports/**',
                     '/dhis-web-event-visualizer/**',
+                    '/dhis-web-core-resource/**',
+                    '/dhis-web-maps/**'
                 ],
                 target: dhisConfig.baseUrl,
                 bypass: log,
             },
-            { path: '/jquery.min.js', target: 'http://localhost:8081/node_modules/jquery/dist', bypass: log },
-            { path: '/polyfill.min.js', target: 'http://localhost:8081/node_modules/babel-polyfill/dist', bypass: log },
+            { path: '/jquery.min.js', target: 'http://localhost:8081/node_modules/jquery/dist', bypass: log }
         ],
     },
 };
