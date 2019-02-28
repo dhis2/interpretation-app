@@ -1,6 +1,8 @@
 DHIS 2 Interpretation app
 ---
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/dhis2/interpretation-app.svg)](https://greenkeeper.io/)
+
 This repo contains the DHIS 2 interpretation wall app.
 
 ## Prerequisites
