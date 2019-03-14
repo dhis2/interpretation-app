@@ -1,4 +1,3 @@
-// require("expose-loader?$!jquery")
 import "expose-loader?jQuery!jquery";
 
 // When the app is built for development, DHIS_CONFIG is replaced with the config read from $DHIS2_HOME/config.js[on]
