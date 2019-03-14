@@ -1,3 +1,6 @@
+// require("expose-loader?$!jquery")
+import "expose-loader?jQuery!jquery";
+
 // When the app is built for development, DHIS_CONFIG is replaced with the config read from $DHIS2_HOME/config.js[on]
 // When the app is built for production, process.env.NODE_ENV is replaced with the string 'production', and
 // DHIS_CONFIG is replaced with an empty object
