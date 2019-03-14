@@ -22,7 +22,7 @@
   "dependencies": {
     "@rxjs/rx": "4.1.0",
     "ckeditor": "^4.11.3",
-    "jquery": "^3.3.1",
+    "jquery": "2.2.3",
     "prop-types": "15.5.4",
     "react": "0.14.9",
     "react-dom": "0.14.9",
