@@ -4,15 +4,12 @@
   "description": "Interpretations app",
   "main": "src/index.html",
   "scripts": {
-    "coverage": "babel-node node_modules/.bin/isparta cover --root ./src --report text --report html --report lcov node_modules/mocha/bin/_mocha -- --reporter dot --require config/setup.js --recursive test",
     "manifest": "d2-manifest package.json ./src/manifest.webapp",
     "prestart": "yarn manifest",
     "start": "webpack-dev-server --config webpack.dev.config.js",
     "prebuild": "rm -rf build",
     "build": "webpack --config webpack.prod.config.js",
     "postbuild": "cp -r  ./src/images icon.png ./src/index.html ./src/manifest.webapp ./package.json build/",
-    "test": "mocha --reporter spec --compilers js:babel-core/register --require config/setup.js --recursive test",
-    "test-watch": "mocha --reporter spec --compilers js:babel-core/register --require config/setup.js --recursive test --watch",
     "lint": "eslint --fix src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,sinon,spy,stub --rule 'no-unused-expressions: 0' test && scss-lint"
   },
   "keywords": [
@@ -74,13 +71,9 @@
     "webpack-dev-server": "^3.2.1"
   },
   "pre-commit": [
-    "test",
     "lint",
     "validate"
   ],
-  "directories": {
-    "test": "test"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dhis2/interpretation-app.git"
