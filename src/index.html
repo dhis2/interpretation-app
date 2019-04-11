@@ -14,9 +14,11 @@
 <script type="text/javascript" src="../dhis-web-commons/javascripts/ext/ext-all.js"></script>
 <script type="text/javascript" src="../dhis-web-commons/javascripts/openlayers/OpenLayers.js"></script>
 
-<script>
+<script type="text/javascript">
     window.dhis2 = window.dhis2 || {};
     dhis2.settings = dhis2.settings || {};
+    window._appUse = "integrated"; // integrated vs app
+    window._dhisLoc = "../"; // '../' vs '../../../'
 </script>
 
 <script type="text/javascript" src="../dhis-web-commons/javascripts/dhis2/dhis2.util.js?_rev=@cacheBuster"></script>
@@ -32,11 +34,6 @@
 <script type="text/javascript" src="../dhis-web-maps/map.js"></script>
 <script type="text/javascript" src="../dhis-web-event-visualizer/eventchart.js"></script>
 <script type="text/javascript" src="../dhis-web-event-reports/eventreport.js"></script>
-
-<script type="text/javascript">
-    var _appUse = "integrated"; // integrated vs app
-    var _dhisLoc = "../"; // '../' vs '../../../'
-</script>
 
 </body>
 </html>
