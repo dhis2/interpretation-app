@@ -383,10 +383,11 @@ const Interpretation = React.createClass({
 
     _getSourceInterpretationLink() {
         let link = '';
+        let fullLink = '';
         if (this.props.data.type === 'REPORT_TABLE') {
             link = 'dhis-web-pivot';
         } else if (this.props.data.type === 'CHART') {
-            link = 'dhis-web-visualizer';
+            fullLink = `${_dhisLoc}dhis-web-data-visualizer/index.html#/${this.props.data.objId}/interpretation/${this.props.data.id}`;
         } else if (this.props.data.type === 'MAP') {
             link = 'dhis-web-mapping';
         } else if (this.props.data.type === 'EVENT_REPORT') {
@@ -396,7 +397,8 @@ const Interpretation = React.createClass({
         }
 
         // ?? ${_dhisLoc}??
-        return (link === '') ? '' : `${_dhisLoc}${link}/index.html?id=${this.props.data.objId}&interpretationId=${this.props.data.id}`;
+        return (fullLink !== '') ? fullLink
+                                 : (link === '') ? '' : `${_dhisLoc}${link}/index.html?id=${this.props.data.objId}&interpretationId=${this.props.data.id}`;
     },
 
     _exploreInterpretation() {
