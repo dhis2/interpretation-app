@@ -389,7 +389,7 @@ const Interpretation = React.createClass({
         } else if (this.props.data.type === 'CHART') {
             fullLink = `${_dhisLoc}dhis-web-data-visualizer/index.html#/${this.props.data.objId}/interpretation/${this.props.data.id}`;
         } else if (this.props.data.type === 'MAP') {
-            link = 'dhis-web-mapping';
+            fullLink = `${_dhisLoc}dhis-web-maps/index.html?id=${this.props.data.objId}&interpretationid=${this.props.data.id}`;
         } else if (this.props.data.type === 'EVENT_REPORT') {
             link = 'dhis-web-event-reports';
         } else if (this.props.data.type === 'EVENT_CHART') {
