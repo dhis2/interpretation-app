@@ -7,7 +7,7 @@
     "coverage": "babel-node node_modules/.bin/isparta cover --root ./src --report text --report html --report lcov node_modules/mocha/bin/_mocha -- --reporter dot --require config/setup.js --recursive test",
     "prebuild": "rm -rf build",
     "build": "webpack -p --progress && d2-manifest package.json build/manifest.webapp",
-    "postbuild": "cp -r index.html images icon.png node_modules/jquery/dist/jquery.min.js node_modules/babel-polyfill/dist/polyfill.min.js build/",
+    "postbuild": "cp -r index.html images icon.png chart.js node_modules/jquery/dist/jquery.min.js node_modules/babel-polyfill/dist/polyfill.min.js build/",
     "test": "mocha --reporter spec --compilers js:babel-core/register --require config/setup.js --recursive test",
     "test-watch": "mocha --reporter spec --compilers js:babel-core/register --require config/setup.js --recursive test --watch",
     "lint": "eslint --fix src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,sinon,spy,stub --rule 'no-unused-expressions: 0' test && scss-lint",
