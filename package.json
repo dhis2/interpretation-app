@@ -20,6 +20,7 @@
   "author": "James Chang",
   "license": "BSD-3-Clause",
   "dependencies": {
+    "@dhis2/d2-ui-rich-text": "^7.0.5",
     "@rxjs/rx": "4.1.0",
     "ckeditor": "^4.11.3",
     "jquery": "2.2.3",
@@ -58,7 +59,7 @@
     "loglevel": "^1.4.0",
     "material-ui": "^0.14.4",
     "mocha": "^2.4.5",
-    "node-sass": "4.9.0",
+    "node-sass": "^4.14.1",
     "rc-tooltip": "^3.4.2",
     "react-intl": "^2.1.5",
     "react-time-ago": "^0.2.3",

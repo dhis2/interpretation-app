@@ -22,7 +22,7 @@ try {
     // Failed to load config file - use default config
     console.log('\nWARNING! Failed to load DHIS config:' + e.message);
     dhisConfig = {
-        baseUrl: 'http://localhost:8080/',
+        baseUrl: 'http://localhost:8080',
         authorization: 'Basic YWRtaW46ZGlzdHJpY3Q=', // admin:district
     };
 }
@@ -37,7 +37,13 @@ webpackConfig.devServer = {
     contentBase: './src',
     progress: true,
     port: 8081,
-    open: true
+    open: true,
+    proxy: [{
+        context: (path) => {
+            return path.startsWith('/dhis-web-') || path.startsWith('/api')
+        },
+        target: 'http://localhost:8080',
+    }]
 };
 
 module.exports = webpackConfig;
