@@ -112,7 +112,6 @@ const Comment = React.createClass({
 
         const date = new Date(eval(created[0]), month, day, hour, minute, second);
 
-        console.log('state', this.state)
         const userName = this.state.data.user.name ? this.state.data.user.name.split(' ') : ['USER'];
         let initChars = userName[0][0];
         if (userName.length > 1) {
