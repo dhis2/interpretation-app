@@ -2,6 +2,7 @@
 import React from 'react';
 import { IntlProvider, FormattedRelative } from 'react-intl';
 import { Avatar } from 'material-ui';
+import { Parser as RichTextParser } from '@dhis2/d2-ui-rich-text';
 import { otherUtils } from './utils';
 
 import actions from './actions/Comment.action';
@@ -26,23 +27,6 @@ const Comment = React.createClass({
             showContent: comments.showContent,
             hideContent: comments.hideContent,
         };
-    },
-
-    componentDidMount() {
-        this._displayContent();
-    },
-
-    _displayContent() {
-        const showContent = otherUtils.parseStringToHTML(this.state.showContent);
-        const hideContent = otherUtils.parseStringToHTML(this.state.hideContent);
-
-        const divShowContent = `showContent_${this.props.data.id}`;
-        const divHideContent = `hideContent_${this.props.data.id}`;
-
-        $(`#${divShowContent}`).html('');
-        $(`#${divHideContent}`).html('');
-        $(`#${divShowContent}`).append(showContent);
-        $(`#${divHideContent}`).append(hideContent);
     },
 
     maxWords: 30,
@@ -88,18 +72,14 @@ const Comment = React.createClass({
     },
 
     _onChange(e) {
-        this.setState(this._setComments(e.target.value, this.state.oldText), function () {
-            this._displayContent();
-        });
+        this.setState(this._setComments(e.target.value, this.state.oldText));
     },
 
     _editCommentText() {
         const text = this.state.text;
         actions.editComment(this.props.interpretationId, this.state.data.id, text)
 			.subscribe(() => {
-    this.setState(this._setComments(this.state.text, this.state.text), function () {
-        this._displayContent();
-    });
+    this.setState(this._setComments(this.state.text, this.state.text));
     const divEditText = `edit_${this.props.data.id}`;
     const divShowText = `show_${this.props.data.id}`;
 
@@ -110,8 +90,6 @@ const Comment = React.createClass({
 
     _cancelCommentText() {
         this.setState(this._setComments(this.state.oldText, this.state.oldText), function () {
-            this._displayContent();
-
             const divEditText = `edit_${this.props.data.id}`;
             const divShowText = `show_${this.props.data.id}`;
 
@@ -134,7 +112,7 @@ const Comment = React.createClass({
 
         const date = new Date(eval(created[0]), month, day, hour, minute, second);
 
-        const userName = this.state.data.user.name.split(' ');
+        const userName = this.state.data.user.name ? this.state.data.user.name.split(' ') : ['USER'];
         let initChars = userName[0][0];
         if (userName.length > 1) {
             initChars += userName[userName.length - 1][0];
@@ -161,9 +139,9 @@ const Comment = React.createClass({
                                 <div className="interpretationText">
                                      <div id={divShowText} >
                                         <a className="bold userLink">{this.state.data.user.name} </a>
-                                        <span id={divShowContent}></span>
+                                        <span id={divShowContent}><RichTextParser>{this.state.showContent}</RichTextParser></span>
                                         <span className={clazzName} onClick={this._handleClick}> ... more</span>
-                                        <span className="hideContent hidden" id={divHideContent}></span>
+                                        <span className="hideContent hidden" id={divHideContent}><RichTextParser>{this.state.hideContent}</RichTextParser></span>
                                     </div>
                                     <div className="hidden" id={divEditText}>
                                         <textarea className="commentArea" value={this.state.text} onChange={this._onChange} />
