@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { IntlProvider, FormattedDate } from 'react-intl';
+import { Parser as RichTextParser } from '@dhis2/d2-ui-rich-text';
 import { otherUtils } from './utils';
 
 import actions from './actions/Interpretation.action';
@@ -15,10 +16,6 @@ const MessageOwner = React.createClass({
 
     getInitialState() {
         return this.setValues(this.props.data.text, this.props.data.text);
-    },
-
-    componentDidMount() {
-        this._displayContent();
     },
 
     setValues(content, oldText) {
@@ -41,11 +38,6 @@ const MessageOwner = React.createClass({
         return str.split(/\s+/).slice(start, end).join(' ');
     },
 
-    _displayContent() {
-        $(`#${this._getTagId().divShowTag}`).html(otherUtils.parseStringToHTML(this.state.showContent));
-        $(`#${this._getTagId().divHideTag}`).html(otherUtils.parseStringToHTML(this.state.hiddenContent));
-    },
-
     _getTagId() {
         return {
             divEditText: `edit_${this.props.data.id}`,
@@ -56,9 +48,7 @@ const MessageOwner = React.createClass({
     },
 
     _onChange(e) {
-        this.setState(this.setValues(e.target.value, this.state.oldText), function () {
-            this._displayContent();
-        });
+        this.setState(this.setValues(e.target.value, this.state.oldText));
     },
 
     handleClick(e) {
@@ -117,9 +107,9 @@ const MessageOwner = React.createClass({
 				</div>
 				<div className="interpretationText">
 					<div id={this._getTagId().divShowText} >
-                        <span id={this._getTagId().divShowTag}></span>
+                        <span id={this._getTagId().divShowTag}><RichTextParser>{this.state.showContent}</RichTextParser></span>
                         <span className={clazzName} onClick={this.handleClick}> ... more</span>
-                        <span id={this._getTagId().divHideTag} className="hiddenContent hidden"></span>
+                        <span id={this._getTagId().divHideTag} className="hiddenContent hidden"><RichTextParser>{this.state.hiddenContent}</RichTextParser></span>
                     </div>
                     <div id={this._getTagId().divEditText} className="hidden" >
                         <textarea className="commentArea" value={this.state.text} onChange={this._onChange} />
