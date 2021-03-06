@@ -59,9 +59,32 @@ jobs:
                       **/build
                       !**/node_modules
                   retention-days: 1
+
+    lint:
+        runs-on: ubuntu-latest
+        needs: install
+        if: "!contains(github.event.head_commit.message, '[skip ci]')"
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 12.x
+
+            - uses: actions/cache@v2
+              id: yarn-cache
+              with:
+                  path: '**/node_modules'
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+            - name: Build
+              run: yarn build
+
+            - name: Lint
+              run: yarn lint
+
     publish:
         runs-on: ubuntu-latest
-        needs: [build]
+        needs: [build, lint]
         if: "!contains(github.event.head_commit.message, '[skip ci]')"
         steps:
             - uses: actions/checkout@v2
@@ -78,7 +101,9 @@ jobs:
 
             - uses: dhis2/deploy-build@master
               with:
-                  build-dir: build
+                  # uncomment following line for monorepo apps:
+                  #cwd: ./packages/app
+                  build-dir: build/app
                   github-token: ${{ env.GH_TOKEN }}
 
     release:
