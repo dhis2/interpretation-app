@@ -22,14 +22,16 @@
         "@dhis2/cli-style": "^7.3.0"
     },
     "dependencies": {
-        "@dhis2/app-runtime": "^2.7.1"
-    },
-    "dependencies": {
         "@dhis2/app-runtime": "^2.7.0",
         "@dhis2/app-runtime-adapter-d2": "^1.0.2",
+        "@dhis2/d2-ui-rich-text": "^7.0.5",
         "@dhis2/prop-types": "^2.0.3",
         "d2": "^31.9.0",
         "d2-ui": "^29.0.35",
-        "material-ui": "0.20.2"
+        "jquery": "^3.6.0",
+        "material-ui": "0.20.2",
+        "rc-tooltip": "^3.4.2",
+        "react-intl": "^2.1.5",
+        "react-infinite-scroller": "^0.2.10"
     }
 }

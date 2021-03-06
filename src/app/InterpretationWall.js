@@ -1,21 +1,8 @@
-import React from 'react';
-
-import HeaderBarComponent from 'd2-ui/lib/app-header/HeaderBar';
-import headerBarStore$ from 'd2-ui/lib/app-header/headerBar.store';
-import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
-
-import SearchBox from './SearchBox.component';
-import InterpretationList from './InterpretationList.component';
-import TopRankItems from './TopRankItems.component';
-import AppVersionInfo from './AppVersionInfo.component';
-
-import { dataInfo } from './data';
-
-const injectTapEventPlugin = require('react-tap-event-plugin');
-injectTapEventPlugin();
-
-
-const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
+import React from 'react'
+import { dataInfo } from './data'
+import InterpretationList from './InterpretationList.component'
+import SearchBox from './SearchBox.component'
+import TopRankItems from './TopRankItems.component'
 
 export default React.createClass({
     propTypes: {
@@ -32,71 +19,84 @@ export default React.createClass({
         return {
             charts: [],
             value: '',
-            currentUser: { name: this.props.d2.currentUser.displayName, id: this.props.d2.currentUser.id, superUser: this.isSuperUser() },
-        };
+            currentUser: {
+                name: this.props.d2.currentUser.displayName,
+                id: this.props.d2.currentUser.id,
+                superUser: this.isSuperUser(),
+            },
+        }
     },
 
     getChildContext() {
         return {
             d2: this.props.d2,
             value: '',
-        };
+        }
     },
 
     isSuperUser() {
-        return this.props.d2.currentUser.authorities.has('ALL');
+        return this.props.d2.currentUser.authorities.has('ALL')
     },
 
     _onSearchChange(searchTerm) {
-        this.refs.lists.onSearchChanged(searchTerm);
+        this.refs.lists.onSearchChanged(searchTerm)
     },
 
     _onTopRankItemClicked(searchTerm) {
-        this.refs.lists.onSearchChanged(searchTerm);
+        this.refs.lists.onSearchChanged(searchTerm)
     },
 
     render() {
-        const rightAreaWidth = `${dataInfo.rightAreaWidth}px`;
+        const rightAreaWidth = `${dataInfo.rightAreaWidth}px`
         return (
             <div className="app-wrapper">
-
-                <HeaderBar />
-				<mainPage>
-
+                <mainPage>
                     <div className="divMainPage">
-
                         <table className="tblMainPage">
-                        <tbody>
-                        <tr>
-                        <td>
-                            <div className="divMainArea">
-                                <div className="divSearchArea">
-                                    <SearchBox
-                                        onChangeEvent={this._onSearchChange}
-                                        hintText="Search by name"
-                                        value={this.state.value}
-                                    />
-                                </div>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div className="divMainArea">
+                                            <div className="divSearchArea">
+                                                <SearchBox
+                                                    onChangeEvent={
+                                                        this._onSearchChange
+                                                    }
+                                                    hintText="Search by name"
+                                                    value={this.state.value}
+                                                />
+                                            </div>
 
-                                <InterpretationList d2={this.props.d2} ref="lists" />
-                            </div>
-                        </td>
-                        <td>
-                            <div className="divRightArea" style={{ width: rightAreaWidth }}>
-                                <div style={{ minHeight: '500px' }}>
-                                    <TopRankItems currentUser={this.state.currentUser} onTopRankItemClicked={this._onTopRankItemClicked} />
-                                </div>
-                                <div style={{ textAlign: 'right' }}>
-                                    <AppVersionInfo linkSrc="https://docs.google.com/document/d/12ob_Ptufu8d7RMq1XJvcYNdWpCx23Zk9kxJx2VijjCk" />
-                                </div>
-                            </div>
-                        </td>
-                        </tr>
-                        </tbody>
+                                            <InterpretationList
+                                                d2={this.props.d2}
+                                                ref="lists"
+                                            />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div
+                                            className="divRightArea"
+                                            style={{ width: rightAreaWidth }}
+                                        >
+                                            <div style={{ minHeight: '500px' }}>
+                                                <TopRankItems
+                                                    currentUser={
+                                                        this.state.currentUser
+                                                    }
+                                                    onTopRankItemClicked={
+                                                        this
+                                                            ._onTopRankItemClicked
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
-				</mainPage>
-			</div>
-        );
+                </mainPage>
+            </div>
+        )
     },
-});
+})

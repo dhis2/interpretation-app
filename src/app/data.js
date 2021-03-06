@@ -1,3 +1,4 @@
+import $ from 'jquery'
 
 export const dataInfo = {
     minMainBodyWidth: 890,
@@ -6,7 +7,7 @@ export const dataInfo = {
     maxLeftAreaWidth: 1000,
     rightAreaWidth: 210,
     offSetTotalWidth: 46,
-    contentDivOffSet: 40,  // 10 or 45
+    contentDivOffSet: 40, // 10 or 45
     offSetRightAreaPosition: 23,
 
     interpObjHeight: 400,
@@ -14,11 +15,10 @@ export const dataInfo = {
     mapHeight: 308,
 
     getleftAreaCalcWidth() {
-        return $(window).width() - this.rightAreaWidth - this.offSetTotalWidth;
+        return $(window).width() - this.rightAreaWidth - this.offSetTotalWidth
     },
-
 
     getInterpDivWidth() {
-        return $('.interpretationContainer').width() - this.contentDivOffSet;
+        return $('.interpretationContainer').width() - this.contentDivOffSet
     },
-};
+}

@@ -1,34 +1,32 @@
-
-import React from 'react';
+import React from 'react'
 
 const AccessInfo = React.createClass({
     propTypes: {
         data: React.PropTypes.object,
     },
 
-
     _convertSharingCodeToName(sharingCode) {
-        let sharingName = 'Read';
+        let sharingName = 'Read'
         if (sharingCode === 'r-------') {
-            sharingName = 'Read';
+            sharingName = 'Read'
         } else if (sharingCode === 'rw------') {
-            sharingName = 'Read/Write';
+            sharingName = 'Read/Write'
         } else if (sharingCode === '--------') {
-            sharingName = 'None';
+            sharingName = 'None'
         }
 
-        return sharingName;
+        return sharingName
     },
 
     _convertExternalAccessText(externalAccess) {
-        let text = '';
+        let text = ''
         if (externalAccess) {
-            text = 'Yes';
+            text = 'Yes'
         } else if (!externalAccess) {
-            text = 'No';
+            text = 'No'
         }
 
-        return text;
+        return text
     },
 
     render() {
@@ -46,20 +44,42 @@ const AccessInfo = React.createClass({
                             </tr>
                             <tr>
                                 <td className="bold">Public Access</td>
-                                <td>{this._convertSharingCodeToName(this.props.data.publicAccess)}</td>
+                                <td>
+                                    {this._convertSharingCodeToName(
+                                        this.props.data.publicAccess
+                                    )}
+                                </td>
                             </tr>
                             <tr>
                                 <td className="bold">External Access</td>
-                                <td>{this._convertExternalAccessText(this.props.data.externalAccess)}</td>
+                                <td>
+                                    {this._convertExternalAccessText(
+                                        this.props.data.externalAccess
+                                    )}
+                                </td>
                             </tr>
                             <tr>
-                                <td colSpan="2" className="bold accessSubHeader">User Group Sharing</td>
+                                <td
+                                    colSpan="2"
+                                    className="bold accessSubHeader"
+                                >
+                                    User Group Sharing
+                                </td>
                             </tr>
-                            {this.props.data.userGroupAccesses.map(userGroupAccesse =>
-                            <tr>
-                                <td className="bold accessUser">{userGroupAccesse.displayName}</td>
-                                <td>{this._convertSharingCodeToName(userGroupAccesse.access)}</td>
-                            </tr>)}
+                            {this.props.data.userGroupAccesses.map(
+                                userGroupAccesse => (
+                                    <tr>
+                                        <td className="bold accessUser">
+                                            {userGroupAccesse.displayName}
+                                        </td>
+                                        <td>
+                                            {this._convertSharingCodeToName(
+                                                userGroupAccesse.access
+                                            )}
+                                        </td>
+                                    </tr>
+                                )
+                            )}
                         </table>
                     </td>
                     <td>
@@ -73,26 +93,48 @@ const AccessInfo = React.createClass({
                             </tr>
                             <tr>
                                 <td className="bold">Public Access</td>
-                                <td>{this._convertSharingCodeToName(this.props.data.objData.publicAccess)}</td>
+                                <td>
+                                    {this._convertSharingCodeToName(
+                                        this.props.data.objData.publicAccess
+                                    )}
+                                </td>
                             </tr>
                             <tr>
                                 <td className="bold">External Access</td>
-                                <td>{this._convertExternalAccessText(this.props.data.objData.externalAccess)}</td>
+                                <td>
+                                    {this._convertExternalAccessText(
+                                        this.props.data.objData.externalAccess
+                                    )}
+                                </td>
                             </tr>
                             <tr>
-                                <td colSpan="2" className="bold accessSubHeader">User Group Sharing</td>
+                                <td
+                                    colSpan="2"
+                                    className="bold accessSubHeader"
+                                >
+                                    User Group Sharing
+                                </td>
                             </tr>
-                            {this.props.data.objData.userGroupAccesses.map(userGroupAccesse =>
-                            <tr>
-                                <td className="bold accessUser">{userGroupAccesse.displayName}</td>
-                                <td>{this._convertSharingCodeToName(userGroupAccesse.access)}</td>
-                            </tr>)}
+                            {this.props.data.objData.userGroupAccesses.map(
+                                userGroupAccesse => (
+                                    <tr>
+                                        <td className="bold accessUser">
+                                            {userGroupAccesse.displayName}
+                                        </td>
+                                        <td>
+                                            {this._convertSharingCodeToName(
+                                                userGroupAccesse.access
+                                            )}
+                                        </td>
+                                    </tr>
+                                )
+                            )}
                         </table>
                     </td>
                 </tr>
             </table>
-        );
+        )
     },
-});
+})
 
-export default AccessInfo;
+export default AccessInfo

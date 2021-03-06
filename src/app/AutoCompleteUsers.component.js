@@ -1,9 +1,7 @@
-
-import React from 'react';
-import { MenuItem, AutoComplete } from 'material-ui';
-import { delayOnceTimeAction } from './utils';
-import { getInstance as getD2 } from 'd2/lib/d2';
-
+import { getInstance as getD2 } from 'd2'
+import { MenuItem, AutoComplete } from 'material-ui'
+import React from 'react'
+import { delayOnceTimeAction } from './utils'
 
 const AutoCompleteUsers = React.createClass({
     propTypes: {
@@ -14,53 +12,72 @@ const AutoCompleteUsers = React.createClass({
 
     getInitialState() {
         return {
-            value: (this.props.item) ? this.props.item.displayName : '',
+            value: this.props.item ? this.props.item.displayName : '',
             loading: false,
             open: false,
             userDataSource: [],
-            user: (this.props.item) ? this.props.item : { id: '', displayName: '' },
-        };
+            user: this.props.item
+                ? this.props.item
+                : { id: '', displayName: '' },
+        }
     },
 
     clear() {
-        this.setState({ value: '', user: { id: '', displayName: '' } });
+        this.setState({ value: '', user: { id: '', displayName: '' } })
     },
 
     _onUpdateUsers(value) {
         // this.setState({ value, loading: true, open: false });
         delayOnceTimeAction.bind(500, this.props.searchId, () => {
             if (value === '') {
-                this.setState({ userDataSource: [], user: { id: '', displayName: '' } });
+                this.setState({
+                    userDataSource: [],
+                    user: { id: '', displayName: '' },
+                })
 
-                this.props.item.id = '';
-                this.props.item.displayName = '';
+                this.props.item.id = ''
+                this.props.item.displayName = ''
             } else {
                 getD2().then(d2 => {
-                    const url = `users.json?paging=false&fields=id,displayName,userCredentials[username]&filter=name:ilike:${value}`;
+                    const url = `users.json?paging=false&fields=id,displayName,userCredentials[username]&filter=name:ilike:${value}`
 
-                    d2.Api.getApi().get(url).then(result => {
-                        const userList = [];
+                    d2.Api.getApi()
+                        .get(url)
+                        .then(result => {
+                            const userList = []
 
-                        for (const user of result.users) {
-                            const source = { id: user.id, displayName: `${user.displayName} (${user.userCredentials.username})` };
-                            userList.push({ text: source.displayName, value: <MenuItem primaryText={source.displayName} value={source.id} />, source });
-                        }
+                            for (const user of result.users) {
+                                const source = {
+                                    id: user.id,
+                                    displayName: `${user.displayName} (${user.userCredentials.username})`,
+                                }
+                                userList.push({
+                                    text: source.displayName,
+                                    value: (
+                                        <MenuItem
+                                            primaryText={source.displayName}
+                                            value={source.id}
+                                        />
+                                    ),
+                                    source,
+                                })
+                            }
 
-                        this.setState({ userDataSource: userList });
-                    })
-                    .catch(errorResponse => {
-                        console.log(`error ${errorResponse}`);
-                    });
-                });
+                            this.setState({ userDataSource: userList })
+                        })
+                        .catch(errorResponse => {
+                            console.log(`error ${errorResponse}`)
+                        })
+                })
             }
-        });
+        })
     },
 
     _onSelectUser(value, i) {
         // Set real user here with setstate!!
-        this.state.user = this.state.userDataSource[i].source;
-        this.props.item.id = this.state.user.id;
-        this.props.item.displayName = this.state.user.displayName;
+        this.state.user = this.state.userDataSource[i].source
+        this.props.item.id = this.state.user.id
+        this.props.item.displayName = this.state.user.displayName
     },
 
     render() {
@@ -75,8 +92,8 @@ const AutoCompleteUsers = React.createClass({
                 searchText={this.state.value}
                 fullWidth
             />
-        );
+        )
     },
-});
+})
 
-export default AutoCompleteUsers;
+export default AutoCompleteUsers
