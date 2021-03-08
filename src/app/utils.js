@@ -40,7 +40,7 @@ export const dateUtil = {
 
 export const restUtil = {
     getUrlBase_Formatted(d2) {
-        let url = d2.Api.getApi().baseUrl.replace('/api', '')
+        let url = d2.Api.getApi().baseUrl.replace(/\/api\/[0-9]{2}/, '')
         const lastChar = url.substring(url.length - 1)
 
         if (lastChar === '/') url = url.substring(0, url.length - 1)
