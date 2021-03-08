@@ -286,10 +286,10 @@ const InterpretationList = createReactClass({
                 chartItems.push(options)
             }
 
-            chartPlugin.url = restUtil.getUrlBase_Formatted(d2)
-            chartPlugin.showTitles = false
-            chartPlugin.preventMask = false
-            chartPlugin.load(chartItems)
+            window.chartPlugin.url = restUtil.getUrlBase_Formatted(d2)
+            window.chartPlugin.showTitles = false
+            window.chartPlugin.preventMask = false
+            window.chartPlugin.load(chartItems)
         })
     },
 
@@ -311,68 +311,12 @@ const InterpretationList = createReactClass({
                 items.push(options)
             }
 
-            reportTablePlugin.url = restUtil.getUrlBase_Formatted(d2)
-            reportTablePlugin.showTitles = false
-            reportTablePlugin.load(items)
+            window.reportTablePlugin.url = restUtil.getUrlBase_Formatted(d2)
+            window.reportTablePlugin.showTitles = false
+            window.reportTablePlugin.load(items)
         })
     },
 
-    /*
-    // CHANGED - #1
-    loadEventReports() {
-        getD2().then(d2 => {
-            //const url = restUtil.getUrlBase_Formatted( d2 );
-            //const width = dataInfo.getInterpDivWidth();
-
-            const items = [];
-            for (let i = 0; i < this.eventReportItems.length; i++) {
-                const id = this.eventReportItems[i].objId;
-                const divId = this.eventReportItems[i].id;
-
-                const options = {};
-                options.url = '..';
-                options.el = divId;
-                options.id = id;
-                options.displayDensity = 'COMPACT';
-                options.fontSize = 'SMALL';
-                options.relativePeriodDate = this.eventReportItems[i].created;
-                items.push(options);
-            }
-
-            eventReportPlugin.url = restUtil.getUrlBase_Formatted( d2 );
-            eventReportPlugin.showTitles = false;
-            eventReportPlugin.load(items);
-        });
-    },
-
-    loadEventCharts(eventChartItems) {
-        getD2().then(d2 => {
-            //const url = restUtil.getUrlBase_Formatted( d2 );
-            //const width = dataInfo.getInterpDivWidth();
-
-            const chartItems = [];
-            for (let i = 0; i < eventChartItems.length; i++) {
-                const id = eventChartItems[i].objId;
-                const divId = eventChartItems[i].id;
-
-                const options = {};
-                options.uid = id;
-                options.el = divId;
-                options.id = id;
-                //options.width = width;
-                options.height = dataInfo.interpObjHeight;
-                options.preventMask = false;
-                options.relativePeriodDate = eventChartItems[i].created;
-                chartItems.push(options);
-            }
-
-            eventChartPlugin.url = restUtil.getUrlBase_Formatted( d2 );
-            eventChartPlugin.showTitles = false;
-            eventChartPlugin.preventMask = false;
-            eventChartPlugin.load(chartItems);
-        });
-    },
-*/
     addToDivList(dataList, hasMore, resultPage) {
         this.setState({
             items: this.state.items.concat([
@@ -418,7 +362,8 @@ const InterpretationList = createReactClass({
             if (page === 1) {
                 // Update the 'READ' timestamp
                 const queryUrl =
-                    this.state.d2Api.baseUrl + '/me/dashboard/interpretations/read'
+                    this.state.d2Api.baseUrl +
+                    '/me/dashboard/interpretations/read'
                 restUtil.requestPostHelper(
                     this.state.d2Api,
                     queryUrl,

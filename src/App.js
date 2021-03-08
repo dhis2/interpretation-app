@@ -1,12 +1,12 @@
 import { useD2 } from '@dhis2/app-runtime-adapter-d2'
-import React from 'react'
-import InterpretationWall from './app/InterpretationWall'
+import $ from 'jquery'
 import { MuiThemeProvider } from 'material-ui/styles'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import $ from 'jquery'
+import React from 'react'
+import InterpretationWall from './app/InterpretationWall'
 
 window.$ = $
-window._appUse = "integrated"
+window._appUse = 'integrated'
 
 import './reporttable'
 import './chart'

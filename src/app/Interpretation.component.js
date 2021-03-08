@@ -12,6 +12,8 @@ import MessageOwner from './MessageOwner.component'
 import { delayOnceTimeAction, restUtil, dhisUtils, otherUtils } from './utils'
 import 'rc-tooltip/assets/bootstrap_white.css'
 
+/* eslint-disable max-params */
+
 const _dhisLoc = '../'
 
 const Interpretation = createReactClass({
@@ -86,8 +88,8 @@ const Interpretation = createReactClass({
 
     _setEventReport() {
         getD2().then(d2 => {
-            eventReportPlugin.url = restUtil.getUrlBase_Formatted(d2)
-            eventReportPlugin.load([
+            window.eventReportPlugin.url = restUtil.getUrlBase_Formatted(d2)
+            window.eventReportPlugin.load([
                 {
                     id: this.props.data.objId,
                     el: this.props.data.id,
@@ -99,8 +101,8 @@ const Interpretation = createReactClass({
 
     _setEventChart() {
         getD2().then(d2 => {
-            eventChartPlugin.url = restUtil.getUrlBase_Formatted(d2)
-            eventChartPlugin.load([
+            window.eventChartPlugin.url = restUtil.getUrlBase_Formatted(d2)
+            window.eventChartPlugin.load([
                 {
                     id: this.props.data.objId,
                     el: this.props.data.id,
@@ -142,12 +144,11 @@ const Interpretation = createReactClass({
     ],
 
     _setMap(data) {
-        const me = this
         getD2().then(d2 => {
             const divId = this.props.data.id
             $(`#${divId}`).css('height', `${dataInfo.mapHeight}px`)
-            mapPlugin.url = restUtil.getUrlBase_Formatted(d2)
-            mapPlugin.load({
+            window.mapPlugin.url = restUtil.getUrlBase_Formatted(d2)
+            window.mapPlugin.load({
                 id: data.id,
                 el: divId,
                 relativePeriodDate: this.props.data.created,
@@ -312,7 +313,7 @@ const Interpretation = createReactClass({
             })
     },
 
-    _starHandler(e) {
+    _starHandler() {
         this._switchMark(
             'star',
             'favorite',
