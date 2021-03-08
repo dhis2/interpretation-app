@@ -29,11 +29,12 @@
         "create-react-class": "^15.7.0",
         "d2": "^31.9.0",
         "d2-ui": "^29.0.35",
-        "jquery": "^3.6.0",
+        "jquery": "1.12.4",
         "material-ui": "0.20.2",
         "prop-types": "^15.7.2",
         "rc-tooltip": "^3.4.2",
-        "react-infinite-scroller": "^0.2.10",
-        "react-intl": "^2.1.5"
+        "react-infinite-scroller": "^1.2.4",
+        "react-intl": "^2.1.5",
+        "rxjs": "5.4.3"
     }
 }

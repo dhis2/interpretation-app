@@ -64,12 +64,6 @@ export const restUtil = {
             'POST',
             returnContType
         )
-        /*d2Api.post(url, value, { contentType: 'text/plain' })
-            .then(successFunc)
-            .catch(errorResponse => {
-                console.log(errorResponse);
-            });
-        */
     },
     requestHelper(
         d2Api,

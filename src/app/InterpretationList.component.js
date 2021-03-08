@@ -418,7 +418,7 @@ const InterpretationList = createReactClass({
             if (page === 1) {
                 // Update the 'READ' timestamp
                 const queryUrl =
-                    _dhisLoc + 'api/' + 'me/dashboard/interpretations/read'
+                    this.state.d2Api.baseUrl + '/me/dashboard/interpretations/read'
                 restUtil.requestPostHelper(
                     this.state.d2Api,
                     queryUrl,

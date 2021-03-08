@@ -478,7 +478,7 @@ const AutoCompleteSearchKeyword = createReactClass({
             if (!otherUtils.checkAdvancedSearch(value)) {
                 this.props.onEnterKey(otherUtils.trim(value))
             }
-        } else {
+        } else if (this.state.keywordDataSource[i]) {
             this.setState(
                 {
                     keyword: this.state.keywordDataSource[i].source,

@@ -38,7 +38,9 @@ export default class SearchBox extends Component {
     }
 
     _searchIconClicked() {
-        this.advancedSearchFormRef.current.collapseMenu()
+        if (this.advancedSearchFormRef.current) {
+            this.advancedSearchFormRef.current.collapseMenu()
+        }
 
         const keyword = this.searchKeywordRef.current.getInputKeyword()
 

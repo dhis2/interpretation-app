@@ -12,6 +12,8 @@ import MessageOwner from './MessageOwner.component'
 import { delayOnceTimeAction, restUtil, dhisUtils, otherUtils } from './utils'
 import 'rc-tooltip/assets/bootstrap_white.css'
 
+const _dhisLoc = '../'
+
 const Interpretation = createReactClass({
     propTypes: {
         currentUser: PropTypes.object,
@@ -457,7 +459,6 @@ const Interpretation = createReactClass({
             link = 'dhis-web-event-visualizer' // Event chart
         }
 
-        // ?? ${_dhisLoc}??
         return fullLink !== ''
             ? fullLink
             : link === ''
