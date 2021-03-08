@@ -5,7 +5,6 @@ import { Dialog, FlatButton } from 'material-ui'
 import PropTypes from 'prop-types'
 import Tooltip from 'rc-tooltip'
 import React from 'react'
-import AccessInfo from './AccessInfo.component'
 import actions from './actions/Interpretation.action'
 import CommentArea from './CommentArea.component'
 import { dataInfo } from './data'
@@ -15,9 +14,9 @@ import 'rc-tooltip/assets/bootstrap_white.css'
 
 const Interpretation = createReactClass({
     propTypes: {
-        data: PropTypes.object,
         currentUser: PropTypes.object,
         d2Api: PropTypes.object,
+        data: PropTypes.object,
         deleteInterpretationSuccess: PropTypes.func,
     },
 
@@ -27,7 +26,6 @@ const Interpretation = createReactClass({
             likes: this.props.data.likes,
             likedBy: this.props.data.likedBy,
             open: false,
-            openAccessInfo: false,
             comments: this.props.data.comments,
             isTooltipActive: false,
         }
@@ -48,9 +46,7 @@ const Interpretation = createReactClass({
                     this._setReportTable()
                 } else if (this.props.data.type === 'MAP') {
                     if (isRedraw) {
-                        $(`#${divId}`).html(
-                            '<img className="loadingImg" src="images/ajax-loader-circle.gif" />'
-                        )
+                        $(`#${divId}`).html('Loading')
                     }
                     actions
                         .getMap('', this.props.data.map.id)
@@ -79,32 +75,7 @@ const Interpretation = createReactClass({
         )
     },
 
-    /* _hasRelativePeriods(relativePeriods) {
-        if (this.props.data.type === 'MAP') {
-            for (const key in relativePeriods) {
-                if (relativePeriods[key] && this.relativePeriodKeys.indexOf(key) < 0) {
-                    return true;
-                }
-            }
-        } else if (this.props.data.type === 'EVENT_REPORT') {
-            for (const key in relativePeriods) {
-                if (relativePeriods[key]) {
-                    return true;
-                }
-            }
-        } else if (this.props.data.type === 'EVENT_CHART') {
-            for (const key in relativePeriods) {
-                if (relativePeriods[key]) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }, */
-
     _setReportTable() {
-        //const width = dataInfo.getInterpDivWidth();
         const divId = this.props.data.id
 
         $(`#${divId}`).closest('.interpretationItem ').addClass('contentTable')
@@ -182,7 +153,7 @@ const Interpretation = createReactClass({
         })
     },
 
-    // Quaterly && 6-month period
+    // Quarterly && 6-month period
     _converRelativePeriods(relativePeriodKey, createdDate) {
         let periods = []
 
@@ -206,7 +177,7 @@ const Interpretation = createReactClass({
         } else if (relativePeriodKey === 'LAST_5_YEARS') {
             const start = currentYear - 5
             const end = currentYear - 1
-            for (let year = start; year >= end; year++) {
+            for (let year = start; year <= end; year++) {
                 periods.push({ id: year.toString(), name: year.toString() })
             }
         } else if (relativePeriodKey === 'THIS_MONTH') {
@@ -340,7 +311,6 @@ const Interpretation = createReactClass({
     },
 
     _starHandler(e) {
-        //const starImgTag = this._getTopRightIconImgByType( 'star' );
         this._switchMark(
             'star',
             'favorite',
@@ -352,7 +322,6 @@ const Interpretation = createReactClass({
     },
 
     _subscribeHandler() {
-        //const starImgTag = this._getTopRightIconImgByType( 'subscribe' );
         this._switchMark(
             'subscribe',
             'subscriber',
@@ -363,10 +332,8 @@ const Interpretation = createReactClass({
         )
     },
 
-    // -------------------------------------------
     _getTopRightIconImgByType(typeStr) {
         const interpretationTagId = `interpretation_${this.props.data.id}`
-        //console.log( 'interpretationTagId: ' + interpretationTagId );
         const interpDivTag = $('#' + interpretationTagId)
 
         return interpDivTag.find('img.' + typeStr)
@@ -475,18 +442,6 @@ const Interpretation = createReactClass({
         )
     },
 
-    _openAccessInfoHandler() {
-        this.setState({
-            openAccessInfo: true,
-        })
-    },
-
-    _closeAccessInfoHandler() {
-        this.setState({
-            openAccessInfo: false,
-        })
-    },
-
     _getSourceInterpretationLink() {
         let link = ''
         let fullLink = ''
@@ -527,6 +482,7 @@ const Interpretation = createReactClass({
 
         const peopleLikedByDialogActions = [
             <FlatButton
+                key="cancel"
                 type="button"
                 onClick={this._closePeopleLikedHandler}
                 label="Cancel"
@@ -551,12 +507,13 @@ const Interpretation = createReactClass({
                                         href={sourceLink}
                                         className="userLink leftSpace smallFont"
                                         target="_blank"
+                                        rel="noreferrer"
                                     >
                                         Explore
                                     </a>
                                 </label>
                                 <div className="interpTopRightDiv">
-                                    {this.props.data.objData !== undefined ? (
+                                    {this.props.data.objData ? (
                                         <div>
                                             <a
                                                 onClick={this._subscribeHandler}
@@ -566,19 +523,9 @@ const Interpretation = createReactClass({
                                                     this.props.data.objData
                                                         .subscribers,
                                                     this.props.currentUser.id
-                                                ) >= 0 ? (
-                                                    <img
-                                                        src="images/start_yes.png"
-                                                        title="Subscribed"
-                                                        className={`topRightIcons subscribe marked srcObj_${this.props.data.objId}`}
-                                                    />
-                                                ) : (
-                                                    <img
-                                                        src="images/start_no.png"
-                                                        title="Not Subscribed"
-                                                        className={`topRightIcons subscribe unmarked srcObj_${this.props.data.objId}`}
-                                                    />
-                                                )}
+                                                ) >= 0
+                                                    ? 'Subscribed'
+                                                    : 'Not subscribed'}
                                             </a>
                                         </div>
                                     ) : (
@@ -586,12 +533,7 @@ const Interpretation = createReactClass({
                                     )}
                                 </div>
                             </div>
-                            <div id={this.props.data.id}>
-                                <img
-                                    className="loadingImg"
-                                    src="images/ajax-loader-circle.gif"
-                                />
-                            </div>
+                            <div id={this.props.data.id}>Loading</div>
                         </div>
                     </div>
 
@@ -649,10 +591,6 @@ const Interpretation = createReactClass({
                                     : 'hidden greyBackground likeArea'
                             }
                         >
-                            <img
-                                src="images/like.png"
-                                className="verticalAlignTop"
-                            />
                             <Tooltip
                                 placement="left"
                                 overlay={this._getPeopleLikeList()}

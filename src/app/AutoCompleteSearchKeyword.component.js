@@ -1,5 +1,6 @@
 import createReactClass from 'create-react-class'
 import { getInstance as getD2 } from 'd2'
+import $ from 'jquery'
 import { AutoComplete } from 'material-ui'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -7,11 +8,10 @@ import { delayOnceTimeAction, restUtil, otherUtils } from './utils'
 
 const AutoCompleteSearchKeyword = createReactClass({
     propTypes: {
-        value: PropTypes.any,
         searchId: PropTypes.string,
-        onSelect: PropTypes.func,
         onChange: PropTypes.func,
         onEnterKey: PropTypes.func,
+        onSelect: PropTypes.func,
     },
 
     getInitialState() {
@@ -122,14 +122,7 @@ const AutoCompleteSearchKeyword = createReactClass({
     },
 
     // Method for adding multiple source on a keyword list item
-    updateKeywordList(
-        keywordList,
-        sourceId,
-        itemId,
-        itemText,
-        imageSrc,
-        title
-    ) {
+    updateKeywordList({ keywordList, sourceId, itemId, itemText }) {
         // If keywordList has same source (id), add to the list..
         const existingSourceInfo = this.checkExistingSource(
             keywordList,
@@ -139,12 +132,9 @@ const AutoCompleteSearchKeyword = createReactClass({
         if (existingSourceInfo.exists) {
             existingSourceInfo.source.idList.push(itemId)
         } else {
-            const sizeOverride = title === 'Interpretation Text'
             const source = this.getKeywordObj([itemId], itemText, sourceId)
 
-            keywordList.push(
-                this.createSelectionObj(source, imageSrc, title, sizeOverride)
-            )
+            keywordList.push(this.createSelectionObj(source))
         }
     },
 
@@ -162,14 +152,12 @@ const AutoCompleteSearchKeyword = createReactClass({
                 const keywordList = []
 
                 for (const interpretation of result.interpretations) {
-                    this.updateKeywordList(
+                    this.updateKeywordList({
                         keywordList,
-                        interpretation.chart.id,
-                        interpretation.id,
-                        interpretation.chart.name,
-                        'images/chart_small.png',
-                        'Chart Favorite'
-                    )
+                        sourceId: interpretation.chart.id,
+                        itemId: interpretation.id,
+                        itemText: interpretation.chart.name,
+                    })
                 }
 
                 updateItemList(keywordList, 'Chart Favorite', 'Chart')
@@ -184,14 +172,12 @@ const AutoCompleteSearchKeyword = createReactClass({
                 const keywordList = []
 
                 for (const interpretation of result.interpretations) {
-                    this.updateKeywordList(
+                    this.updateKeywordList({
                         keywordList,
-                        interpretation.reportTable.id,
-                        interpretation.id,
-                        interpretation.reportTable.name,
-                        'images/table_small.png',
-                        'Report Table Favorite'
-                    )
+                        sourceId: interpretation.reportTable.id,
+                        itemId: interpretation.id,
+                        itemText: interpretation.reportTable.name,
+                    })
                 }
 
                 updateItemList(
@@ -210,14 +196,12 @@ const AutoCompleteSearchKeyword = createReactClass({
                 const keywordList = []
 
                 for (const interpretation of result.interpretations) {
-                    this.updateKeywordList(
+                    this.updateKeywordList({
                         keywordList,
-                        interpretation.eventChart.id,
-                        interpretation.id,
-                        interpretation.eventChart.name,
-                        'images/chart_small.png',
-                        'Event Chart Favorite'
-                    )
+                        sourceId: interpretation.eventChart.id,
+                        itemId: interpretation.id,
+                        itemText: interpretation.eventChart.name,
+                    })
                 }
 
                 updateItemList(
@@ -236,14 +220,12 @@ const AutoCompleteSearchKeyword = createReactClass({
                 const keywordList = []
 
                 for (const interpretation of result.interpretations) {
-                    this.updateKeywordList(
+                    this.updateKeywordList({
                         keywordList,
-                        interpretation.eventReport.id,
-                        interpretation.id,
-                        interpretation.eventReport.name,
-                        'images/table_small.png',
-                        'Event Report Table Favorite'
-                    )
+                        sourceId: interpretation.eventReport.id,
+                        itemId: interpretation.id,
+                        itemText: interpretation.eventReport.name,
+                    })
                 }
 
                 updateItemList(
@@ -262,14 +244,12 @@ const AutoCompleteSearchKeyword = createReactClass({
                 const keywordList = []
 
                 for (const interpretation of result.interpretations) {
-                    this.updateKeywordList(
+                    this.updateKeywordList({
                         keywordList,
-                        interpretation.map.id,
-                        interpretation.id,
-                        interpretation.map.name,
-                        'images/map_small.png',
-                        'Map Favorite'
-                    )
+                        sourceId: interpretation.map.id,
+                        itemId: interpretation.id,
+                        itemText: interpretation.map.name,
+                    })
                 }
 
                 updateItemList(keywordList, 'Map Favorite', 'Map')
@@ -284,14 +264,12 @@ const AutoCompleteSearchKeyword = createReactClass({
                 const keywordList = []
 
                 for (const interpretation of result.interpretations) {
-                    this.updateKeywordList(
+                    this.updateKeywordList({
                         keywordList,
-                        interpretation.user.id,
-                        interpretation.id,
-                        interpretation.user.name,
-                        'images/user_small.png',
-                        'Author'
-                    )
+                        sourceId: interpretation.user.id,
+                        itemId: interpretation.id,
+                        itemText: interpretation.user.name,
+                    })
                 }
 
                 updateItemList(keywordList, 'Author', 'Author')
@@ -311,14 +289,12 @@ const AutoCompleteSearchKeyword = createReactClass({
                             comment.user.name.search(new RegExp(value, 'i')) >=
                             0
                         ) {
-                            this.updateKeywordList(
+                            this.updateKeywordList({
                                 keywordList,
-                                comment.user.id,
-                                interpretation.id,
-                                comment.user.name,
-                                'images/user_small.png',
-                                'Commentator'
-                            )
+                                sourceId: comment.user.id,
+                                itemId: interpretation.id,
+                                itemText: comment.user.name,
+                            })
                         }
                     }
                 }
@@ -335,14 +311,12 @@ const AutoCompleteSearchKeyword = createReactClass({
                 const keywordList = []
 
                 for (const interpretation of result.interpretations) {
-                    this.updateKeywordList(
+                    this.updateKeywordList({
                         keywordList,
-                        interpretation.id,
-                        interpretation.id,
-                        interpretation.text,
-                        'images/interpretation.png',
-                        'Interpretation Text'
-                    )
+                        sourceId: interpretation.id,
+                        itemId: interpretation.id,
+                        itemText: interpretation.text,
+                    })
                 }
 
                 updateItemList(
@@ -363,14 +337,12 @@ const AutoCompleteSearchKeyword = createReactClass({
                 for (const interpretation of result.interpretations) {
                     for (const comment of interpretation.comments) {
                         if (comment.text.search(new RegExp(value, 'i')) >= 0) {
-                            this.updateKeywordList(
+                            this.updateKeywordList({
                                 keywordList,
-                                comment.id,
-                                interpretation.id,
-                                comment.text,
-                                'images/comment.png',
-                                'Comment Text'
-                            )
+                                sourceId: comment.id,
+                                itemId: interpretation.id,
+                                itemText: comment.text,
+                            })
                         }
                     }
                 }
@@ -392,13 +364,11 @@ const AutoCompleteSearchKeyword = createReactClass({
         }
     },
 
-    createSelectionObj(source, imageSrc, title, sizeOverride) {
-        const props = sizeOverride ? { width: '14px', height: '14px' } : {}
+    createSelectionObj(source) {
         return {
             text: source.text,
             value: (
                 <div value={source.id} className="searchItemStyle">
-                    <img alt={title} src={imageSrc} title={title} {...props} />
                     <span className="searchItemName">{source.text}</span>
                 </div>
             ),
@@ -505,23 +475,18 @@ const AutoCompleteSearchKeyword = createReactClass({
 
     _onSelectkeyword(value, i) {
         if (i === undefined) {
-            // Enter Key was pressed without selection
-            if (otherUtils.checkAdvancedSearch(value)) {
-                //console.log( '-- keyword has advanced search string - Not calling search.');
-            } else {
-                //this.props.onSelect(this.getKeywordObj('', otherUtils.trim(value)));
+            if (!otherUtils.checkAdvancedSearch(value)) {
                 this.props.onEnterKey(otherUtils.trim(value))
             }
         } else {
-            // Set keyword as 'value' (input) as well and pass back to parent control.
-            /* const keyword = this.state.keywordDataSource[i].source;
-            this.setState({ value: keyword, keyword });
-            this.props.onSelect(keyword);
-            */
-
-            this.state.keyword = this.state.keywordDataSource[i].source
-            // this.state.value = this.state.keyword;
-            this.props.onSelect(this.state.keyword)
+            this.setState(
+                {
+                    keyword: this.state.keywordDataSource[i].source,
+                },
+                () => {
+                    this.props.onSelect(this.state.keyword)
+                }
+            )
         }
     },
 

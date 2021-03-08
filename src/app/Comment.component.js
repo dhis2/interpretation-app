@@ -10,12 +10,10 @@ import { otherUtils } from './utils'
 
 const Comment = createReactClass({
     propTypes: {
-        data: PropTypes.object,
-        created: PropTypes.string,
-        user: PropTypes.string,
         currentUser: PropTypes.object,
-        interpretationId: PropTypes.string,
+        data: PropTypes.object,
         deleteCommentSuccess: PropTypes.func,
+        interpretationId: PropTypes.string,
     },
 
     getInitialState() {

@@ -45,14 +45,13 @@ const InterpretationList = createReactClass({
         window.addEventListener('resize', this._handleWindowResize)
     },
 
+    // This method is called by the parent component `InterpretationWall` using a ref
     onSearchChanged(searchTerm) {
         this.searchLoading(true)
 
-        // set the search terms on state memory and reset the item list
-        this.state.searchTerm = searchTerm
-        this.state.items = []
-        // Clear the previously displayed list first?
-        //this.setState({ searchTerm, items: [] });
+        this.setState({
+            items: [],
+        })
 
         // For search, let's simplify it by -->
         // retrieving all the ID of the all the search sections
@@ -60,14 +59,16 @@ const InterpretationList = createReactClass({
         // and send the ID list to 'loadMore'
         this.checkAndHandleKeywordCase(searchTerm, keywordSearchedIdList => {
             if (keywordSearchedIdList === undefined) {
-                //console.log('onSearchChanged -> loadMore CASE');
                 // no search keyword entered case
-                this.loadMore(1, () => {
-                    this.searchLoading(false)
+                this.loadMore({
+                    searchTerm,
+                    page: 1,
+                    afterFunc: () => {
+                        this.searchLoading(false)
+                    },
                 })
             } else {
                 // NOTE: THIS CASE DOES NOT WORK WITH PAGING!!!  <-- SINCE we already have list, not by query 'page' use..?
-                //console.log('onSearchChanged -> loadSearchedListCase CASE');
                 this.loadSearchedListCase(keywordSearchedIdList, () => {
                     this.searchLoading(false)
                 })
@@ -410,8 +411,8 @@ const InterpretationList = createReactClass({
         })
     },
 
-    loadMore(page, afterFunc) {
-        const searchQuery = this.getSearchTerms(this.state.searchTerm)
+    loadMore({ searchTerm, page, afterFunc }) {
+        const searchQuery = this.getSearchTerms(searchTerm)
 
         actions.listInterpretation('', searchQuery, page).subscribe(result => {
             if (page === 1) {
@@ -623,7 +624,13 @@ const InterpretationList = createReactClass({
                                 </span>
                             </div>
                         }
-                        loadMore={this.loadMore}
+                        loadMore={(page, afterFunc) =>
+                            this.loadMore({
+                                searchTerm: this.state.searchTerm,
+                                page,
+                                afterFunc,
+                            })
+                        }
                         hasMore={this.state.hasMore}
                         useWindow
                     >

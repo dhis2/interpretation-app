@@ -5,11 +5,11 @@ import Comment from './Comment.component'
 
 const CommentList = createReactClass({
     propTypes: {
-        list: PropTypes.array,
         currentUser: PropTypes.object,
-        interpretationId: PropTypes.string,
-        hidden: PropTypes.bool,
         deleteCommentSuccess: PropTypes.func,
+        hidden: PropTypes.bool,
+        interpretationId: PropTypes.string,
+        list: PropTypes.array,
         updateCommentSuccess: PropTypes.func,
     },
 

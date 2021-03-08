@@ -10,6 +10,11 @@ import React, { Component } from 'react'
 import AutoCompleteUsers from './AutoCompleteUsers.component'
 import { otherUtils, dateUtil } from './utils'
 
+const hintStyle = { fontSize: '14px' }
+const underlineStyle = { width: '400px' }
+const menuStyle = { fontSize: '14px' }
+const fontStyle = { fontSize: '14px' }
+
 export default class AdvanceSearchForm extends Component {
     constructor(props) {
         super(props)
@@ -152,28 +157,32 @@ export default class AdvanceSearchForm extends Component {
     _onChangeInterpretationText(event) {
         this.setState({ interpretationText: event.target.value })
     }
+
     _onChangeFavoritesName(event) {
         this.setState({ favoritesName: event.target.value })
     }
+
     _onChangeCommentText(event) {
         this.setState({ commentText: event.target.value })
     }
 
-    _onCheckStar(event) {
+    _onCheckStar() {
         setTimeout(() => {
             this.setState(oldState => {
                 return { star: !oldState.star }
             })
         }, 1)
     }
-    _onCheckSubscribe(event) {
+
+    _onCheckSubscribe() {
         setTimeout(() => {
             this.setState(oldState => {
                 return { subscribe: !oldState.subscribe }
             })
         }, 1)
     }
-    _onCheckMention(event) {
+
+    _onCheckMention() {
         setTimeout(() => {
             this.setState(oldState => {
                 return { mention: !oldState.mention }
@@ -181,16 +190,7 @@ export default class AdvanceSearchForm extends Component {
         }, 1)
     }
 
-    _tempClickFix(returnFunc) {
-        setTimeout(returnFunc, 1)
-    }
-
     render() {
-        const hintStyle = { fontSize: '14px' }
-        const underlineStyle = { width: '400px' }
-        const menuStyle = { fontSize: '14px' }
-        const fontStyle = { fontSize: '14px' }
-
         return (
             <div className="advanceSearchForm">
                 <div
@@ -467,6 +467,6 @@ export default class AdvanceSearchForm extends Component {
 }
 
 AdvanceSearchForm.propTypes = {
-    savedTerms: PropTypes.object,
     askPopupClose: PropTypes.func,
+    savedTerms: PropTypes.object,
 }

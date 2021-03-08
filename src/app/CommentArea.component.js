@@ -1,4 +1,5 @@
 import createReactClass from 'create-react-class'
+import $ from 'jquery'
 import PropTypes from 'prop-types'
 import React from 'react'
 import actions from './actions/Comment.action'
@@ -8,10 +9,8 @@ import PostComment from './PostComment.component'
 const CommentArea = createReactClass({
     propTypes: {
         comments: PropTypes.array,
-        likes: PropTypes.number,
-        likedBy: PropTypes.array,
-        interpretationId: PropTypes.string,
         currentUser: PropTypes.object,
+        interpretationId: PropTypes.string,
     },
 
     getInitialState() {

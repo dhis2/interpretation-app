@@ -7,9 +7,9 @@ import { delayOnceTimeAction } from './utils'
 
 const AutoCompleteUsers = createReactClass({
     propTypes: {
-        searchId: PropTypes.string,
-        item: PropTypes.object,
         hintStyle: PropTypes.object,
+        item: PropTypes.object,
+        searchId: PropTypes.string,
     },
 
     getInitialState() {
@@ -76,10 +76,15 @@ const AutoCompleteUsers = createReactClass({
     },
 
     _onSelectUser(value, i) {
-        // Set real user here with setstate!!
-        this.state.user = this.state.userDataSource[i].source
-        this.props.item.id = this.state.user.id
-        this.props.item.displayName = this.state.user.displayName
+        this.setState(
+            {
+                user: this.state.userDataSource[i].source,
+            },
+            () => {
+                this.props.item.id = this.state.user.id
+                this.props.item.displayName = this.state.user.displayName
+            }
+        )
     },
 
     render() {
