@@ -1,15 +1,17 @@
+import createReactClass from 'create-react-class'
 import { getInstance as getD2 } from 'd2'
 import { AutoComplete } from 'material-ui'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { delayOnceTimeAction, restUtil, otherUtils } from './utils'
 
-const AutoCompleteSearchKeyword = React.createClass({
+const AutoCompleteSearchKeyword = createReactClass({
     propTypes: {
-        value: React.PropTypes.any,
-        searchId: React.PropTypes.string,
-        onSelect: React.PropTypes.func,
-        onChange: React.PropTypes.func,
-        onEnterKey: React.PropTypes.func,
+        value: PropTypes.any,
+        searchId: PropTypes.string,
+        onSelect: PropTypes.func,
+        onChange: PropTypes.func,
+        onEnterKey: PropTypes.func,
     },
 
     getInitialState() {

@@ -1,8 +1,10 @@
+import createReactClass from 'create-react-class'
+import PropTypes from 'prop-types'
 import React from 'react'
 
-const AccessInfo = React.createClass({
+const AccessInfo = createReactClass({
     propTypes: {
-        data: React.PropTypes.object,
+        data: PropTypes.object,
     },
 
     _convertSharingCodeToName(sharingCode) {
@@ -67,14 +69,20 @@ const AccessInfo = React.createClass({
                                 </td>
                             </tr>
                             {this.props.data.userGroupAccesses.map(
-                                userGroupAccesse => (
-                                    <tr>
+                                userGroupAccess => (
+                                    <tr
+                                        key={`${
+                                            userGroupAccess.displayName
+                                        }-${this._convertSharingCodeToName(
+                                            userGroupAccess.access
+                                        )}`}
+                                    >
                                         <td className="bold accessUser">
-                                            {userGroupAccesse.displayName}
+                                            {userGroupAccess.displayName}
                                         </td>
                                         <td>
                                             {this._convertSharingCodeToName(
-                                                userGroupAccesse.access
+                                                userGroupAccess.access
                                             )}
                                         </td>
                                     </tr>
@@ -116,14 +124,20 @@ const AccessInfo = React.createClass({
                                 </td>
                             </tr>
                             {this.props.data.objData.userGroupAccesses.map(
-                                userGroupAccesse => (
-                                    <tr>
+                                userGroupAccess => (
+                                    <tr
+                                        key={`${
+                                            userGroupAccess.displayName
+                                        }-${this._convertSharingCodeToName(
+                                            userGroupAccess.access
+                                        )}`}
+                                    >
                                         <td className="bold accessUser">
-                                            {userGroupAccesse.displayName}
+                                            {userGroupAccess.displayName}
                                         </td>
                                         <td>
                                             {this._convertSharingCodeToName(
-                                                userGroupAccesse.access
+                                                userGroupAccess.access
                                             )}
                                         </td>
                                     </tr>

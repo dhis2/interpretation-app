@@ -1,15 +1,17 @@
+import createReactClass from 'create-react-class'
+import PropTypes from 'prop-types'
 import React from 'react'
 import actions from './actions/Comment.action'
 import CommentList from './CommentList.component'
 import PostComment from './PostComment.component'
 
-const CommentArea = React.createClass({
+const CommentArea = createReactClass({
     propTypes: {
-        comments: React.PropTypes.array,
-        likes: React.PropTypes.number,
-        likedBy: React.PropTypes.array,
-        interpretationId: React.PropTypes.string,
-        currentUser: React.PropTypes.object,
+        comments: PropTypes.array,
+        likes: PropTypes.number,
+        likedBy: PropTypes.array,
+        interpretationId: PropTypes.string,
+        currentUser: PropTypes.object,
     },
 
     getInitialState() {

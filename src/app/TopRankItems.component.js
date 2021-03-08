@@ -1,13 +1,12 @@
+import createReactClass from 'create-react-class'
+import PropTypes from 'prop-types'
 import React from 'react'
 import actions from './actions/Interpretation.action'
 import { otherUtils } from './utils'
 
-const TopRankItems = React.createClass({
+const TopRankItems = createReactClass({
     propTypes: {
-        data: React.PropTypes.object,
-        currentUser: React.PropTypes.object,
-        deleteInterpretationSuccess: React.PropTypes.func,
-        onTopRankItemClicked: React.PropTypes.func,
+        onTopRankItemClicked: PropTypes.func,
     },
 
     getInitialState() {

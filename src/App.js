@@ -1,5 +1,4 @@
 import { useD2 } from '@dhis2/app-runtime-adapter-d2'
-import { init, config, getManifest } from 'd2'
 import React from 'react'
 import InterpretationWall from './app/InterpretationWall'
 

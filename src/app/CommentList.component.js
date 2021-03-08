@@ -1,14 +1,16 @@
+import createReactClass from 'create-react-class'
+import PropTypes from 'prop-types'
 import React from 'react'
 import Comment from './Comment.component'
 
-const CommentList = React.createClass({
+const CommentList = createReactClass({
     propTypes: {
-        list: React.PropTypes.array,
-        currentUser: React.PropTypes.object,
-        interpretationId: React.PropTypes.string,
-        hidden: React.PropTypes.bool,
-        deleteCommentSuccess: React.PropTypes.func,
-        updateCommentSuccess: React.PropTypes.func,
+        list: PropTypes.array,
+        currentUser: PropTypes.object,
+        interpretationId: PropTypes.string,
+        hidden: PropTypes.bool,
+        deleteCommentSuccess: PropTypes.func,
+        updateCommentSuccess: PropTypes.func,
     },
 
     getInitialState() {

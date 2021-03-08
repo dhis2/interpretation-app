@@ -1,19 +1,21 @@
 import { Parser as RichTextParser } from '@dhis2/d2-ui-rich-text'
+import createReactClass from 'create-react-class'
 import $ from 'jquery'
 import { Avatar } from 'material-ui'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { IntlProvider, FormattedRelative } from 'react-intl'
 import actions from './actions/Comment.action'
 import { otherUtils } from './utils'
 
-const Comment = React.createClass({
+const Comment = createReactClass({
     propTypes: {
-        data: React.PropTypes.object,
-        created: React.PropTypes.string,
-        user: React.PropTypes.string,
-        currentUser: React.PropTypes.object,
-        interpretationId: React.PropTypes.string,
-        deleteCommentSuccess: React.PropTypes.func,
+        data: PropTypes.object,
+        created: PropTypes.string,
+        user: PropTypes.string,
+        currentUser: PropTypes.object,
+        interpretationId: PropTypes.string,
+        deleteCommentSuccess: PropTypes.func,
     },
 
     getInitialState() {

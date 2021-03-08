@@ -1,6 +1,8 @@
+import createReactClass from 'create-react-class'
 import { getInstance as getD2 } from 'd2'
 import $ from 'jquery'
 import { CircularProgress } from 'material-ui'
+import PropTypes from 'prop-types'
 import React from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import actions from './actions/Interpretation.action'
@@ -8,13 +10,13 @@ import { dataInfo } from './data'
 import Interpretation from './Interpretation.component'
 import { dateUtil, restUtil, otherUtils } from './utils'
 
-const InterpretationList = React.createClass({
+const InterpretationList = createReactClass({
     propTypes: {
-        d2: React.PropTypes.object,
+        d2: PropTypes.object,
     },
 
     childContextTypes: {
-        d2: React.PropTypes.object,
+        d2: PropTypes.object,
     },
 
     getInitialState() {

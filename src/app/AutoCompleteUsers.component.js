@@ -1,13 +1,15 @@
+import createReactClass from 'create-react-class'
 import { getInstance as getD2 } from 'd2'
 import { MenuItem, AutoComplete } from 'material-ui'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { delayOnceTimeAction } from './utils'
 
-const AutoCompleteUsers = React.createClass({
+const AutoCompleteUsers = createReactClass({
     propTypes: {
-        searchId: React.PropTypes.string,
-        item: React.PropTypes.object,
-        hintStyle: React.PropTypes.object,
+        searchId: PropTypes.string,
+        item: PropTypes.object,
+        hintStyle: PropTypes.object,
     },
 
     getInitialState() {

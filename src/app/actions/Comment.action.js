@@ -1,11 +1,11 @@
-import Action from 'd2-ui/lib/action/Action'
 import { getInstance as getD2 } from 'd2'
+import Action from 'd2-ui/lib/action/Action'
 const actions = Action.createActionsFromNames(
     ['listComment', 'addComment', 'deleteComment', 'editComment'],
     'comment'
 )
 
-actions.listComment.subscribe(({ data: [model, id], complete }) => {
+actions.listComment.subscribe(({ data: [, id], complete }) => {
     getD2().then(d2 => {
         const url = `interpretations/${id}?fields=comments[id,created,text,user[id,name]]`
 

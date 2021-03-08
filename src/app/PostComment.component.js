@@ -1,12 +1,14 @@
+import createReactClass from 'create-react-class'
 import { Avatar } from 'material-ui'
+import PropTypes from 'prop-types'
 import React from 'react'
 import actions from './actions/Comment.action'
 
-const PostComment = React.createClass({
+const PostComment = createReactClass({
     propTypes: {
-        currentUser: React.PropTypes.object,
-        interpretationId: React.PropTypes.string,
-        postCommentSuccess: React.PropTypes.func,
+        currentUser: PropTypes.object,
+        interpretationId: PropTypes.string,
+        postCommentSuccess: PropTypes.func,
     },
 
     getInitialState() {

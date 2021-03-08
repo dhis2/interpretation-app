@@ -5,6 +5,7 @@ import {
     MenuItem,
     Checkbox,
 } from 'material-ui'
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import AutoCompleteUsers from './AutoCompleteUsers.component'
 import { otherUtils, dateUtil } from './utils'
@@ -13,10 +14,12 @@ export default class AdvanceSearchForm extends Component {
     constructor(props) {
         super(props)
 
-        // const today = new Date().toISOString();
         this.state = !props.savedTerms
             ? this.getInitialData()
             : props.savedTerms
+
+        this.authorRef = React.createRef()
+        this.commentatorRef = React.createRef()
 
         this._clickCloseBtn = this._clickCloseBtn.bind(this)
         this._typeChanged = this._typeChanged.bind(this)
@@ -24,9 +27,6 @@ export default class AdvanceSearchForm extends Component {
         this._setDateCreatedTo = this._setDateCreatedTo.bind(this)
         this._setDateModiFrom = this._setDateModiFrom.bind(this)
         this._setDateModiTo = this._setDateModiTo.bind(this)
-        this._authorSelected = this._authorSelected.bind(this)
-        this._commentatorSelected = this._commentatorSelected.bind(this)
-        this._onSelectAuthor = this._onSelectAuthor.bind(this)
         this._onChangeInterpretationText = this._onChangeInterpretationText.bind(
             this
         )
@@ -52,7 +52,6 @@ export default class AdvanceSearchForm extends Component {
             favoritesName: '',
             commentText: '',
             showFavoritesNameSearch: false,
-            //favoritesNameSearchHint: '',
             star: false,
             subscribe: false,
             mention: false,
@@ -66,8 +65,8 @@ export default class AdvanceSearchForm extends Component {
     resetForm() {
         this.setState(this.getInitialData())
 
-        if (this.refs.author !== undefined) this.refs.author.clear()
-        if (this.refs.commentator !== undefined) this.refs.commentator.clear()
+        this.authorRef.current.clear()
+        this.commentatorRef.current.clear()
     }
 
     generateAdvSearchText() {
@@ -148,19 +147,6 @@ export default class AdvanceSearchForm extends Component {
 
     _setDateModiTo(event, dateModiTo) {
         this.setState({ dateModiTo })
-    }
-
-    _authorSelected(user) {
-        this.state.author = user
-    }
-
-    _commentatorSelected(user) {
-        this.state.commentator = user
-    }
-
-    _onSelectAuthor(value, i) {
-        // Set real author here with setstate!!
-        this.state.author = this.state.authorDataSource[i].source
     }
 
     _onChangeInterpretationText(event) {
@@ -420,7 +406,7 @@ export default class AdvanceSearchForm extends Component {
                                     fullWidth
                                     hintStyle={hintStyle}
                                     item={this.state.author}
-                                    ref="author"
+                                    ref={this.authorRef}
                                 />
                             </td>
                         </tr>
@@ -436,7 +422,7 @@ export default class AdvanceSearchForm extends Component {
                                     fullWidth
                                     hintStyle={hintStyle}
                                     item={this.state.commentator}
-                                    ref="commentator"
+                                    ref={this.commentatorRef}
                                 />
                             </td>
                         </tr>
@@ -481,6 +467,6 @@ export default class AdvanceSearchForm extends Component {
 }
 
 AdvanceSearchForm.propTypes = {
-    savedTerms: React.PropTypes.object,
-    askPopupClose: React.PropTypes.func,
+    savedTerms: PropTypes.object,
+    askPopupClose: PropTypes.func,
 }

@@ -1,5 +1,7 @@
 import $ from 'jquery'
 
+/* eslint-disable max-params */
+
 export const delayOnceTimeAction = {
     oneTimeActions: {},
 

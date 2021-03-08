@@ -1,5 +1,6 @@
 import $ from 'jquery'
 import { FlatButton, Dialog } from 'material-ui'
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import AdvanceSearchForm from './AdvanceSearchForm.component'
 import AutoCompleteSearchKeyword from './AutoCompleteSearchKeyword.component'
@@ -10,11 +11,13 @@ export default class SearchBox extends Component {
         super(props)
 
         this.state = {
-            //value: '',
             open: false,
             searchList: [],
             moreTerms: undefined,
         }
+
+        this.searchKeywordRef = React.createRef()
+        this.advancedSearchFormRef = React.createRef()
 
         this._searchKeywordChanged = this._searchKeywordChanged.bind(this)
         this._searchIconClicked = this._searchIconClicked.bind(this)
@@ -35,10 +38,9 @@ export default class SearchBox extends Component {
     }
 
     _searchIconClicked() {
-        if (this.refs.advancedSearchForm)
-            this.refs.advancedSearchForm.collapseMenu()
+        this.advancedSearchFormRef.current.collapseMenu()
 
-        const keyword = this.refs.searchKeyword.getInputKeyword()
+        const keyword = this.searchKeywordRef.current.getInputKeyword()
 
         this.props.onChangeEvent({ keyword })
     }
@@ -46,10 +48,11 @@ export default class SearchBox extends Component {
     _openAdvancedSearchForm() {
         if (
             !otherUtils.checkAdvancedSearch(
-                this.refs.searchKeyword.getInputKeyword()
+                this.searchKeywordRef.current.getInputKeyword()
             )
-        )
+        ) {
             this._advSearchFormReset()
+        }
 
         this.setState({ open: true })
         this.bodyscrollingDisable(true)
@@ -57,7 +60,7 @@ export default class SearchBox extends Component {
 
     _closeAdvancedSearchForm() {
         // get data from advanced search form
-        this.refs.advancedSearchForm.resetForm()
+        this.advancedSearchFormRef.current.resetForm()
 
         this.setState({ open: false, moreTerms: undefined })
         this.bodyscrollingDisable(false)
@@ -70,7 +73,7 @@ export default class SearchBox extends Component {
 
     _performAdvancedSearch() {
         // get data from advanced search form
-        const moreTerms = this.refs.advancedSearchForm.getSearchConditions()
+        const moreTerms = this.advancedSearchFormRef.current.getSearchConditions()
 
         // Call back with search term
         this.props.onChangeEvent({ keyword: '', moreTerms })
@@ -80,8 +83,8 @@ export default class SearchBox extends Component {
         this.bodyscrollingDisable(false)
 
         // Populate the search text input with advanced content ('ADV: ---')
-        this.refs.searchKeyword.setInputKeyword(
-            this.refs.advancedSearchForm.generateAdvSearchText()
+        this.searchKeywordRef.current.setInputKeyword(
+            this.advancedSearchFormRef.current.generateAdvSearchText()
         )
     }
 
@@ -103,11 +106,13 @@ export default class SearchBox extends Component {
     render() {
         const actions = [
             <FlatButton
+                key="search"
                 label="Search"
                 primary
                 onClick={this._performAdvancedSearch}
             />,
             <FlatButton
+                key="reset"
                 label="Reset"
                 primary
                 onClick={this._advSearchFormReset}
@@ -139,7 +144,7 @@ export default class SearchBox extends Component {
                                     onChange={this._searchKeywordChanged}
                                     onEnterKey={this._searchEnterKeyPressed}
                                     onSelect={this._searchedItemSelected}
-                                    ref="searchKeyword"
+                                    ref={this.searchKeywordRef}
                                 />
                             </td>
                             <td className="tdAdvancedSearch">
@@ -176,7 +181,7 @@ export default class SearchBox extends Component {
                     autoDetectWindowHeight={false}
                 >
                     <AdvanceSearchForm
-                        ref="advancedSearchForm"
+                        ref={this.advancedSearchFormRef}
                         savedTerms={this.state.moreTerms}
                         askPopupClose={this._closeAdvancedSearchForm}
                     />
@@ -186,10 +191,6 @@ export default class SearchBox extends Component {
     }
 }
 
-// below property 'value' probably is not needed anymore.  - Also remove 'value' from interpretationWall as well
 SearchBox.propTypes = {
-    value: React.PropTypes.any,
-    multiLine: React.PropTypes.bool,
-    onChangeEvent: React.PropTypes.func,
+    onChangeEvent: PropTypes.func,
 }
-SearchBox.defaultProps = { value: '' }

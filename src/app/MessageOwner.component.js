@@ -1,15 +1,17 @@
 import { Parser as RichTextParser } from '@dhis2/d2-ui-rich-text'
+import createReactClass from 'create-react-class'
+import $ from 'jquery'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { IntlProvider, FormattedDate } from 'react-intl'
 import actions from './actions/Interpretation.action'
-import { otherUtils } from './utils'
 
-const MessageOwner = React.createClass({
+const MessageOwner = createReactClass({
     propTypes: {
-        data: React.PropTypes.object,
-        text: React.PropTypes.string,
-        editInterpretationTextSuccess: React.PropTypes.func,
-        sourceLink: React.PropTypes.string,
+        data: PropTypes.object,
+        editInterpretationTextSuccess: PropTypes.func,
+        sourceLink: PropTypes.string,
+        text: PropTypes.string,
     },
 
     getInitialState() {
@@ -96,6 +98,7 @@ const MessageOwner = React.createClass({
                         href={this.props.sourceLink}
                         className="bold userLink"
                         target="_blank"
+                        rel="noreferrer"
                     >
                         {this.props.data.user}
                     </a>

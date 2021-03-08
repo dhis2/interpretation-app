@@ -1,102 +1,56 @@
-import React from 'react'
+import PropTypes from 'prop-types'
+import React, { useRef } from 'react'
 import { dataInfo } from './data'
 import InterpretationList from './InterpretationList.component'
 import SearchBox from './SearchBox.component'
 import TopRankItems from './TopRankItems.component'
 
-export default React.createClass({
-    propTypes: {
-        d2: React.PropTypes.object,
-        value: React.PropTypes.string,
-    },
+const isSuperUser = d2 => d2.currentUser.authorities.has('ALL')
+const rightAreaWidth = `${dataInfo.rightAreaWidth}px`
 
-    childContextTypes: {
-        d2: React.PropTypes.object,
-        value: React.PropTypes.string,
-    },
+const InterpretationWall = ({ d2 }) => {
+    const listRef = useRef(null)
+    const handleSearchChange = searchTerm => {
+        listRef.current.onSearchChanged(searchTerm)
+    }
+    const handleTopRankItemClick = searchTerm => {
+        listRef.current.onSearchChanged(searchTerm)
+    }
+    const currentUser = {
+        name: d2.currentUser.displayName,
+        id: d2.currentUser.id,
+        superUser: isSuperUser(d2),
+    }
 
-    getInitialState() {
-        return {
-            charts: [],
-            value: '',
-            currentUser: {
-                name: this.props.d2.currentUser.displayName,
-                id: this.props.d2.currentUser.id,
-                superUser: this.isSuperUser(),
-            },
-        }
-    },
+    return (
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <SearchBox onChangeEvent={handleSearchChange} />
+                        <InterpretationList d2={d2} ref={listRef} />
+                    </td>
+                    <td>
+                        <div
+                            style={{
+                                width: rightAreaWidth,
+                                minHeight: '500px',
+                            }}
+                        >
+                            <TopRankItems
+                                currentUser={currentUser}
+                                onTopRankItemClicked={handleTopRankItemClick}
+                            />
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    )
+}
 
-    getChildContext() {
-        return {
-            d2: this.props.d2,
-            value: '',
-        }
-    },
+InterpretationWall.propTypes = {
+    d2: PropTypes.object,
+}
 
-    isSuperUser() {
-        return this.props.d2.currentUser.authorities.has('ALL')
-    },
-
-    _onSearchChange(searchTerm) {
-        this.refs.lists.onSearchChanged(searchTerm)
-    },
-
-    _onTopRankItemClicked(searchTerm) {
-        this.refs.lists.onSearchChanged(searchTerm)
-    },
-
-    render() {
-        const rightAreaWidth = `${dataInfo.rightAreaWidth}px`
-        return (
-            <div className="app-wrapper">
-                <mainPage>
-                    <div className="divMainPage">
-                        <table className="tblMainPage">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div className="divMainArea">
-                                            <div className="divSearchArea">
-                                                <SearchBox
-                                                    onChangeEvent={
-                                                        this._onSearchChange
-                                                    }
-                                                    hintText="Search by name"
-                                                    value={this.state.value}
-                                                />
-                                            </div>
-
-                                            <InterpretationList
-                                                d2={this.props.d2}
-                                                ref="lists"
-                                            />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div
-                                            className="divRightArea"
-                                            style={{ width: rightAreaWidth }}
-                                        >
-                                            <div style={{ minHeight: '500px' }}>
-                                                <TopRankItems
-                                                    currentUser={
-                                                        this.state.currentUser
-                                                    }
-                                                    onTopRankItemClicked={
-                                                        this
-                                                            ._onTopRankItemClicked
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </mainPage>
-            </div>
-        )
-    },
-})
+export default InterpretationWall

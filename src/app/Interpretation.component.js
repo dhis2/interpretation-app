@@ -1,6 +1,8 @@
+import createReactClass from 'create-react-class'
 import { getInstance as getD2 } from 'd2'
 import $ from 'jquery'
 import { Dialog, FlatButton } from 'material-ui'
+import PropTypes from 'prop-types'
 import Tooltip from 'rc-tooltip'
 import React from 'react'
 import AccessInfo from './AccessInfo.component'
@@ -11,12 +13,12 @@ import MessageOwner from './MessageOwner.component'
 import { delayOnceTimeAction, restUtil, dhisUtils, otherUtils } from './utils'
 import 'rc-tooltip/assets/bootstrap_white.css'
 
-const Interpretation = React.createClass({
+const Interpretation = createReactClass({
     propTypes: {
-        data: React.PropTypes.object,
-        currentUser: React.PropTypes.object,
-        d2Api: React.PropTypes.object,
-        deleteInterpretationSuccess: React.PropTypes.func,
+        data: PropTypes.object,
+        currentUser: PropTypes.object,
+        d2Api: PropTypes.object,
+        deleteInterpretationSuccess: PropTypes.func,
     },
 
     getInitialState() {
