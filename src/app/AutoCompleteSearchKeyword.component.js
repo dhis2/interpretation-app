@@ -166,7 +166,7 @@ const AutoCompleteSearchKeyword = React.createClass({
 
         // Author Search
         restUtil.requestGetHelper(d2Api,
-            `interpretations?paging=false&fields=id,text,user[id,name]&filter=user.name:ilike:${value}`,
+            `interpretations?paging=false&fields=id,text,user[id,displayName~rename(name)]&filter=user.name:ilike:${value}`,
             (result) => {
                 const keywordList = [];
 
@@ -179,7 +179,7 @@ const AutoCompleteSearchKeyword = React.createClass({
 
         // Commentator Search
         restUtil.requestGetHelper(d2Api,
-            `interpretations?paging=false&fields=id,text,comments[user[id,name]]&filter=comments.user.name:ilike:${value}`,
+            `interpretations?paging=false&fields=id,text,comments[user[id,displayName~rename(name)]]&filter=comments.user.name:ilike:${value}`,
             (result) => {
                 const keywordList = [];
 
