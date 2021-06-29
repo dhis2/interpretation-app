@@ -1,3 +1,10 @@
+## [0.1.29](https://github.com/dhis2/interpretation-app/compare/v0.1.28...v0.1.29) (2021-06-29)
+
+
+### Bug Fixes
+
+* use displayName instead of name when referencing users [DHIS2-9712] ([516c95e](https://github.com/dhis2/interpretation-app/commit/516c95e0c697279e07979c60bcd8b34bda3e3ae8))
+
 ## [0.1.28](https://github.com/dhis2/interpretation-app/compare/v0.1.27...v0.1.28) (2020-12-02)
 
 
