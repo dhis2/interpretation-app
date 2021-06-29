@@ -7,7 +7,7 @@ const actions = Action.createActionsFromNames(['listComment', 'addComment', 'del
 actions.listComment
     .subscribe(({ data: [model, id], complete }) => {
         getD2().then(d2 => {
-            const url = `interpretations/${id}?fields=comments[id,created,text,user[id,name]]`;
+            const url = `interpretations/${id}?fields=comments[id,created,text,user[id,displayName~rename(name)]]`;
 
             d2.Api.getApi().get(url)
 				.then(result => {
