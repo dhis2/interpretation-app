@@ -46,16 +46,9 @@ const AutoCompleteSearchKeyword = React.createClass({
 
         placeHolderItems.push(
             this.createPlaceHolderObj(
-                'Chart Favorite',
+                'Visualization Favorite',
                 'images/chart.png',
-                'Chart Favorite Searching...'
-            )
-        );
-        placeHolderItems.push(
-            this.createPlaceHolderObj(
-                'Report Table Favorite',
-                'images/table.png',
-                'Report Table Favorite Searching...'
+                'Visualization Favorite Searching...'
             )
         );
         placeHolderItems.push(
@@ -152,29 +145,7 @@ const AutoCompleteSearchKeyword = React.createClass({
         // UpdateItemList with placeholder of each section first..
         updateItemList(this.getPlaceHolderItems());
 
-        // Chart Favorit Search
-        restUtil.requestGetHelper(
-            d2Api,
-            `interpretations?paging=false&fields=id,text,visualization[id,name,title]&filter=visualization.name:ilike:${value}`,
-            (result) => {
-                const keywordList = [];
-
-                for (const interpretation of result.interpretations) {
-                    this.updateKeywordList(
-                        keywordList,
-                        interpretation.visualization.id,
-                        interpretation.id,
-                        interpretation.visualization.name,
-                        'images/chart_small.png',
-                        'Chart Favorite'
-                    );
-                }
-
-                updateItemList(keywordList, 'Chart Favorite', 'Chart');
-            }
-        );
-
-        // Report Table Favorite Search
+        // Visualization Favorite Search
         restUtil.requestGetHelper(
             d2Api,
             `interpretations?paging=false&fields=id,text,visualization[id,name,title]&filter=visualization.name:ilike:${value}`,
@@ -188,14 +159,14 @@ const AutoCompleteSearchKeyword = React.createClass({
                         interpretation.id,
                         interpretation.visualization.name,
                         'images/table_small.png',
-                        'Report Table Favorite'
+                        'Visualization Favorite'
                     );
                 }
 
                 updateItemList(
                     keywordList,
-                    'Report Table Favorite',
-                    'Report Table'
+                    'Visualization Favorite',
+                    'Visualization'
                 );
             }
         );
