@@ -100,12 +100,12 @@ const AutoCompleteSearchKeyword = React.createClass({
 
         // Chart Favorit Search
         restUtil.requestGetHelper(d2Api,
-            `interpretations?paging=false&fields=id,text,chart[id,name,title]&filter=chart.name:ilike:${value}`,
+            `interpretations?paging=false&fields=id,text,visualization[id,name,title]&filter=visualization.name:ilike:${value}`,
             (result) => {
                 const keywordList = [];
 
                 for (const interpretation of result.interpretations) {
-                    this.updateKeywordList(keywordList, interpretation.chart.id, interpretation.id, interpretation.chart.name, 'images/chart_small.png', 'Chart Favorite');
+                    this.updateKeywordList(keywordList, interpretation.visualization.id, interpretation.id, interpretation.visualization.name, 'images/chart_small.png', 'Chart Favorite');
                 }
 
                 updateItemList(keywordList, 'Chart Favorite', 'Chart');
