@@ -26,7 +26,7 @@ actions.listInterpretation.subscribe(
         ",eventChart[id,name,relativePeriods,userGroupAccesses[*],externalAccess,publicAccess,user[id,displayName~rename(name)],favorites,subscribers,mentions]" +
         ",chart[id,name,relativePeriods,userGroupAccesses[*],externalAccess,publicAccess,user[id,displayName~rename(name)],favorites,subscribers,mentions]" +
         ",map[id,name,mapViews[relativePeriods],userGroupAccesses[*],externalAccess,publicAccess,user[id,displayName~rename(name)],favorites,subscribers,mentions]" +
-        ",visualization[id,name,relativePeriods,userGroupAccesses[*],externalAccess,publicAccess,user[id,displayName~rename(name)],favorites,subscribers,mentions]" +
+        ",visualization[id,name,type,relativePeriods,userGroupAccesses[*],externalAccess,publicAccess,user[id,displayName~rename(name)],favorites,subscribers,mentions]" +
         searchData;
 
       if (page !== undefined) {

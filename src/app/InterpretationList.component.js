@@ -81,10 +81,10 @@ const InterpretationList = React.createClass({
     this.curAggchartItems = [];
     this.eventReportItems = [];
     this.curEventChartItems = [];
+    console.log("itemList", itemList)
 
     for (let i = 0; i < itemList.length; i++) {
       const interpretation = itemList[i];
-
       let data = {};
       data = interpretation;
 
@@ -110,7 +110,12 @@ const InterpretationList = React.createClass({
         data.objId = interpretation.visualization.id;
         data.name = interpretation.visualization.name;
         data.objData = interpretation.visualization;
-        this.aggReportItems.push(interpretation);
+
+        if (interpretation.visualization.type === 'PIVOT_TABLE') {
+          this.aggReportItems.push(interpretation);
+        } else {
+          this.curAggchartItems.push(interpretation);
+        }
       } else if (interpretation.type === "EVENT_REPORT") {
         data.objId = interpretation.eventReport.id;
         data.name = interpretation.eventReport.name;
@@ -306,6 +311,7 @@ const InterpretationList = React.createClass({
 
       reportTablePlugin.url = restUtil.getUrlBase_Formatted(d2);
       reportTablePlugin.showTitles = false;
+      console.log("items", items)
       reportTablePlugin.load(items);
     });
   },

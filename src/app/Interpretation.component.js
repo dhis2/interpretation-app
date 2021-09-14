@@ -384,8 +384,8 @@ const Interpretation = React.createClass({
     _getSourceInterpretationLink() {
         let link = '';
         let fullLink = '';
-        if (this.props.data.type === 'CHART' || this.props.data.type === 'VISUALIZATION') {
-            fullLink = `${_dhisLoc}dhis-web-data-visualizer/index.html#/${this.props.data.objId}/interpretation/${this.props.data.id}`;
+        if (this.props.data.type === 'VISUALIZATION') {
+            fullLink = `${_dhisLoc}dhis-web-data-visualizer/#/${this.props.data.objId}/interpretation/${this.props.data.id}`;
         } else if (this.props.data.type === 'MAP') {
             fullLink = `${_dhisLoc}dhis-web-maps/index.html?id=${this.props.data.objId}&interpretationid=${this.props.data.id}`;
         } else if (this.props.data.type === 'EVENT_REPORT') {

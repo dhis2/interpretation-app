@@ -12058,7 +12058,7 @@
 	
 	    // base
 	    request.setBaseUrl(this.getRequestPath(source, format));
-	
+	    console.log("request", request);
 	    return request;
 	};
 	
@@ -22553,7 +22553,7 @@
 	        bodyStyle: 'padding:12px 12px 15px; background-color:#fff; font-size:11px',
 	        html: function () {
 	            var layout = instanceManager.getStateFavorite(),
-	                appUrl = path + '/' + apiModule + '/#/index.html?id=' + layout.id,
+	                appUrl = path + '/' + apiModule + '/index.html?id=' + layout.id,
 	                apiUrl = apiPath + '/' + apiEndpoint + '/' + layout.id + '/data.html+css',
 	                hStyle = 'padding-bottom:10px; font-weight:bold; color:#444',
 	                html = '';
