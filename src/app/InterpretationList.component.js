@@ -9,11 +9,11 @@ import { getInstance as getD2 } from 'd2/lib/d2';
 
 const InterpretationList = React.createClass({
     propTypes: {
-        d2: React.PropTypes.object
+        d2: React.PropTypes.object,
     },
 
     childContextTypes: {
-        d2: React.PropTypes.object
+        d2: React.PropTypes.object,
     },
 
     getInitialState() {
@@ -24,15 +24,15 @@ const InterpretationList = React.createClass({
             currentUser: {
                 name: this.props.d2.currentUser.displayName,
                 id: this.props.d2.currentUser.id,
-                superUser: this.isSuperUser()
+                superUser: this.isSuperUser(),
             },
-            d2Api: this.props.d2.Api.getApi()
+            d2Api: this.props.d2.Api.getApi(),
         };
     },
 
     getChildContext() {
         return {
-            d2: this.props.d2
+            d2: this.props.d2,
         };
     },
 
@@ -378,9 +378,9 @@ const InterpretationList = React.createClass({
     addToDivList(dataList, hasMore, resultPage) {
         this.setState({
             items: this.state.items.concat([
-                this.createDiv(dataList, resultPage)
+                this.createDiv(dataList, resultPage),
             ]),
-            hasMore
+            hasMore,
         });
     },
 
@@ -486,48 +486,48 @@ const InterpretationList = React.createClass({
             {
                 type: 'chart',
                 performed: false,
-                query: `interpretations?paging=false&fields=id&filter=chart.name:ilike:${keyword}`
+                query: `interpretations?paging=false&fields=id&filter=chart.name:ilike:${keyword}`,
             },
             {
                 type: 'report',
                 performed: false,
-                query: `interpretations?paging=false&fields=id&filter=visualization.name:ilike:${keyword}`
+                query: `interpretations?paging=false&fields=id&filter=visualization.name:ilike:${keyword}`,
             },
             {
                 type: 'chartEvent',
                 performed: false,
-                query: `interpretations?paging=false&fields=id&filter=eventChart.name:ilike:${keyword}`
+                query: `interpretations?paging=false&fields=id&filter=eventChart.name:ilike:${keyword}`,
             },
             {
                 type: 'reportEvent',
                 performed: false,
-                query: `interpretations?paging=false&fields=id&filter=eventReport.name:ilike:${keyword}`
+                query: `interpretations?paging=false&fields=id&filter=eventReport.name:ilike:${keyword}`,
             },
             {
                 type: 'map',
                 performed: false,
-                query: `interpretations?paging=false&fields=id&filter=map.name:ilike:${keyword}`
+                query: `interpretations?paging=false&fields=id&filter=map.name:ilike:${keyword}`,
             },
             {
                 type: 'author',
                 performed: false,
-                query: `interpretations?paging=false&fields=id&filter=user.name:ilike:${keyword}`
+                query: `interpretations?paging=false&fields=id&filter=user.name:ilike:${keyword}`,
             },
             {
                 type: 'commentator',
                 performed: false,
-                query: `interpretations?paging=false&fields=id&filter=comments.user.name:ilike:${keyword}`
+                query: `interpretations?paging=false&fields=id&filter=comments.user.name:ilike:${keyword}`,
             },
             {
                 type: 'interpretationText',
                 performed: false,
-                query: `interpretations?paging=false&fields=id&filter=text:ilike:${keyword}`
+                query: `interpretations?paging=false&fields=id&filter=text:ilike:${keyword}`,
             },
             {
                 type: 'commentText',
                 performed: false,
-                query: `interpretations?paging=false&fields=id&filter=comments.text:ilike:${keyword}`
-            }
+                query: `interpretations?paging=false&fields=id&filter=comments.text:ilike:${keyword}`,
+            },
         ];
 
         for (const searchItem of searchPerformList) {
@@ -637,7 +637,7 @@ const InterpretationList = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 export default InterpretationList;

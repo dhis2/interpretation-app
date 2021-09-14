@@ -9,7 +9,7 @@ const AutoCompleteSearchKeyword = React.createClass({
         searchId: React.PropTypes.string,
         onSelect: React.PropTypes.func,
         onChange: React.PropTypes.func,
-        onEnterKey: React.PropTypes.func
+        onEnterKey: React.PropTypes.func,
     },
 
     getInitialState() {
@@ -19,7 +19,7 @@ const AutoCompleteSearchKeyword = React.createClass({
             loading: false,
             open: false,
             keywordDataSource: [],
-            keyword: this.getEmptyKeywordObj()
+            keyword: this.getEmptyKeywordObj(),
         };
     },
 
@@ -386,7 +386,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                     <span className="spanSearchItemHeaderName">{title}</span>
                 </div>
             ),
-            source: this.getEmptyKeywordObj()
+            source: this.getEmptyKeywordObj(),
         };
     },
 
@@ -400,7 +400,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                     <span className="searchItemName">{source.text}</span>
                 </div>
             ),
-            source
+            source,
         };
     },
 
@@ -419,7 +419,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                     {title}
                 </div>
             ),
-            source: this.getEmptyKeywordObj()
+            source: this.getEmptyKeywordObj(),
         };
     },
 
@@ -538,7 +538,7 @@ const AutoCompleteSearchKeyword = React.createClass({
                 openOnFocus
             />
         );
-    }
+    },
 });
 
 export default AutoCompleteSearchKeyword;

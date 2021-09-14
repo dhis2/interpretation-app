@@ -16,7 +16,7 @@ const Interpretation = React.createClass({
         data: React.PropTypes.object,
         currentUser: React.PropTypes.object,
         d2Api: React.PropTypes.object,
-        deleteInterpretationSuccess: React.PropTypes.func
+        deleteInterpretationSuccess: React.PropTypes.func,
     },
 
     getInitialState() {
@@ -27,7 +27,7 @@ const Interpretation = React.createClass({
             open: false,
             openAccessInfo: false,
             comments: this.props.data.comments,
-            isTooltipActive: false
+            isTooltipActive: false,
         };
     },
 
@@ -116,8 +116,8 @@ const Interpretation = React.createClass({
                 {
                     id: this.props.data.objId,
                     el: this.props.data.id,
-                    relativePeriodDate: this.props.data.created
-                }
+                    relativePeriodDate: this.props.data.created,
+                },
             ]);
         });
     },
@@ -129,8 +129,8 @@ const Interpretation = React.createClass({
                 {
                     id: this.props.data.objId,
                     el: this.props.data.id,
-                    relativePeriodDate: this.props.data.created
-                }
+                    relativePeriodDate: this.props.data.created,
+                },
             ]);
         });
     },
@@ -163,7 +163,7 @@ const Interpretation = React.createClass({
         'LAST_12_MONTHS',
         'THIS_YEAR',
         'LAST_YEAR',
-        'LAST_5_YEARS'
+        'LAST_5_YEARS',
     ],
 
     _setMap(data) {
@@ -175,7 +175,7 @@ const Interpretation = React.createClass({
             mapPlugin.load({
                 id: data.id,
                 el: divId,
-                relativePeriodDate: this.props.data.created
+                relativePeriodDate: this.props.data.created,
             });
         });
     },
@@ -196,13 +196,13 @@ const Interpretation = React.createClass({
         if (relativePeriodKey === 'THIS_YEAR') {
             periods.push({
                 id: currentYear.toString(),
-                name: currentYear.toString()
+                name: currentYear.toString(),
             });
         } else if (relativePeriodKey === 'LAST_YEAR') {
             const lastYear = currentYear - 1;
             periods.push({
                 id: lastYear.toString(),
-                name: lastYear.toString()
+                name: lastYear.toString(),
             });
         } else if (relativePeriodKey === 'LAST_5_YEARS') {
             const start = currentYear - 5;
@@ -223,7 +223,7 @@ const Interpretation = React.createClass({
                 currentMonth > 10 ? currentMonth : `0${currentMonth}`;
             periods.push({
                 id: `${currentYear}${currentMonth}`,
-                name: `${currentYear}${currentMonth}`
+                name: `${currentYear}${currentMonth}`,
             });
         } else if (relativePeriodKey === 'monthsThisYear') {
             const currentMonth = date.getMonth(); // Month from Date Object starts from 0
@@ -267,7 +267,7 @@ const Interpretation = React.createClass({
                 const k = m >= 10 ? m : `0${m}`;
                 lastYearPeriods.push({
                     id: `${lastYear}${k}`,
-                    name: `${lastYear}${k}`
+                    name: `${lastYear}${k}`,
                 });
                 count++;
             }
@@ -287,13 +287,13 @@ const Interpretation = React.createClass({
                 const likedBy = this.state.likedBy;
                 likedBy.push({
                     name: this.props.currentUser.name,
-                    id: this.props.currentUser.id
+                    id: this.props.currentUser.id,
                 });
 
                 this.setState(
                     {
                         likes,
-                        likedBy
+                        likedBy,
                     },
                     function () {
                         const peopleLikeTagId = `peopleLike_${this.props.data.id}`;
@@ -322,7 +322,7 @@ const Interpretation = React.createClass({
                 this.setState(
                     {
                         likes,
-                        likedBy
+                        likedBy,
                     },
                     function () {
                         if (likes === 0) {
@@ -453,13 +453,13 @@ const Interpretation = React.createClass({
 
     _openPeopleLikedHandler() {
         this.setState({
-            open: true
+            open: true,
         });
     },
 
     _closePeopleLikedHandler() {
         this.setState({
-            open: false
+            open: false,
         });
     },
 
@@ -480,13 +480,13 @@ const Interpretation = React.createClass({
 
     _openAccessInfoHandler() {
         this.setState({
-            openAccessInfo: true
+            openAccessInfo: true,
         });
     },
 
     _closeAccessInfoHandler() {
         this.setState({
-            openAccessInfo: false
+            openAccessInfo: false,
         });
     },
 
@@ -532,7 +532,7 @@ const Interpretation = React.createClass({
                 onClick={this._closePeopleLikedHandler}
                 label="Cancel"
                 primary
-            />
+            />,
         ];
 
         return (
@@ -703,7 +703,7 @@ const Interpretation = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 export default Interpretation;
