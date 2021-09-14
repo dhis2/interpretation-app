@@ -179,7 +179,7 @@ export default class AdvanceSearchForm extends Component {
                                 <SelectField value={this.state.type} style={fontStyle} menuStyle={menuStyle} hintStyle={hintStyle} onChange={this._typeChanged}>
                                     <MenuItem value="" primaryText="No Selection" />
                                     <MenuItem value="CHART" primaryText="Chart" />
-                                    <MenuItem value="REPORT_TABLE" primaryText="Report Table" />
+                                    <MenuItem value="VISUALIZATION" primaryText="Visualization" />
                                     <MenuItem value="EVENT_CHART" primaryText="Event Chart" />
                                     <MenuItem value="EVENT_REPORT" primaryText="Event Report Table" />
                                     <MenuItem value="MAP" primaryText="Map" />
