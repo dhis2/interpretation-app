@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Dialog, FlatButton } from 'material-ui';
 import MessageOwner from './MessageOwner.component';
@@ -17,7 +16,7 @@ const Interpretation = React.createClass({
         data: React.PropTypes.object,
         currentUser: React.PropTypes.object,
         d2Api: React.PropTypes.object,
-        deleteInterpretationSuccess: React.PropTypes.func,
+        deleteInterpretationSuccess: React.PropTypes.func
     },
 
     getInitialState() {
@@ -28,7 +27,7 @@ const Interpretation = React.createClass({
             open: false,
             openAccessInfo: false,
             comments: this.props.data.comments,
-            isTooltipActive: false,
+            isTooltipActive: false
         };
     },
 
@@ -36,35 +35,46 @@ const Interpretation = React.createClass({
         this._drawIntepretation();
     },
 
-    _drawIntepretation( isRedraw ) {
+    _drawIntepretation(isRedraw) {
+        delayOnceTimeAction.bind(
+            1000,
+            `resultInterpretation${this.props.data.id}`,
+            () => {
+                const divId = this.props.data.id;
 
-        delayOnceTimeAction.bind(1000, `resultInterpretation${this.props.data.id}`, () => {
-            const divId = this.props.data.id;
-
-            if (this.props.data.type === 'VISUALIZATION') {
-                this._setReportTable();
-            } else if (this.props.data.type === 'MAP') {
-                if (isRedraw) {
-                    $(`#${divId}`).html('<img className="loadingImg" src="images/ajax-loader-circle.gif" />');
-                }
-                actions.getMap('', this.props.data.map.id).subscribe(result => {
-                    this._setMap(result);
-                });
-            } else if (this.props.data.type === 'EVENT_REPORT') {
-                if (!isRedraw) {
-                    this._setEventReport();
-                }
-            } else if (this.props.data.type === 'EVENT_CHART') {
-                if (!isRedraw) {
-                    this._setEventChart();
+                if (this.props.data.type === 'VISUALIZATION') {
+                    this._setReportTable();
+                } else if (this.props.data.type === 'MAP') {
+                    if (isRedraw) {
+                        $(`#${divId}`).html(
+                            '<img className="loadingImg" src="images/ajax-loader-circle.gif" />'
+                        );
+                    }
+                    actions
+                        .getMap('', this.props.data.map.id)
+                        .subscribe((result) => {
+                            this._setMap(result);
+                        });
+                } else if (this.props.data.type === 'EVENT_REPORT') {
+                    if (!isRedraw) {
+                        this._setEventReport();
+                    }
+                } else if (this.props.data.type === 'EVENT_CHART') {
+                    if (!isRedraw) {
+                        this._setEventChart();
+                    }
                 }
             }
-        });
+        );
 
-        delayOnceTimeAction.bind(8000, `imgLoading${this.props.data.id}`, () => {
-            const divId = this.props.data.id;
-            $(`#${divId}`).find('img.loadingImg').remove();
-        });
+        delayOnceTimeAction.bind(
+            8000,
+            `imgLoading${this.props.data.id}`,
+            () => {
+                const divId = this.props.data.id;
+                $(`#${divId}`).find('img.loadingImg').remove();
+            }
+        );
     },
 
     /* _hasRelativePeriods(relativePeriods) {
@@ -100,24 +110,28 @@ const Interpretation = React.createClass({
     },
 
     _setEventReport() {
-        getD2().then(d2 => {
+        getD2().then((d2) => {
             eventReportPlugin.url = restUtil.getUrlBase_Formatted(d2);
-            eventReportPlugin.load([{
-                id: this.props.data.objId,
-                el: this.props.data.id,
-                relativePeriodDate: this.props.data.created,
-            }]);
+            eventReportPlugin.load([
+                {
+                    id: this.props.data.objId,
+                    el: this.props.data.id,
+                    relativePeriodDate: this.props.data.created
+                }
+            ]);
         });
     },
 
     _setEventChart() {
-        getD2().then(d2 => {
+        getD2().then((d2) => {
             eventChartPlugin.url = restUtil.getUrlBase_Formatted(d2);
-            eventChartPlugin.load([{
-                id: this.props.data.objId,
-                el: this.props.data.id,
-                relativePeriodDate: this.props.data.created,
-            }]);
+            eventChartPlugin.load([
+                {
+                    id: this.props.data.objId,
+                    el: this.props.data.id,
+                    relativePeriodDate: this.props.data.created
+                }
+            ]);
         });
     },
 
@@ -149,19 +163,19 @@ const Interpretation = React.createClass({
         'LAST_12_MONTHS',
         'THIS_YEAR',
         'LAST_YEAR',
-        'LAST_5_YEARS',
+        'LAST_5_YEARS'
     ],
 
     _setMap(data) {
         const me = this;
-        getD2().then(d2 => {			
+        getD2().then((d2) => {
             const divId = this.props.data.id;
             $(`#${divId}`).css('height', `${dataInfo.mapHeight}px`);
-            mapPlugin.url = restUtil.getUrlBase_Formatted( d2 );
+            mapPlugin.url = restUtil.getUrlBase_Formatted(d2);
             mapPlugin.load({
                 id: data.id,
                 el: divId,
-                relativePeriodDate: this.props.data.created,                
+                relativePeriodDate: this.props.data.created
             });
         });
     },
@@ -180,37 +194,55 @@ const Interpretation = React.createClass({
 
         // Yearly periods
         if (relativePeriodKey === 'THIS_YEAR') {
-            periods.push({ id: currentYear.toString(), name: currentYear.toString() });
+            periods.push({
+                id: currentYear.toString(),
+                name: currentYear.toString()
+            });
         } else if (relativePeriodKey === 'LAST_YEAR') {
             const lastYear = currentYear - 1;
-            periods.push({ id: lastYear.toString(), name: lastYear.toString() });
+            periods.push({
+                id: lastYear.toString(),
+                name: lastYear.toString()
+            });
         } else if (relativePeriodKey === 'LAST_5_YEARS') {
             const start = currentYear - 5;
             const end = currentYear - 1;
             for (let year = start; year >= end; year++) {
                 periods.push({ id: year.toString(), name: year.toString() });
             }
-        } else if (relativePeriodKey === 'THIS_MONTH') { // Monthy periods
-            let currentMonth = date.getMonth() + 1;// Month from Date Object starts from 0
-            currentMonth = (currentMonth > 10) ? currentMonth : `0${currentMonth}`;
+        } else if (relativePeriodKey === 'THIS_MONTH') {
+            // Monthy periods
+            let currentMonth = date.getMonth() + 1; // Month from Date Object starts from 0
+            currentMonth =
+                currentMonth > 10 ? currentMonth : `0${currentMonth}`;
             const period = `${currentYear}${currentMonth}`;
             periods.push({ id: period, name: period });
         } else if (relativePeriodKey === 'LAST_MONTH') {
-            let currentMonth = date.getMonth();// Month from Date Object starts from 0
-            currentMonth = (currentMonth > 10) ? currentMonth : `0${currentMonth}`;
-            periods.push({ id: `${currentYear}${currentMonth}`, name: `${currentYear}${currentMonth}` });
+            let currentMonth = date.getMonth(); // Month from Date Object starts from 0
+            currentMonth =
+                currentMonth > 10 ? currentMonth : `0${currentMonth}`;
+            periods.push({
+                id: `${currentYear}${currentMonth}`,
+                name: `${currentYear}${currentMonth}`
+            });
         } else if (relativePeriodKey === 'monthsThisYear') {
-            const currentMonth = date.getMonth();// Month from Date Object starts from 0
+            const currentMonth = date.getMonth(); // Month from Date Object starts from 0
             for (let m = 1; m <= currentMonth; m++) {
-                const k = (m > 10) ? m : `0${m}`;
+                const k = m > 10 ? m : `0${m}`;
                 periods.push({ id: `${currentYear}${k}` });
             }
         } else if (relativePeriodKey === 'LAST_12_MONTHS') {
-            periods = periods.concat(this._getLastNMonth(12, currentYear, date.getMonth()));
+            periods = periods.concat(
+                this._getLastNMonth(12, currentYear, date.getMonth())
+            );
         } else if (relativePeriodKey === 'LAST_3_MONTHS') {
-            periods = periods.concat(this._getLastNMonth(3, currentYear, date.getMonth()));
+            periods = periods.concat(
+                this._getLastNMonth(3, currentYear, date.getMonth())
+            );
         } else if (relativePeriodKey === 'LAST_6_MONTHS') {
-            periods = periods.concat(this._getLastNMonth(6, currentYear, date.getMonth()));
+            periods = periods.concat(
+                this._getLastNMonth(6, currentYear, date.getMonth())
+            );
         }
 
         return periods;
@@ -223,7 +255,7 @@ const Interpretation = React.createClass({
 
         let count = 0;
         for (let m = month; m >= 1 && count < noNumber; m--) {
-            const k = (m >= 10) ? m : `0${m}`;
+            const k = m >= 10 ? m : `0${m}`;
             currentYearPeriods.push({ id: `${year}${k}`, name: `${year}${k}` });
             count++;
         }
@@ -232,8 +264,11 @@ const Interpretation = React.createClass({
         if (count < noNumber - 1) {
             const lastYear = year - 1;
             for (let m = noNumber; m >= 1 && count < noNumber; m--) {
-                const k = (m >= 10) ? m : `0${m}`;
-                lastYearPeriods.push({ id: `${lastYear}${k}`, name: `${lastYear}${k}` });
+                const k = m >= 10 ? m : `0${m}`;
+                lastYearPeriods.push({
+                    id: `${lastYear}${k}`,
+                    name: `${lastYear}${k}`
+                });
                 count++;
             }
         }
@@ -245,93 +280,157 @@ const Interpretation = React.createClass({
     },
 
     _likeHandler() {
-        actions.updateLike(this.props.data, this.props.data.id).subscribe(() => {
-            const likes = this.state.likes + 1;
-            const likedBy = this.state.likedBy;
-            likedBy.push({ name: this.props.currentUser.name, id: this.props.currentUser.id });
+        actions
+            .updateLike(this.props.data, this.props.data.id)
+            .subscribe(() => {
+                const likes = this.state.likes + 1;
+                const likedBy = this.state.likedBy;
+                likedBy.push({
+                    name: this.props.currentUser.name,
+                    id: this.props.currentUser.id
+                });
 
-            this.setState({
-                likes,
-                likedBy,
-            }, function () {
-                const peopleLikeTagId = `peopleLike_${this.props.data.id}`;
-                const postComentTagId = `postComent_${this.props.data.id}`;
-                $(`#${peopleLikeTagId}`).show();
-                $(`#${postComentTagId}`).closest('.interpretationCommentArea').show();
+                this.setState(
+                    {
+                        likes,
+                        likedBy
+                    },
+                    function () {
+                        const peopleLikeTagId = `peopleLike_${this.props.data.id}`;
+                        const postComentTagId = `postComent_${this.props.data.id}`;
+                        $(`#${peopleLikeTagId}`).show();
+                        $(`#${postComentTagId}`)
+                            .closest('.interpretationCommentArea')
+                            .show();
+                    }
+                );
             });
-        });
     },
 
     _unlikeHandler() {
-        actions.removeLike(this.props.data, this.props.data.id).subscribe(() => {
-            const likes = this.state.likes - 1;
-            const likedBy = this.state.likedBy;
-            otherUtils.removeFromList(likedBy, 'id', this.props.currentUser.id);
+        actions
+            .removeLike(this.props.data, this.props.data.id)
+            .subscribe(() => {
+                const likes = this.state.likes - 1;
+                const likedBy = this.state.likedBy;
+                otherUtils.removeFromList(
+                    likedBy,
+                    'id',
+                    this.props.currentUser.id
+                );
 
-            this.setState({
-                likes,
-                likedBy,
-            }, function () {
-                if (likes === 0) {
-                    const peopleLikeTagId = `peopleLike_${this.props.data.id}`;
-                    $(`#${peopleLikeTagId}`).hide();
-                }
+                this.setState(
+                    {
+                        likes,
+                        likedBy
+                    },
+                    function () {
+                        if (likes === 0) {
+                            const peopleLikeTagId = `peopleLike_${this.props.data.id}`;
+                            $(`#${peopleLikeTagId}`).hide();
+                        }
+                    }
+                );
             });
-        });
     },
 
     _deleteHandler() {
-        actions.deleteInterpretation(this.props.data, this.props.data.id)
-			.subscribe(() => {
-            this.props.deleteInterpretationSuccess(this.props.data.id);
-		});
+        actions
+            .deleteInterpretation(this.props.data, this.props.data.id)
+            .subscribe(() => {
+                this.props.deleteInterpretationSuccess(this.props.data.id);
+            });
     },
 
-    _starHandler( e ) {
+    _starHandler(e) {
         //const starImgTag = this._getTopRightIconImgByType( 'star' );
-        this._switchMark( 'star', 'favorite', 'marked.png', 'unmarked.png', 'Starred', 'Not Starred' );
+        this._switchMark(
+            'star',
+            'favorite',
+            'marked.png',
+            'unmarked.png',
+            'Starred',
+            'Not Starred'
+        );
     },
 
     _subscribeHandler() {
         //const starImgTag = this._getTopRightIconImgByType( 'subscribe' );
-        this._switchMark( 'subscribe', 'subscriber', 'start_yes.png', 'start_no.png', 'Subscribed', 'Not Subscribed' );
+        this._switchMark(
+            'subscribe',
+            'subscriber',
+            'start_yes.png',
+            'start_no.png',
+            'Subscribed',
+            'Not Subscribed'
+        );
     },
 
     // -------------------------------------------
-    _getTopRightIconImgByType( typeStr ) {
+    _getTopRightIconImgByType(typeStr) {
         const interpretationTagId = `interpretation_${this.props.data.id}`;
         //console.log( 'interpretationTagId: ' + interpretationTagId );
-        const interpDivTag = $( '#' + interpretationTagId );
+        const interpDivTag = $('#' + interpretationTagId);
 
-        return interpDivTag.find( 'img.' + typeStr );
+        return interpDivTag.find('img.' + typeStr);
     },
 
-    _switchMark( typeStr, typeName, markImgSrcStr, unmarkImgSrcStr, markTitleStr, unmarkTitleStr ) {
-        const dataType = dhisUtils.getMatchingApiObjTypeName(this.props.data.type);
-        const queryUrl = _dhisLoc + 'api/' + dataType + '/' + this.props.data.objId + '/' + typeName;
+    _switchMark(
+        typeStr,
+        typeName,
+        markImgSrcStr,
+        unmarkImgSrcStr,
+        markTitleStr,
+        unmarkTitleStr
+    ) {
+        const dataType = dhisUtils.getMatchingApiObjTypeName(
+            this.props.data.type
+        );
+        const queryUrl =
+            _dhisLoc +
+            'api/' +
+            dataType +
+            '/' +
+            this.props.data.objId +
+            '/' +
+            typeName;
 
-        const imgTag = this._getTopRightIconImgByType( typeStr );
-        // Do universal same sourceId icon change        
-        const imgTags_All = otherUtils.getSameSourceInterpIconTags( imgTag, typeStr, 'srcObj_' );
-                
-        if ( imgTag.hasClass( 'unmarked' ) )
-        {
-            restUtil.requestPostHelper(this.props.d2Api, queryUrl, '', () => {
-                imgTags_All.removeClass( 'unmarked' );
-                imgTags_All.addClass( 'marked' );
-                imgTags_All.attr( 'src', 'images/' + markImgSrcStr );
-                imgTags_All.attr( 'title', markTitleStr );
-            }, 'application/json' );
+        const imgTag = this._getTopRightIconImgByType(typeStr);
+        // Do universal same sourceId icon change
+        const imgTags_All = otherUtils.getSameSourceInterpIconTags(
+            imgTag,
+            typeStr,
+            'srcObj_'
+        );
+
+        if (imgTag.hasClass('unmarked')) {
+            restUtil.requestPostHelper(
+                this.props.d2Api,
+                queryUrl,
+                '',
+                () => {
+                    imgTags_All.removeClass('unmarked');
+                    imgTags_All.addClass('marked');
+                    imgTags_All.attr('src', 'images/' + markImgSrcStr);
+                    imgTags_All.attr('title', markTitleStr);
+                },
+                'application/json'
+            );
+        } else if (imgTag.hasClass('marked')) {
+            restUtil.requestHelper(
+                this.props.d2Api,
+                queryUrl,
+                '',
+                () => {
+                    imgTags_All.removeClass('marked');
+                    imgTags_All.addClass('unmarked');
+                    imgTags_All.attr('src', 'images/' + unmarkImgSrcStr);
+                    imgTags_All.attr('title', unmarkTitleStr);
+                },
+                'DELETE',
+                'application/json'
+            );
         }
-        else if ( imgTag.hasClass( 'marked' ) )
-        {
-            restUtil.requestHelper(this.props.d2Api, queryUrl, '', () => {
-                imgTags_All.removeClass( 'marked' );
-                imgTags_All.addClass( 'unmarked' );
-                imgTags_All.attr( 'src', 'images/' + unmarkImgSrcStr );
-                imgTags_All.attr( 'title', unmarkTitleStr );                
-            }, 'DELETE', 'application/json' );
-        }        
     },
 
     _showEditHandler() {
@@ -354,30 +453,40 @@ const Interpretation = React.createClass({
 
     _openPeopleLikedHandler() {
         this.setState({
-            open: true,
+            open: true
         });
     },
 
     _closePeopleLikedHandler() {
         this.setState({
-            open: false,
+            open: false
         });
     },
 
     _getPeopleLikeList() {
         const list = this.state.likedBy.slice(0, 10);
-        return <div>{list.map(likedByUserName => <span key={likedByUserName.id}>{likedByUserName.name}<br /></span>)} {this.state.likedBy.length > 10 ? <span>more...</span> : '' }</div>;
+        return (
+            <div>
+                {list.map((likedByUserName) => (
+                    <span key={likedByUserName.id}>
+                        {likedByUserName.name}
+                        <br />
+                    </span>
+                ))}{' '}
+                {this.state.likedBy.length > 10 ? <span>more...</span> : ''}
+            </div>
+        );
     },
 
     _openAccessInfoHandler() {
         this.setState({
-            openAccessInfo: true,
+            openAccessInfo: true
         });
     },
 
     _closeAccessInfoHandler() {
         this.setState({
-            openAccessInfo: false,
+            openAccessInfo: false
         });
     },
 
@@ -395,8 +504,11 @@ const Interpretation = React.createClass({
         }
 
         // ?? ${_dhisLoc}??
-        return (fullLink !== '') ? fullLink
-                                 : (link === '') ? '' : `${_dhisLoc}${link}/index.html?id=${this.props.data.objId}&interpretationId=${this.props.data.id}`;
+        return fullLink !== ''
+            ? fullLink
+            : link === ''
+            ? ''
+            : `${_dhisLoc}${link}/index.html?id=${this.props.data.objId}&interpretationId=${this.props.data.id}`;
     },
 
     _exploreInterpretation() {
@@ -415,70 +527,162 @@ const Interpretation = React.createClass({
         const sourceLink = this._getSourceInterpretationLink();
 
         const peopleLikedByDialogActions = [
-            <FlatButton type="button"
+            <FlatButton
+                type="button"
                 onClick={this._closePeopleLikedHandler}
                 label="Cancel"
                 primary
-            />,
+            />
         ];
 
         return (
-			<div id={interpretationTagId} key={interpretationTagId} className="interpretations">
-				<div className="interpretationContainer" >
-
+            <div
+                id={interpretationTagId}
+                key={interpretationTagId}
+                className="interpretations"
+            >
+                <div className="interpretationContainer">
                     <div>
                         <div className="interpretationItem">
                             <div className="title">
                                 <span>{this.props.data.name}</span>
                                 <label className="linkArea">
                                     <span className="smallFont">|</span>
-                                    <a href={sourceLink} className="userLink leftSpace smallFont" target="_blank">Explore</a>
+                                    <a
+                                        href={sourceLink}
+                                        className="userLink leftSpace smallFont"
+                                        target="_blank"
+                                    >
+                                        Explore
+                                    </a>
                                 </label>
                                 <div className="interpTopRightDiv">
-                                    { this.props.data.objData !== undefined 
-                                    ?   <div>
-                                            <a onClick={this._subscribeHandler} className="topRightAnchors">
-                                                { otherUtils.findInArray( this.props.data.objData.subscribers, this.props.currentUser.id ) >= 0 
-                                                    ? <img src="images/start_yes.png" title="Subscribed" className={`topRightIcons subscribe marked srcObj_${this.props.data.objId}`} />
-                                                    : <img src="images/start_no.png" title="Not Subscribed" className={`topRightIcons subscribe unmarked srcObj_${this.props.data.objId}`} /> 
-                                                }
+                                    {this.props.data.objData !== undefined ? (
+                                        <div>
+                                            <a
+                                                onClick={this._subscribeHandler}
+                                                className="topRightAnchors"
+                                            >
+                                                {otherUtils.findInArray(
+                                                    this.props.data.objData
+                                                        .subscribers,
+                                                    this.props.currentUser.id
+                                                ) >= 0 ? (
+                                                    <img
+                                                        src="images/start_yes.png"
+                                                        title="Subscribed"
+                                                        className={`topRightIcons subscribe marked srcObj_${this.props.data.objId}`}
+                                                    />
+                                                ) : (
+                                                    <img
+                                                        src="images/start_no.png"
+                                                        title="Not Subscribed"
+                                                        className={`topRightIcons subscribe unmarked srcObj_${this.props.data.objId}`}
+                                                    />
+                                                )}
                                             </a>
                                         </div>
-                                    : <div></div>
-                                    }
+                                    ) : (
+                                        <div></div>
+                                    )}
                                 </div>
                             </div>
-                            <div id={this.props.data.id} ><img className="loadingImg" src="images/ajax-loader-circle.gif" /></div>
+                            <div id={this.props.data.id}>
+                                <img
+                                    className="loadingImg"
+                                    src="images/ajax-loader-circle.gif"
+                                />
+                            </div>
                         </div>
                     </div>
 
-                    <div id={relativePeriodMsgId} className="relativePeriodWarming"></div>
+                    <div
+                        id={relativePeriodMsgId}
+                        className="relativePeriodWarming"
+                    ></div>
 
-                    <MessageOwner key={messageOwnerKey} data={this.props.data} sourceLink={sourceLink} text={this.state.text} editInterpretationTextSuccess={this._editInterpretationTextSuccess} />
+                    <MessageOwner
+                        key={messageOwnerKey}
+                        data={this.props.data}
+                        sourceLink={sourceLink}
+                        text={this.state.text}
+                        editInterpretationTextSuccess={
+                            this._editInterpretationTextSuccess
+                        }
+                    />
 
                     <div className="linkTag">
-                        {otherUtils.findItemFromList(this.props.data.likedBy, 'id', this.props.currentUser.id) === undefined ? <a onClick={this._likeHandler} id={likeLinkTagId}>Like</a> : <a onClick={this._unlikeHandler} id={likeLinkTagId}>Unlike</a> } 
-                        <span className={this.props.currentUser.id === this.props.data.userId || this.props.currentUser.superUser ? '' : 'hidden'} >
-                        <label className="linkArea">·</label><a onClick={this._showEditHandler}>Edit</a>
-                        <label className="linkArea">·</label><a onClick={this._deleteHandler}>Delete</a>
+                        {otherUtils.findItemFromList(
+                            this.props.data.likedBy,
+                            'id',
+                            this.props.currentUser.id
+                        ) === undefined ? (
+                            <a onClick={this._likeHandler} id={likeLinkTagId}>
+                                Like
+                            </a>
+                        ) : (
+                            <a onClick={this._unlikeHandler} id={likeLinkTagId}>
+                                Unlike
+                            </a>
+                        )}
+                        <span
+                            className={
+                                this.props.currentUser.id ===
+                                    this.props.data.userId ||
+                                this.props.currentUser.superUser
+                                    ? ''
+                                    : 'hidden'
+                            }
+                        >
+                            <label className="linkArea">·</label>
+                            <a onClick={this._showEditHandler}>Edit</a>
+                            <label className="linkArea">·</label>
+                            <a onClick={this._deleteHandler}>Delete</a>
                         </span>
                     </div>
 
-                     <div className="interpretationCommentArea">
-                        <div id={peopleLikeTagId} className={this.state.likes > 0 ? 'greyBackground likeArea paddingLeft' : 'hidden greyBackground likeArea'}>
-                            <img src="images/like.png" className="verticalAlignTop" />
+                    <div className="interpretationCommentArea">
+                        <div
+                            id={peopleLikeTagId}
+                            className={
+                                this.state.likes > 0
+                                    ? 'greyBackground likeArea paddingLeft'
+                                    : 'hidden greyBackground likeArea'
+                            }
+                        >
+                            <img
+                                src="images/like.png"
+                                className="verticalAlignTop"
+                            />
                             <Tooltip
                                 placement="left"
                                 overlay={this._getPeopleLikeList()}
-                                arrowContent={<div className="rc-tooltip-arrow-inner"></div>}
+                                arrowContent={
+                                    <div className="rc-tooltip-arrow-inner"></div>
+                                }
                             >
-                                    <a onClick={this._openPeopleLikedHandler} id={peopleLikeLinkTagId}>{this.state.likes} people </a>
+                                <a
+                                    onClick={this._openPeopleLikedHandler}
+                                    id={peopleLikeLinkTagId}
+                                >
+                                    {this.state.likes} people{' '}
+                                </a>
                             </Tooltip>
-                            <span> liked this</span><label className="linkArea">·</label><span>{this.state.comments.length} people commented</span>
+                            <span> liked this</span>
+                            <label className="linkArea">·</label>
+                            <span>
+                                {this.state.comments.length} people commented
+                            </span>
                             <br />
                         </div>
-                        <CommentArea key={commentAreaKey} comments={this.state.comments} likes={this.state.likes} interpretationId={this.props.data.id} likedBy={this.state.likedBy} currentUser={this.props.currentUser} />
-
+                        <CommentArea
+                            key={commentAreaKey}
+                            comments={this.state.comments}
+                            likes={this.state.likes}
+                            interpretationId={this.props.data.id}
+                            likedBy={this.state.likedBy}
+                            currentUser={this.props.currentUser}
+                        />
 
                         <Dialog
                             title="People"
@@ -488,18 +692,18 @@ const Interpretation = React.createClass({
                             onRequestClose={this._closePeopleLikedHandler}
                         >
                             <div key={likeDialogKey}>
-                                {this.state.likedBy.map(likedByUserName =>
-                                    <p key={likedByUserName.id}>{likedByUserName.name}</p>
-                                )}
+                                {this.state.likedBy.map((likedByUserName) => (
+                                    <p key={likedByUserName.id}>
+                                        {likedByUserName.name}
+                                    </p>
+                                ))}
                             </div>
                         </Dialog>
-
-
                     </div>
                 </div>
-			</div>
-		);
-    },
+            </div>
+        );
+    }
 });
 
 export default Interpretation;
