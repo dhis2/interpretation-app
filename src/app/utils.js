@@ -16,42 +16,50 @@ export const delayOnceTimeAction = {
 export const dateUtil = {
     formatDateYYYYMMDD(date, separator) {
         let monthStr = (date.getMonth() + 1).toString();
-        monthStr = (monthStr[1]) ? monthStr : `0${monthStr[0]}`;
+        monthStr = monthStr[1] ? monthStr : `0${monthStr[0]}`;
 
         let dateStr = date.getDate().toString();
-        dateStr = (dateStr[1]) ? dateStr : `0${dateStr[0]}`;
+        dateStr = dateStr[1] ? dateStr : `0${dateStr[0]}`;
 
         return `${date.getFullYear()}${separator}${monthStr}${separator}${dateStr}`;
     },
     formatDateMMDDYYYY(date, separator) {
         let monthStr = (date.getMonth() + 1).toString();
-        monthStr = (monthStr[1]) ? monthStr : `0${monthStr[0]}`;
+        monthStr = monthStr[1] ? monthStr : `0${monthStr[0]}`;
 
         let dateStr = date.getDate().toString();
-        dateStr = (dateStr[1]) ? dateStr : `0${dateStr[0]}`;
+        dateStr = dateStr[1] ? dateStr : `0${dateStr[0]}`;
 
         return `${monthStr}${separator}${dateStr}${separator}${date.getFullYear()}`;
     },
 };
 
 export const restUtil = {
-    getUrlBase_Formatted( d2 ) {        
-        let url = d2.Api.getApi().baseUrl.replace( '/api', '' );
-        const lastChar = url.substring( url.length - 1 );
+    getUrlBase_Formatted(d2) {
+        let url = d2.Api.getApi().baseUrl.replace('/api', '');
+        const lastChar = url.substring(url.length - 1);
 
-        if ( lastChar === '/' ) url = url.substring( 0, url.length - 1 )
+        if (lastChar === '/') url = url.substring(0, url.length - 1);
 
         return url;
     },
-    
+
     requestGetHelper(d2Api, url, successFunc) {
-        d2Api.get(url).then(result => {
+        d2Api.get(url).then((result) => {
             successFunc(result);
         });
     },
     requestPostHelper(d2Api, url, value, successFunc, returnContentType) {
-        const returnContType = (returnContentType === undefined) ? 'text/plain' : returnContentType;
-        restUtil.requestHelper(d2Api, url, value, successFunc, 'POST', returnContType);
+        const returnContType =
+            returnContentType === undefined ? 'text/plain' : returnContentType;
+        restUtil.requestHelper(
+            d2Api,
+            url,
+            value,
+            successFunc,
+            'POST',
+            returnContType
+        );
         /*d2Api.post(url, value, { contentType: 'text/plain' })
             .then(successFunc)
             .catch(errorResponse => {
@@ -59,22 +67,31 @@ export const restUtil = {
             });
         */
     },
-    requestHelper(d2Api, url, value, successFunc, requestType, returnContentType) {
-        const reqType = (requestType === undefined) ? 'POST' : requestType;
-        const returnContType = (returnContentType === undefined) ? 'text/plain' : returnContentType;
-        d2Api.request(reqType, url, value, { contentType: returnContType })
-        .then(successFunc)
-        .catch(errorResponse => {
-            console.log(errorResponse);
-        });
+    requestHelper(
+        d2Api,
+        url,
+        value,
+        successFunc,
+        requestType,
+        returnContentType
+    ) {
+        const reqType = requestType === undefined ? 'POST' : requestType;
+        const returnContType =
+            returnContentType === undefined ? 'text/plain' : returnContentType;
+        d2Api
+            .request(reqType, url, value, { contentType: returnContType })
+            .then(successFunc)
+            .catch((errorResponse) => {
+                console.log(errorResponse);
+            });
     },
 };
 
 export const dhisUtils = {
-    getMatchingApiObjTypeName( dataType ) {
+    getMatchingApiObjTypeName(dataType) {
         let dhisApiObjName = '';
-        if (dataType === 'REPORT_TABLE') {
-            dhisApiObjName = 'reportTables';
+        if (dataType === 'VISUALIZATION') {
+            dhisApiObjName = 'visualizations';
         } else if (dataType === 'CHART') {
             dhisApiObjName = 'charts';
         } else if (dataType === 'MAP') {
@@ -121,12 +138,11 @@ export const otherUtils = {
         return foundData;
     },
 
-    findInArray( arr, valueStr ) {
+    findInArray(arr, valueStr) {
         let foundIndex = -1;
 
-        if ( arr !== undefined && valueStr !== undefined )
-        {
-            foundIndex = arr.indexOf( valueStr );
+        if (arr !== undefined && valueStr !== undefined) {
+            foundIndex = arr.indexOf(valueStr);
         }
 
         return foundIndex;
@@ -161,16 +177,16 @@ export const otherUtils = {
         let check = false;
         if (inputStr) {
             const trimmedStr = this.trim(inputStr);
-            check = (trimmedStr.indexOf(this.advSearchStr) === 0);
+            check = trimmedStr.indexOf(this.advSearchStr) === 0;
         }
         return check;
     },
 
     convertToNumber(n) {
-        return (n.startsWith('0')) ? eval(n[1]) : eval(n);
+        return n.startsWith('0') ? eval(n[1]) : eval(n);
     },
     // nameBeginsWith - 'srcObj_'
-    getClassName_ByBeginName( tag, nameBeginsWith ) {
+    getClassName_ByBeginName(tag, nameBeginsWith) {
         const classNameArr = tag.attr('class').split(' ');
         let foundName = '';
 
@@ -185,9 +201,14 @@ export const otherUtils = {
         return foundName;
     },
 
-    getSameSourceInterpIconTags( tag, typeStr, nameBeginsWith ) {
-        const scrObjName = otherUtils.getClassName_ByBeginName( tag, nameBeginsWith );
+    getSameSourceInterpIconTags(tag, typeStr, nameBeginsWith) {
+        const scrObjName = otherUtils.getClassName_ByBeginName(
+            tag,
+            nameBeginsWith
+        );
 
-        return ( scrObjName !== '' ) ? $( 'img.' + scrObjName ).filter( '.' + typeStr ) : tag;
-    }
+        return scrObjName !== ''
+            ? $('img.' + scrObjName).filter('.' + typeStr)
+            : tag;
+    },
 };

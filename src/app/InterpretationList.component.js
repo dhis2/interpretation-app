@@ -21,7 +21,11 @@ const InterpretationList = React.createClass({
             hasMore: true,
             items: [],
             searchTerm: undefined,
-            currentUser: { name: this.props.d2.currentUser.displayName, id: this.props.d2.currentUser.id, superUser: this.isSuperUser() },
+            currentUser: {
+                name: this.props.d2.currentUser.displayName,
+                id: this.props.d2.currentUser.id,
+                superUser: this.isSuperUser(),
+            },
             d2Api: this.props.d2.Api.getApi(),
         };
     },
@@ -41,7 +45,7 @@ const InterpretationList = React.createClass({
     onSearchChanged(searchTerm) {
         this.searchLoading(true);
 
-		// set the search terms on state memory and reset the item list
+        // set the search terms on state memory and reset the item list
         this.state.searchTerm = searchTerm;
         this.state.items = [];
         // Clear the previously displayed list first?
@@ -70,17 +74,17 @@ const InterpretationList = React.createClass({
     },
 
     structureData_AndPutInGlobalList(itemList) {
-		// Can not use itemList itself into the 'setState' since
-		// we didn't resolve it yet?
+        // Can not use itemList itself into the 'setState' since
+        // we didn't resolve it yet?
         const dataList = [];
         this.aggReportItems = [];
         this.curAggchartItems = [];
         this.eventReportItems = [];
         this.curEventChartItems = [];
+        console.log('itemList', itemList);
 
         for (let i = 0; i < itemList.length; i++) {
             const interpretation = itemList[i];
-
             let data = {};
             data = interpretation;
 
@@ -102,11 +106,16 @@ const InterpretationList = React.createClass({
                 data.objId = interpretation.map.id;
                 data.name = interpretation.map.name;
                 data.objData = interpretation.map;
-            } else if (interpretation.type === 'REPORT_TABLE') {
-                data.objId = interpretation.reportTable.id;
-                data.name = interpretation.reportTable.name;
-                data.objData = interpretation.reportTable;
-                this.aggReportItems.push(interpretation);
+            } else if (interpretation.type === 'VISUALIZATION') {
+                data.objId = interpretation.visualization.id;
+                data.name = interpretation.visualization.name;
+                data.objData = interpretation.visualization;
+
+                if (interpretation.visualization.type === 'PIVOT_TABLE') {
+                    this.aggReportItems.push(interpretation);
+                } else {
+                    this.curAggchartItems.push(interpretation);
+                }
             } else if (interpretation.type === 'EVENT_REPORT') {
                 data.objId = interpretation.eventReport.id;
                 data.name = interpretation.eventReport.name;
@@ -132,34 +141,67 @@ const InterpretationList = React.createClass({
                 // id changed to array
                 searchTermUrl += `&filter=id:in:[${searchTerm.idList.toString()}]&order=created:desc`;
             } else if (searchTerm.moreTerms !== undefined) {
-                if (searchTerm.moreTerms.author && searchTerm.moreTerms.author.id !== '') searchTermUrl += `&filter=user.id:eq:${searchTerm.moreTerms.author.id}`;
+                if (
+                    searchTerm.moreTerms.author &&
+                    searchTerm.moreTerms.author.id !== ''
+                )
+                    searchTermUrl += `&filter=user.id:eq:${searchTerm.moreTerms.author.id}`;
 
-                if (searchTerm.moreTerms.commentator && searchTerm.moreTerms.commentator.id !== '') searchTermUrl += `&filter=comments.user.id:eq:${searchTerm.moreTerms.commentator.id}`;
+                if (
+                    searchTerm.moreTerms.commentator &&
+                    searchTerm.moreTerms.commentator.id !== ''
+                )
+                    searchTermUrl += `&filter=comments.user.id:eq:${searchTerm.moreTerms.commentator.id}`;
 
-                if (searchTerm.moreTerms.type) searchTermUrl += `&filter=type:eq:${searchTerm.moreTerms.type}`;
+                if (searchTerm.moreTerms.type)
+                    searchTermUrl += `&filter=type:eq:${searchTerm.moreTerms.type}`;
 
-                if (searchTerm.moreTerms.dateCreatedFrom) searchTermUrl += `&filter=created:ge:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateCreatedFrom, '-')}`;
+                if (searchTerm.moreTerms.dateCreatedFrom)
+                    searchTermUrl += `&filter=created:ge:${dateUtil.formatDateYYYYMMDD(
+                        searchTerm.moreTerms.dateCreatedFrom,
+                        '-'
+                    )}`;
 
-                if (searchTerm.moreTerms.dateCreatedTo) searchTermUrl += `&filter=created:le:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateCreatedTo, '-')}`;
+                if (searchTerm.moreTerms.dateCreatedTo)
+                    searchTermUrl += `&filter=created:le:${dateUtil.formatDateYYYYMMDD(
+                        searchTerm.moreTerms.dateCreatedTo,
+                        '-'
+                    )}`;
 
-                if (searchTerm.moreTerms.dateModiFrom) searchTermUrl += `&filter=lastUpdated:ge:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateModiFrom, '-')}`;
+                if (searchTerm.moreTerms.dateModiFrom)
+                    searchTermUrl += `&filter=lastUpdated:ge:${dateUtil.formatDateYYYYMMDD(
+                        searchTerm.moreTerms.dateModiFrom,
+                        '-'
+                    )}`;
 
-                if (searchTerm.moreTerms.dateModiTo) searchTermUrl += `&filter=lastUpdated:le:${dateUtil.formatDateYYYYMMDD(searchTerm.moreTerms.dateModiTo, '-')}`;
+                if (searchTerm.moreTerms.dateModiTo)
+                    searchTermUrl += `&filter=lastUpdated:le:${dateUtil.formatDateYYYYMMDD(
+                        searchTerm.moreTerms.dateModiTo,
+                        '-'
+                    )}`;
 
-                if (searchTerm.moreTerms.interpretationText) searchTermUrl += `&filter=text:ilike:${searchTerm.moreTerms.interpretationText}`;
+                if (searchTerm.moreTerms.interpretationText)
+                    searchTermUrl += `&filter=text:ilike:${searchTerm.moreTerms.interpretationText}`;
 
                 // depending on the type, do other search..
-                if (searchTerm.moreTerms.favoritesName && searchTerm.moreTerms.type) searchTermUrl += `&filter=${this.getFavoriteSearchKeyName(searchTerm.moreTerms.type)}:ilike:${searchTerm.moreTerms.favoritesName}`;
+                if (
+                    searchTerm.moreTerms.favoritesName &&
+                    searchTerm.moreTerms.type
+                )
+                    searchTermUrl += `&filter=${this.getFavoriteSearchKeyName(
+                        searchTerm.moreTerms.type
+                    )}:ilike:${searchTerm.moreTerms.favoritesName}`;
 
-                if (searchTerm.moreTerms.commentText) searchTermUrl += `&filter=comments.text:ilike:${searchTerm.moreTerms.commentText}`;
-                
-                if (searchTerm.moreTerms.mention) searchTermUrl += `&filter=comments.mentions.username:eq:${this.props.d2.currentUser.username}`;
+                if (searchTerm.moreTerms.commentText)
+                    searchTermUrl += `&filter=comments.text:ilike:${searchTerm.moreTerms.commentText}`;
+
+                if (searchTerm.moreTerms.mention)
+                    searchTermUrl += `&filter=comments.mentions.username:eq:${this.props.d2.currentUser.username}`;
 
                 // TODO:
                 //      For 'Star' (Favorite), we can check it by '/{charId}/favorites...  so, we can do favorites:in:$---, but that would be in char..
                 //      So, we need to do 'chart.favorites:in:-userId--' ?  How can we tell which type?
                 //      Look at this in API after being able to submit for favorites/subscribers..
-
             }
         }
 
@@ -169,23 +211,23 @@ const InterpretationList = React.createClass({
     getFavoriteSearchKeyName(favoriteType) {
         let searchFavoriteKeyName = '';
         switch (favoriteType) {
-        case 'CHART':
-            searchFavoriteKeyName = 'chart.name';
-            break;
-        case 'REPORT_TABLE':
-            searchFavoriteKeyName = 'reportTable.name';
-            break;
-        case 'EVENT_CHART':
-            searchFavoriteKeyName = 'eventChart.name';
-            break;
-        case 'EVENT_REPORT':
-            searchFavoriteKeyName = 'eventReport.name';
-            break;
-        case 'MAP':
-            searchFavoriteKeyName = 'map.name';
-            break;
-        default:
-            break;
+            case 'CHART':
+                searchFavoriteKeyName = 'chart.name';
+                break;
+            case 'VISUALIZATION':
+                searchFavoriteKeyName = 'visualization.name';
+                break;
+            case 'EVENT_CHART':
+                searchFavoriteKeyName = 'eventChart.name';
+                break;
+            case 'EVENT_REPORT':
+                searchFavoriteKeyName = 'eventReport.name';
+                break;
+            case 'MAP':
+                searchFavoriteKeyName = 'map.name';
+                break;
+            default:
+                break;
         }
 
         return searchFavoriteKeyName;
@@ -208,18 +250,25 @@ const InterpretationList = React.createClass({
         const rightAreaOffSetPos = dataInfo.offSetRightAreaPosition;
         let leftEndPosition = width;
 
-        if ($('.intpreContents').width() < minLeftWidth || width < minLeftWidth) leftEndPosition = minLeftWidth;
-        else if ($('.intpreContents').width() >= maxLeftWidth || width >= maxLeftWidth) leftEndPosition = maxLeftWidth;
+        if ($('.intpreContents').width() < minLeftWidth || width < minLeftWidth)
+            leftEndPosition = minLeftWidth;
+        else if (
+            $('.intpreContents').width() >= maxLeftWidth ||
+            width >= maxLeftWidth
+        )
+            leftEndPosition = maxLeftWidth;
 
         const rightStartPosition = leftEndPosition + rightAreaOffSetPos;
 
         $('.intpreContents').width(leftEndPosition);
         $('.divSearchArea,.searchDiv').width(leftEndPosition - 1);
-        $('.divRightArea').css('position', 'fixed').css('left', `${rightStartPosition}px`);
+        $('.divRightArea')
+            .css('position', 'fixed')
+            .css('left', `${rightStartPosition}px`);
     },
 
     loadCharts(aggchartItems) {
-        getD2().then(d2 => {
+        getD2().then((d2) => {
             //const width = dataInfo.getInterpDivWidth();
 
             const chartItems = [];
@@ -238,7 +287,7 @@ const InterpretationList = React.createClass({
                 chartItems.push(options);
             }
 
-            chartPlugin.url = restUtil.getUrlBase_Formatted( d2 );
+            chartPlugin.url = restUtil.getUrlBase_Formatted(d2);
             chartPlugin.showTitles = false;
             chartPlugin.preventMask = false;
             chartPlugin.load(chartItems);
@@ -246,7 +295,7 @@ const InterpretationList = React.createClass({
     },
 
     loadAggregateReports() {
-        getD2().then(d2 => {
+        getD2().then((d2) => {
             //const width = dataInfo.getInterpDivWidth();
             const items = [];
             for (let i = 0; i < this.aggReportItems.length; i++) {
@@ -263,8 +312,9 @@ const InterpretationList = React.createClass({
                 items.push(options);
             }
 
-            reportTablePlugin.url = restUtil.getUrlBase_Formatted( d2 );
+            reportTablePlugin.url = restUtil.getUrlBase_Formatted(d2);
             reportTablePlugin.showTitles = false;
+            console.log('items', items);
             reportTablePlugin.load(items);
         });
     },
@@ -327,7 +377,10 @@ const InterpretationList = React.createClass({
 */
     addToDivList(dataList, hasMore, resultPage) {
         this.setState({
-            items: this.state.items.concat([this.createDiv(dataList, resultPage)]), hasMore,
+            items: this.state.items.concat([
+                this.createDiv(dataList, resultPage),
+            ]),
+            hasMore,
         });
     },
 
@@ -338,9 +391,12 @@ const InterpretationList = React.createClass({
     loadSearchedListCase(idList, afterFunc) {
         const searchQuery = `&filter=id:in:[${idList.toString()}]&order=created:desc`;
 
-        actions.listInterpretation('', searchQuery).subscribe(result => {
+        actions.listInterpretation('', searchQuery).subscribe((result) => {
             // NOTE: Changed the name of the method to long and descriptive.  Break up the method purpose if you can.
-            const dataList = this.structureData_AndPutInGlobalList(result.interpretations, this.state.d2Api.baseUrl);
+            const dataList = this.structureData_AndPutInGlobalList(
+                result.interpretations,
+                this.state.d2Api.baseUrl
+            );
 
             this.addToDivList(dataList, false, 1);
 
@@ -360,33 +416,44 @@ const InterpretationList = React.createClass({
     loadMore(page, afterFunc) {
         const searchQuery = this.getSearchTerms(this.state.searchTerm);
 
-        actions.listInterpretation('', searchQuery, page).subscribe(result => {
-            if (page === 1) {
-                // Update the 'READ' timestamp
-                const queryUrl = _dhisLoc + 'api/' + 'me/dashboard/interpretations/read';
-                restUtil.requestPostHelper(this.state.d2Api, queryUrl, '', () => {
-                    console.log('successfully updated read timestamp');
-                });
-            }
+        actions
+            .listInterpretation('', searchQuery, page)
+            .subscribe((result) => {
+                if (page === 1) {
+                    // Update the 'READ' timestamp
+                    const queryUrl =
+                        _dhisLoc + 'api/' + 'me/dashboard/interpretations/read';
+                    restUtil.requestPostHelper(
+                        this.state.d2Api,
+                        queryUrl,
+                        '',
+                        () => {
+                            console.log('successfully updated read timestamp');
+                        }
+                    );
+                }
 
-            // NOTE: Changed the name of the method to long and descriptive.  Break up the method purpose if you can.
-            const dataList = this.structureData_AndPutInGlobalList(result.interpretations, this.state.d2Api.baseUrl);
-            const hasMore = (result.pager.page < result.pager.pageCount);
-            const resultPage = result.pager.page;
+                // NOTE: Changed the name of the method to long and descriptive.  Break up the method purpose if you can.
+                const dataList = this.structureData_AndPutInGlobalList(
+                    result.interpretations,
+                    this.state.d2Api.baseUrl
+                );
+                const hasMore = result.pager.page < result.pager.pageCount;
+                const resultPage = result.pager.page;
 
-            this.addToDivList(dataList, hasMore, resultPage);
+                this.addToDivList(dataList, hasMore, resultPage);
 
-            // QUESTION: Could we pass this as local list? Rather than using global list?
-            this.loadCharts(this.curAggchartItems);
-            this.loadAggregateReports();
-            // CHANGED - #3
-            //this.loadEventCharts(this.curEventChartItems);
-            //this.loadEventReports();
+                // QUESTION: Could we pass this as local list? Rather than using global list?
+                this.loadCharts(this.curAggchartItems);
+                this.loadAggregateReports();
+                // CHANGED - #3
+                //this.loadEventCharts(this.curEventChartItems);
+                //this.loadEventReports();
 
-            if (afterFunc) afterFunc();
+                if (afterFunc) afterFunc();
 
-            this.setTableCentering();
-        });
+                this.setTableCentering();
+            });
     },
 
     curAggchartItems: [],
@@ -413,29 +480,72 @@ const InterpretationList = React.createClass({
         }
     },
 
-
     performKeywordSearchRequest(keyword, doneFunc) {
         const searchIdListObject = {};
         const searchPerformList = [
-            { type: 'chart', performed: false, query: `interpretations?paging=false&fields=id&filter=chart.name:ilike:${keyword}` },
-            { type: 'report', performed: false, query: `interpretations?paging=false&fields=id&filter=reportTable.name:ilike:${keyword}` },
-            { type: 'chartEvent', performed: false, query: `interpretations?paging=false&fields=id&filter=eventChart.name:ilike:${keyword}` },
-            { type: 'reportEvent', performed: false, query: `interpretations?paging=false&fields=id&filter=eventReport.name:ilike:${keyword}` },
-            { type: 'map', performed: false, query: `interpretations?paging=false&fields=id&filter=map.name:ilike:${keyword}` },
-            { type: 'author', performed: false, query: `interpretations?paging=false&fields=id&filter=user.name:ilike:${keyword}` },
-            { type: 'commentator', performed: false, query: `interpretations?paging=false&fields=id&filter=comments.user.name:ilike:${keyword}` },
-            { type: 'interpretationText', performed: false, query: `interpretations?paging=false&fields=id&filter=text:ilike:${keyword}` },
-            { type: 'commentText', performed: false, query: `interpretations?paging=false&fields=id&filter=comments.text:ilike:${keyword}` },
+            {
+                type: 'chart',
+                performed: false,
+                query: `interpretations?paging=false&fields=id&filter=chart.name:ilike:${keyword}`,
+            },
+            {
+                type: 'report',
+                performed: false,
+                query: `interpretations?paging=false&fields=id&filter=visualization.name:ilike:${keyword}`,
+            },
+            {
+                type: 'chartEvent',
+                performed: false,
+                query: `interpretations?paging=false&fields=id&filter=eventChart.name:ilike:${keyword}`,
+            },
+            {
+                type: 'reportEvent',
+                performed: false,
+                query: `interpretations?paging=false&fields=id&filter=eventReport.name:ilike:${keyword}`,
+            },
+            {
+                type: 'map',
+                performed: false,
+                query: `interpretations?paging=false&fields=id&filter=map.name:ilike:${keyword}`,
+            },
+            {
+                type: 'author',
+                performed: false,
+                query: `interpretations?paging=false&fields=id&filter=user.name:ilike:${keyword}`,
+            },
+            {
+                type: 'commentator',
+                performed: false,
+                query: `interpretations?paging=false&fields=id&filter=comments.user.name:ilike:${keyword}`,
+            },
+            {
+                type: 'interpretationText',
+                performed: false,
+                query: `interpretations?paging=false&fields=id&filter=text:ilike:${keyword}`,
+            },
+            {
+                type: 'commentText',
+                performed: false,
+                query: `interpretations?paging=false&fields=id&filter=comments.text:ilike:${keyword}`,
+            },
         ];
 
         for (const searchItem of searchPerformList) {
-            restUtil.requestGetHelper(this.state.d2Api, searchItem.query, (result) => {
-                this.combineIdList(result, searchIdListObject);
+            restUtil.requestGetHelper(
+                this.state.d2Api,
+                searchItem.query,
+                (result) => {
+                    this.combineIdList(result, searchIdListObject);
 
-                searchItem.performed = true;
+                    searchItem.performed = true;
 
-                this.checkDoneList(searchPerformList, doneFunc, searchIdListObject);
-            });
+                    this.checkDoneList(
+                        searchPerformList,
+                        doneFunc,
+                        searchIdListObject
+                    );
+                }
+            );
         }
     },
 
@@ -472,11 +582,20 @@ const InterpretationList = React.createClass({
         const divKey = `list_${page}`;
 
         return (
-			<div key={divKey}>
-			{dataList.map(data =>
-                <Interpretation page={page} key={data.id} data={data} currentUser={this.state.currentUser} d2Api={this.state.d2Api} deleteInterpretationSuccess={this._deleteInterpretationSuccess} />
-			)}
-			</div>
+            <div key={divKey}>
+                {dataList.map((data) => (
+                    <Interpretation
+                        page={page}
+                        key={data.id}
+                        data={data}
+                        currentUser={this.state.currentUser}
+                        d2Api={this.state.d2Api}
+                        deleteInterpretationSuccess={
+                            this._deleteInterpretationSuccess
+                        }
+                    />
+                ))}
+            </div>
         );
     },
 
@@ -493,20 +612,31 @@ const InterpretationList = React.createClass({
 
     render() {
         return (
-			<div>
+            <div>
                 <div className="intpreLoading" style={{ display: 'none' }}>
                     <CircularProgress size={2} />
                 </div>
                 <div className="intpreContents">
-                    <InfiniteScroll key="interpretationListKey"
-                        loader={<div className="intprePageLoading"><CircularProgress size={1} /><span style={{ marginLeft: '20px' }}> Loading Interpretations...</span></div>}
-                        loadMore={this.loadMore} hasMore={this.state.hasMore} useWindow>
+                    <InfiniteScroll
+                        key="interpretationListKey"
+                        loader={
+                            <div className="intprePageLoading">
+                                <CircularProgress size={1} />
+                                <span style={{ marginLeft: '20px' }}>
+                                    {' '}
+                                    Loading Interpretations...
+                                </span>
+                            </div>
+                        }
+                        loadMore={this.loadMore}
+                        hasMore={this.state.hasMore}
+                        useWindow
+                    >
                         {this.state.items}
                     </InfiniteScroll>
                 </div>
-
-			</div>
-		);
+            </div>
+        );
     },
 });
 
