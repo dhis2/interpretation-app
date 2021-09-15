@@ -1,3 +1,13 @@
+# [1.0.0](https://github.com/dhis2/interpretation-app/compare/v0.1.29...v1.0.0) (2021-09-15)
+
+
+* breaking change ([34d2635](https://github.com/dhis2/interpretation-app/commit/34d263504ef5648d674ed6d192c18c95447afde1))
+
+
+### BREAKING CHANGES
+
+* migrate to visualization
+
 ## [0.1.29](https://github.com/dhis2/interpretation-app/compare/v0.1.28...v0.1.29) (2021-06-29)
 
 
