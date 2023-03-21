@@ -9,7 +9,7 @@
     "start": "webpack-dev-server --config webpack.dev.config.js",
     "prebuild": "rm -rf build",
     "build": "webpack --config webpack.prod.config.js && yarn manifest",
-    "postbuild": "cp -r  ./src/images icon.png ./src/index.html ./src/chart.js ./src/reporttable.js ./src/manifest.webapp ./package.json build/",
+    "postbuild": "cp -r  ./src/images icon.png ./src/index.html ./src/chart.js ./src/reporttable.js ./src/map.js ./src/268.bundle.js ./src/manifest.webapp ./package.json build/",
     "lint": "eslint --fix src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,sinon,spy,stub --rule 'no-unused-expressions: 0' test && scss-lint"
   },
   "keywords": [
