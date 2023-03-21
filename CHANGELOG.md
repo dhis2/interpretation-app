@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/dhis2/interpretation-app/compare/v1.0.0...v1.0.1) (2023-03-21)
+
+
+### Bug Fixes
+
+* add map plugin and dependency ([a4e7c0a](https://github.com/dhis2/interpretation-app/commit/a4e7c0ade9f1fd46c108fe6ab721ef8fb48b93ee))
+* revers script order ([9561ea6](https://github.com/dhis2/interpretation-app/commit/9561ea61b26ff3e36f039647234caabc2f286042))
+* use the officially build files from d2-ci/maps-app ([f3c9cb2](https://github.com/dhis2/interpretation-app/commit/f3c9cb2432498b081ca2c5f99e6d9c3e331b7837))
+
 # [1.0.0](https://github.com/dhis2/interpretation-app/compare/v0.1.29...v1.0.0) (2021-09-15)
 
 
