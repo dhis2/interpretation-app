@@ -9,7 +9,7 @@
     "start": "webpack-dev-server --config webpack.dev.config.js",
     "prebuild": "rm -rf build",
     "build": "webpack --config webpack.prod.config.js && yarn manifest",
-    "postbuild": "cp -r  ./src/images icon.png ./src/index.html ./src/chart.js ./src/reporttable.js ./src/map.js ./src/268.bundle.js ./src/manifest.webapp ./package.json build/",
+    "postbuild": "cp -r  ./src/images ./public/ ./src/index.html ./src/chart.js ./src/reporttable.js ./src/map.js ./src/268.bundle.js ./src/manifest.webapp ./package.json build/",
     "lint": "eslint --fix src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,sinon,spy,stub --rule 'no-unused-expressions: 0' test && scss-lint"
   },
   "keywords": [
@@ -17,7 +17,6 @@
     "App",
     "Interpretation"
   ],
-  "author": "James Chang",
   "license": "BSD-3-Clause",
   "dependencies": {
     "@dhis2/d2-ui-rich-text": "^7.0.5",
@@ -89,7 +88,7 @@
     },
     "activities": {
       "dhis": {
-        "href": ".."
+        "href": "*"
       }
     }
   }
