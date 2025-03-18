@@ -15,7 +15,9 @@ const injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
 // If this is being rendered in a subframe, hide the header bar
-export const shouldRenderHeaderBar = window.self === window.top
+const shouldRenderHeaderBar = window.self === window.top
+// todo: remove
+console.log({ shouldRenderHeaderBar })
 
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 
