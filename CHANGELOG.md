@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/dhis2/interpretation-app/compare/v1.0.2...v1.1.0) (2025-03-18)
+
+
+### Features
+
+* hide headerbar when rendered in an iframe ([#58](https://github.com/dhis2/interpretation-app/issues/58)) ([33a71be](https://github.com/dhis2/interpretation-app/commit/33a71be87a3c25c964e4aaf5d5d495f84b7530a9))
+
 ## [1.0.2](https://github.com/dhis2/interpretation-app/compare/v1.0.1...v1.0.2) (2025-03-18)
 
 
