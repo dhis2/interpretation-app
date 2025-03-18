@@ -17,7 +17,6 @@
     "App",
     "Interpretation"
   ],
-  "author": "James Chang",
   "license": "BSD-3-Clause",
   "dependencies": {
     "@dhis2/d2-ui-rich-text": "^7.0.5",
@@ -84,6 +83,8 @@
   },
   "homepage": "https://github.com/dhis2/interpretation-app#readme",
   "manifest.webapp": {
+    "short_name": "interpretation",
+    "name": "Interpretation app",
     "icons": {
       "48": "icon.png"
     },
