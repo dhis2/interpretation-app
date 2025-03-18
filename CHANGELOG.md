@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/dhis2/interpretation-app/compare/v1.0.1...v1.0.2) (2025-03-18)
+
+
+### Bug Fixes
+
+* update manifest ([#57](https://github.com/dhis2/interpretation-app/issues/57)) ([40d615b](https://github.com/dhis2/interpretation-app/commit/40d615b19d6d5d85cf3758f7bc24e9efdcf5a156))
+
 ## [1.0.1](https://github.com/dhis2/interpretation-app/compare/v1.0.0...v1.0.1) (2023-03-21)
 
 
