@@ -14,6 +14,8 @@ import { dataInfo } from './data';
 const injectTapEventPlugin = require('react-tap-event-plugin');
 injectTapEventPlugin();
 
+// If this is being rendered in a subframe, hide the header bar
+const shouldRenderHeaderBar = window.self === window.top
 
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 
@@ -58,9 +60,10 @@ export default React.createClass({
     render() {
         const rightAreaWidth = `${dataInfo.rightAreaWidth}px`;
         return (
-            <div className="app-wrapper">
+            // 'app-wrapper' apps margin-top styles; skip those if no header bar
+            <div className={shouldRenderHeaderBar ? "app-wrapper" : undefined}>
 
-                <HeaderBar />
+                {shouldRenderHeaderBar && <HeaderBar />}
 				<mainPage>
 
                     <div className="divMainPage">
