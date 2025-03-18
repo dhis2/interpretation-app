@@ -88,6 +88,10 @@
     "icons": {
       "48": "icon.png"
     },
+    "developer": {
+      "url": "",
+      "name": "DHIS2"
+    },
     "activities": {
       "dhis": {
         "href": ".."
