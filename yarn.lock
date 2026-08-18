@@ -4013,13 +4013,6 @@ http-proxy@^1.17.0:
     follow-redirects "^1.0.0"
     requires-port "^1.0.0"
 
-"http-proxy@git+https://github.com/nicolayr/node-http-proxy.git":
-  version "1.13.3"
-  resolved "git+https://github.com/nicolayr/node-http-proxy.git#98b0fbd683dbddb41b8bf876a39d234671c83846"
-  dependencies:
-    eventemitter3 "1.x.x"
-    requires-port "1.x.x"
-
 http-signature@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/http-signature/-/http-signature-1.2.0.tgz#9aecd925114772f3d95b65a60abb8f7c18fbace1"
