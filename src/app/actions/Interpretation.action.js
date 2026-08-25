@@ -24,6 +24,7 @@ actions.listInterpretation.subscribe(
                 ',comments[id,created,latestUpdate,text,user[id,displayName~rename(name)]]' +
                 ',eventReport[id,name,relativePeriods,userGroupAccesses[*],externalAccess,publicAccess,user[id,displayName~rename(name)],favorites,subscribers,mentions]' +
                 ',eventChart[id,name,relativePeriods,userGroupAccesses[*],externalAccess,publicAccess,user[id,displayName~rename(name)],favorites,subscribers,mentions]' +
+                ',eventVisualization[id,name,type,relativePeriods,userGroupAccesses[*],externalAccess,publicAccess,user[id,displayName~rename(name)],favorites,subscribers,mentions]' +
                 ',chart[id,name,relativePeriods,userGroupAccesses[*],externalAccess,publicAccess,user[id,displayName~rename(name)],favorites,subscribers,mentions]' +
                 ',map[id,name,mapViews[relativePeriods],userGroupAccesses[*],externalAccess,publicAccess,user[id,displayName~rename(name)],favorites,subscribers,mentions]' +
                 ',visualization[id,name,type,relativePeriods,userGroupAccesses[*],externalAccess,publicAccess,user[id,displayName~rename(name)],favorites,subscribers,mentions]' +

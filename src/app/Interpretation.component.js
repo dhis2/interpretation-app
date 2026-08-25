@@ -15,6 +15,7 @@ const Interpretation = React.createClass({
     propTypes: {
         data: React.PropTypes.object,
         currentUser: React.PropTypes.object,
+        d2: React.PropTypes.object,
         d2Api: React.PropTypes.object,
         deleteInterpretationSuccess: React.PropTypes.func,
     },
@@ -62,6 +63,14 @@ const Interpretation = React.createClass({
                 } else if (this.props.data.type === 'EVENT_CHART') {
                     if (!isRedraw) {
                         this._setEventChart();
+                    }
+                } else if (this.props.data.type === 'EVENT_VISUALIZATION') {
+                    if (!isRedraw) {
+                        if (this._isEventTableType()) {
+                            this._setEventReport();
+                        } else {
+                            this._setEventChart();
+                        }
                     }
                 }
             }
@@ -120,6 +129,17 @@ const Interpretation = React.createClass({
                 },
             ]);
         });
+    },
+
+    // Event visualizations cover both the chart types and the tabular ones;
+    // the tabular ones are rendered by the event report plugin.
+    _isEventTableType() {
+        const eventVisualizationType = this.props.data.objData.type;
+
+        return (
+            eventVisualizationType === 'PIVOT_TABLE' ||
+            eventVisualizationType === 'LINE_LIST'
+        );
     },
 
     _setEventChart() {
@@ -490,6 +510,16 @@ const Interpretation = React.createClass({
         });
     },
 
+    // The Line Listing app is bundled from 2.42 onwards; before that it is
+    // served as an installed app.
+    _getLineListingPath() {
+        const version = this.props.d2 && this.props.d2.system.version;
+
+        return version && version.minor >= 42
+            ? 'dhis-web-line-listing/'
+            : 'api/apps/line-listing/index.html';
+    },
+
     _getSourceInterpretationLink() {
         let link = '';
         let fullLink = '';
@@ -501,6 +531,8 @@ const Interpretation = React.createClass({
             link = 'dhis-web-event-reports';
         } else if (this.props.data.type === 'EVENT_CHART') {
             link = 'dhis-web-event-visualizer'; // Event chart
+        } else if (this.props.data.type === 'EVENT_VISUALIZATION') {
+            fullLink = `${_dhisLoc}${this._getLineListingPath()}#/${this.props.data.objId}/interpretation/${this.props.data.id}`;
         }
 
         // ?? ${_dhisLoc}??

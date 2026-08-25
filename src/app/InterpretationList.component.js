@@ -124,6 +124,10 @@ const InterpretationList = React.createClass({
                 data.objId = interpretation.eventChart.id;
                 data.name = interpretation.eventChart.name;
                 data.objData = interpretation.eventChart;
+            } else if (interpretation.type === 'EVENT_VISUALIZATION') {
+                data.objId = interpretation.eventVisualization.id;
+                data.name = interpretation.eventVisualization.name;
+                data.objData = interpretation.eventVisualization;
             }
 
             dataList.push(data);
@@ -222,6 +226,9 @@ const InterpretationList = React.createClass({
                 break;
             case 'EVENT_REPORT':
                 searchFavoriteKeyName = 'eventReport.name';
+                break;
+            case 'EVENT_VISUALIZATION':
+                searchFavoriteKeyName = 'eventVisualization.name';
                 break;
             case 'MAP':
                 searchFavoriteKeyName = 'map.name';
@@ -589,6 +596,7 @@ const InterpretationList = React.createClass({
                         key={data.id}
                         data={data}
                         currentUser={this.state.currentUser}
+                        d2={this.props.d2}
                         d2Api={this.state.d2Api}
                         deleteInterpretationSuccess={
                             this._deleteInterpretationSuccess
