@@ -95,4 +95,6 @@ jobs:
                   node-version: 20.x
 
             - name: Publish release to GitHub
+              env:
+                  NPM_TOKEN: ${{ secrets.DHIS2_BOT_NPM_TOKEN }}
               run: npx @dhis2/cli-utils release
