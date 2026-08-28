@@ -100,6 +100,8 @@ export const dhisUtils = {
             dhisApiObjName = 'eventReports';
         } else if (dataType === 'EVENT_CHART') {
             dhisApiObjName = 'eventCharts'; // Event chart
+        } else if (dataType === 'EVENT_VISUALIZATION') {
+            dhisApiObjName = 'eventVisualizations';
         }
 
         return dhisApiObjName;

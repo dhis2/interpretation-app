@@ -249,6 +249,10 @@ export default class AdvanceSearchForm extends Component {
                                         primaryText="Visualization"
                                     />
                                     <MenuItem
+                                        value="EVENT_VISUALIZATION"
+                                        primaryText="Event Visualization"
+                                    />
+                                    <MenuItem
                                         value="EVENT_CHART"
                                         primaryText="Event Chart"
                                     />
